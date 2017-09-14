@@ -1,4 +1,4 @@
-# Lite CommandLine Arguments Parser
+# LiteRT/Clap.js
 
 A simple library for parsing commandline arguments.
 
