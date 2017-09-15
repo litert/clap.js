@@ -1,3 +1,5 @@
-export * from "./class.CommandParser";
-export * from "./class.SimpleParser";
-export { IParseResult, ICommandParseResult } from "./class.ParseResult";
+export * from "./interfaces";
+import * as Def from "./interfaces";
+export import Errors = require("./errors");
+export declare function createCommandParser(): Def.ICommandParser;
+export declare function createSimpleParser(): Def.ISimpleParser;

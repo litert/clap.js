@@ -1,22 +1,5 @@
-/**
- * Following types of options are supported.
- *
- * 1. Without argument
- *   -v (--version), -rf (--recursive --force)
- * 2. With argument
- *   -f a.txt (--file a.txt)
- *   -o=a.txt (--output=a.txt)
- *   -oa.txt (--output=a.txt)
- */
 import { IDictionary } from "@litert/core";
-export interface IOptionSetting {
-    "name": string;
-    "description": string;
-    "argPlaceholders"?: string[];
-    "shortName"?: string;
-    "required"?: boolean;
-    "multi"?: boolean;
-}
+import { IOptionSetting } from "./interfaces";
 export interface IOptionHandleResult {
     "success": boolean;
     "advance"?: number;

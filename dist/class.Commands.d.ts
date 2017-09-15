@@ -1,8 +1,4 @@
-export interface ICommandSettings {
-    "name": string;
-    "description": string;
-    "shortName"?: string;
-}
+import { ICommandSettings } from "./interfaces";
 export interface IMainCommandSettings extends ICommandSettings {
     "enableSubCommand"?: boolean;
     addSubCommand(opts: ICommandSettings): IMainCommandSettings;

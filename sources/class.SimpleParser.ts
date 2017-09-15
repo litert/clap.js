@@ -1,21 +1,36 @@
+/*
+   +----------------------------------------------------------------------+
+   | LiteRT Clap.js Library                                               |
+   +----------------------------------------------------------------------+
+   | Copyright (c) 2007-2017 Fenying Studio                               |
+   +----------------------------------------------------------------------+
+   | This source file is subject to version 2.0 of the Apache license,    |
+   | that is bundled with this package in the file LICENSE, and is        |
+   | available through the world-wide-web at the following url:           |
+   | https://github.com/litert/clap.js/blob/master/LICENSE                |
+   +----------------------------------------------------------------------+
+   | Authors: Angus Fenying <i.am.x.fenying@gmail.com>                    |
+   +----------------------------------------------------------------------+
+ */
+
 import { IDictionary, Exception } from "@litert/core";
-import { ParseResult, IParseResult } from "./class.ParseResult";
+import { ParseResult } from "./class.ParseResult";
 import * as Errors from "./errors";
+import * as Def from "./interfaces";
 
 import {
-    IOptionSetting,
     IOption,
     ArgLessOptionHandler,
     ArgOptionHandler
 } from "./class.Option";
 
-export class SimpleParser {
+export class SimpleParser implements Def.ISimpleParser {
 
     private _optionHandlers: IDictionary<IOption>;
 
-    public _options: IDictionary<IDictionary<string>[]>;
+    protected _options: IDictionary<IDictionary<string>[]>;
 
-    public _args: string[];
+    protected _args: string[];
 
     public constructor() {
 
@@ -26,7 +41,7 @@ export class SimpleParser {
         this._args = [];
     }
 
-    public addOption(opts: IOptionSetting): SimpleParser {
+    public addOption(opts: Def.IOptionSetting): SimpleParser {
 
         if (opts.argPlaceholders) {
 
@@ -40,7 +55,7 @@ export class SimpleParser {
         return this;
     }
 
-    public parse(): IParseResult {
+    public parse(): Def.IParseResult {
 
         let args: string[] = process.argv.slice(2);
 

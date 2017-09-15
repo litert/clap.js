@@ -1,12 +1,11 @@
 import { IDictionary } from "@litert/core";
-import { IParseResult } from "./class.ParseResult";
-import { IOptionSetting } from "./class.Option";
-export declare class SimpleParser {
+import * as Def from "./interfaces";
+export declare class SimpleParser implements Def.ISimpleParser {
     private _optionHandlers;
-    _options: IDictionary<IDictionary<string>[]>;
-    _args: string[];
+    protected _options: IDictionary<IDictionary<string>[]>;
+    protected _args: string[];
     constructor();
-    addOption(opts: IOptionSetting): SimpleParser;
-    parse(): IParseResult;
+    addOption(opts: Def.IOptionSetting): SimpleParser;
+    parse(): Def.IParseResult;
     protected _hookNotOption(val: string): boolean;
 }

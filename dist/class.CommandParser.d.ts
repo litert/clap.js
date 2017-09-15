@@ -1,12 +1,11 @@
-import { ICommandParseResult } from "./class.ParseResult";
-import { ICommandSettings } from "./class.Commands";
+import { ICommandParseResult, ICommandParser, ICommandSettings } from "./interfaces";
 import { SimpleParser } from "./class.SimpleParser";
-export declare class CommandParser extends SimpleParser {
+export declare class CommandParser extends SimpleParser implements ICommandParser {
     private _mainCommands;
     private _commands;
     constructor();
-    addCommand(opts: ICommandSettings): CommandParser;
-    addSubCommand(main: string, opts: ICommandSettings): CommandParser;
+    addCommand(opts: ICommandSettings): ICommandParser;
+    addSubCommand(main: string, opts: ICommandSettings): ICommandParser;
     parse(): ICommandParseResult;
     protected _hookNotOption(val: string): boolean;
 }

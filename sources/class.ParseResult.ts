@@ -1,69 +1,20 @@
+/*
+   +----------------------------------------------------------------------+
+   | LiteRT Clap.js Library                                               |
+   +----------------------------------------------------------------------+
+   | Copyright (c) 2007-2017 Fenying Studio                               |
+   +----------------------------------------------------------------------+
+   | This source file is subject to version 2.0 of the Apache license,    |
+   | that is bundled with this package in the file LICENSE, and is        |
+   | available through the world-wide-web at the following url:           |
+   | https://github.com/litert/clap.js/blob/master/LICENSE                |
+   +----------------------------------------------------------------------+
+   | Authors: Angus Fenying <i.am.x.fenying@gmail.com>                    |
+   +----------------------------------------------------------------------+
+ */
+
 import { IDictionary, Exception } from "@litert/core";
-
-export interface IParseResult {
-
-    /**
-     * Detect if parse successfully.
-     */
-    "success": boolean;
-
-    /**
-     * The error info when failed to parse.
-     */
-    "error"?: Exception;
-
-    /**
-     * Get list of names of all found options.
-     */
-    "optionNames": string[];
-
-    /**
-     * How many options are found.
-     */
-    "optionCount": number;
-
-    /**
-     * How many arguments found.
-     */
-    "argumentCount": number;
-
-    /**
-     * Get list of all arguments found.
-     */
-    "arguments": string[];
-
-    /**
-     * Check if an option is set.
-     */
-    existOption(name: string): boolean;
-
-    /**
-     * Check if an option is multi set.
-     */
-    isMultiOption(name: string): boolean;
-
-    /**
-     * Check how many times an option is set.
-     */
-    countOption(name: string): number;
-
-    /**
-     * Get arguments list of option by index.
-     */
-    getOption(name: string, index: number): IDictionary<string>;
-
-    /**
-     * The the value of argument by index.
-     */
-    getArgument(index: number): string;
-}
-
-export interface ICommandParseResult extends IParseResult {
-
-    "mainCommand"?: string;
-
-    "subCommand"?: string;
-}
+import { IParseResult, ICommandParseResult } from "./interfaces";
 
 export class ParseResult implements IParseResult {
 

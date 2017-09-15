@@ -1,30 +1,21 @@
-/**
- * Following types of options are supported.
- *
- * 1. Without argument
- *   -v (--version), -rf (--recursive --force)
- * 2. With argument
- *   -f a.txt (--file a.txt)
- *   -o=a.txt (--output=a.txt)
- *   -oa.txt (--output=a.txt)
+/*
+   +----------------------------------------------------------------------+
+   | LiteRT Clap.js Library                                               |
+   +----------------------------------------------------------------------+
+   | Copyright (c) 2007-2017 Fenying Studio                               |
+   +----------------------------------------------------------------------+
+   | This source file is subject to version 2.0 of the Apache license,    |
+   | that is bundled with this package in the file LICENSE, and is        |
+   | available through the world-wide-web at the following url:           |
+   | https://github.com/litert/clap.js/blob/master/LICENSE                |
+   +----------------------------------------------------------------------+
+   | Authors: Angus Fenying <i.am.x.fenying@gmail.com>                    |
+   +----------------------------------------------------------------------+
  */
+
 import { IDictionary, Exception } from "@litert/core";
 import * as Errors from "./errors";
-
-export interface IOptionSetting {
-
-    "name": string;
-
-    "description": string;
-
-    "argPlaceholders"?: string[];
-
-    "shortName"?: string;
-
-    "required"?: boolean;
-
-    "multi"?: boolean;
-}
+import { IOptionSetting } from "./interfaces";
 
 export interface IOptionHandleResult {
 
@@ -65,12 +56,17 @@ export abstract class OptionConstructor implements IOption {
 
     public constructor(opts: IOptionSetting) {
 
-        if (opts.shortName && opts.shortName.length !== 1) {
+        if (opts.shortName) {
 
-            throw new Exception(
-                Errors.E_INVALID_SHORT_OPTION,
-                "Short name of option must a single alphabet charactor."
-            );
+            if (opts.shortName.length !== 1
+                || !/^[0-9a-zA-Z]$/.test(opts.shortName)
+            ) {
+
+                throw new Exception(
+                    Errors.E_INVALID_SHORT_OPTION,
+                    "Short name of option must a single alphabet or digtal charactor."
+                );
+            }
         }
 
         this.name = opts.name;
@@ -108,16 +104,16 @@ export class ArgLessOptionHandler extends OptionConstructor {
             ret.success = true;
             ret.advance = 1;
         }
-        else if (arg.match(/^-[a-zA-Z0-9]+$/) && this.shortName && arg.indexOf(this.shortName) > 0) {
+        else if (arg.match(/^-[a-zA-Z0-9]+$/)
+                && this.shortName
+                && arg.indexOf(this.shortName) > 0
+        ) {
 
             args[current] = arg = arg.replace(this.shortName, "");
 
             ret.success = true;
 
-            if (arg === "-") {
-
-                ret.advance = 1;
-            }
+            ret.advance = arg === "-" ? 1 : 0;
         }
 
         return ret;
@@ -139,7 +135,9 @@ export class ArgOptionHandler extends OptionConstructor {
 
         let arg = args[current];
 
-        if (arg === `--${this.name}` || (this.shortName && arg === `-${this.shortName}`)) {
+        if (arg === `--${this.name}`
+            || (this.shortName && arg === `-${this.shortName}`)
+        ) {
 
             ret.success = true;
 

@@ -1,15 +1,34 @@
+/*
+   +----------------------------------------------------------------------+
+   | LiteRT Clap.js Library                                               |
+   +----------------------------------------------------------------------+
+   | Copyright (c) 2007-2017 Fenying Studio                               |
+   +----------------------------------------------------------------------+
+   | This source file is subject to version 2.0 of the Apache license,    |
+   | that is bundled with this package in the file LICENSE, and is        |
+   | available through the world-wide-web at the following url:           |
+   | https://github.com/litert/clap.js/blob/master/LICENSE                |
+   +----------------------------------------------------------------------+
+   | Authors: Angus Fenying <i.am.x.fenying@gmail.com>                    |
+   +----------------------------------------------------------------------+
+ */
+
 import { IDictionary, Exception } from "@litert/core";
-import { CommandParseResult, ParseResult, ICommandParseResult } from "./class.ParseResult";
+import { CommandParseResult, ParseResult } from "./class.ParseResult";
+import {
+    ICommandParseResult,
+    ICommandParser,
+    ICommandSettings
+} from "./interfaces";
 import * as Errors from "./errors";
 import {
-    ICommandSettings,
     IMainCommandSettings,
     MainCommand
 } from "./class.Commands";
 
 import { SimpleParser } from "./class.SimpleParser";
 
-export class CommandParser extends SimpleParser {
+export class CommandParser extends SimpleParser implements ICommandParser {
 
     private _mainCommands: IDictionary<IMainCommandSettings>;
 
@@ -22,7 +41,7 @@ export class CommandParser extends SimpleParser {
         this._mainCommands = {};
     }
 
-    public addCommand(opts: ICommandSettings): CommandParser {
+    public addCommand(opts: ICommandSettings): ICommandParser {
 
         opts.name = opts.name.toLowerCase();
 
@@ -52,7 +71,10 @@ export class CommandParser extends SimpleParser {
         return this;
     }
 
-    public addSubCommand(main: string, opts: ICommandSettings): CommandParser {
+    public addSubCommand(
+        main: string,
+        opts: ICommandSettings
+    ): ICommandParser {
 
         main = main.toLowerCase();
 
@@ -137,7 +159,7 @@ export class CommandParser extends SimpleParser {
             }
 
             throw new Exception(
-                Errors.E_UNAVAILABLE_MAIN_COMMAND,
+                Errors.E_INVALID_MAIN_COMMAND,
                 `Command "${val}" is not supported.`
             );
         }
@@ -155,7 +177,7 @@ export class CommandParser extends SimpleParser {
             }
 
             throw new Exception(
-                Errors.E_UNAVAILABLE_MAIN_COMMAND,
+                Errors.E_INVALID_SUB_COMMAND,
                 `Command "${val}" is not sub command of "${mc.name}".`
             );
         }

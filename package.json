@@ -33,6 +33,6 @@
     "typescript": "^2.5.2"
   },
   "dependencies": {
-    "@litert/core": "git+https://github.com/litert/core.js.git"
+    "@litert/core": "git+https://github.com/litert/core.js.git#v0.1.1"
   }
 }

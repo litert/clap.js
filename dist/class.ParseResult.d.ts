@@ -1,54 +1,5 @@
 import { IDictionary, Exception } from "@litert/core";
-export interface IParseResult {
-    /**
-     * Detect if parse successfully.
-     */
-    "success": boolean;
-    /**
-     * The error info when failed to parse.
-     */
-    "error"?: Exception;
-    /**
-     * Get list of names of all found options.
-     */
-    "optionNames": string[];
-    /**
-     * How many options are found.
-     */
-    "optionCount": number;
-    /**
-     * How many arguments found.
-     */
-    "argumentCount": number;
-    /**
-     * Get list of all arguments found.
-     */
-    "arguments": string[];
-    /**
-     * Check if an option is set.
-     */
-    existOption(name: string): boolean;
-    /**
-     * Check if an option is multi set.
-     */
-    isMultiOption(name: string): boolean;
-    /**
-     * Check how many times an option is set.
-     */
-    countOption(name: string): number;
-    /**
-     * Get arguments list of option by index.
-     */
-    getOption(name: string, index: number): IDictionary<string>;
-    /**
-     * The the value of argument by index.
-     */
-    getArgument(index: number): string;
-}
-export interface ICommandParseResult extends IParseResult {
-    "mainCommand"?: string;
-    "subCommand"?: string;
-}
+import { IParseResult, ICommandParseResult } from "./interfaces";
 export declare class ParseResult implements IParseResult {
     protected _success: boolean;
     protected _error?: Exception;
