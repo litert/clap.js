@@ -10,9 +10,9 @@
 function createSimpleParser(): ISimpleParser;
 ```
 
-## 2. 方法 createSimpleParser
+## 2. 方法 createCommandParser
 
-该方法创建一个简单命令行参数解析器对象。
+该方法创建一个支持命令的命令行参数解析器对象。
 
 ### 2.1. 方法签名
 
