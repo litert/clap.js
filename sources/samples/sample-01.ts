@@ -17,9 +17,7 @@
 
 import * as Clap from "../index";
 
-let parser = Clap.createSimpleParser({
-    "shortAssign": true
-});
+let parser = Clap.createSimpleParser();
 
 parser.addOption({
 

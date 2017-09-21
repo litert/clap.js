@@ -21,8 +21,7 @@ parser.addOption({
     "name": "output",
     "description": "Determine the path to the output file.",
     "shortcut": "o",
-    "withArgument": true,
-    "defaultArgument": "default.txt"
+    "withArgument": true
 });
 let result = parser.parse();
 for (let unknown of result.unknwonOptions) {

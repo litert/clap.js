@@ -1,4 +1,3 @@
-"use strict";
 /*
    +----------------------------------------------------------------------+
    | LiteRT Clap.js Library                                               |
@@ -13,29 +12,45 @@
    | Authors: Angus Fenying <i.am.x.fenying@gmail.com>                    |
    +----------------------------------------------------------------------+
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+
 /* tslint:disable:no-console */
-const Clap = require("../index");
-let parser = Clap.createSimpleParser();
-parser.addOption({
-    "name": "Help",
-    "description": "Display the help text.",
-    "shortcut": "h"
+
+import * as Clap from "../index";
+
+let parser = Clap.createSimpleParser({
+    "follow": false,
+    "shortAssign": true,
+    "fullAssign": true
 });
+
+parser.addOption({
+
+    "name": "input",
+    "description": "Determine the input file.",
+    "shortcut": "i",
+    "withArgument": true
+});
+
 let result = parser.parse();
+
 for (let unknown of result.unknwonOptions) {
+
     console.log(`Unknown option: ${unknown}.`);
 }
+
 if (result.success) {
-    if (result.existOption("help")) {
-        console.info("This is help text");
-        process.exit(0);
+
+    if (result.existOption("input")) {
+
+        console.info(`Input: ${result.getOption("input")}`);
     }
+
     for (let argv of result.arguments) {
+
         console.log(`Found Argument: ${argv}`);
     }
 }
 else {
+
     console.error(result.error);
 }
-//# sourceMappingURL=sample-01.js.map

@@ -16,20 +16,24 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 /* tslint:disable:no-console */
 const Clap = require("../index");
-let parser = Clap.createSimpleParser();
+let parser = Clap.createSimpleParser({
+    "follow": false,
+    "shortAttach": true,
+    "fullAssign": true
+});
 parser.addOption({
-    "name": "Help",
-    "description": "Display the help text.",
-    "shortcut": "h"
+    "name": "input",
+    "description": "Determine the input file.",
+    "shortcut": "i",
+    "withArgument": true
 });
 let result = parser.parse();
 for (let unknown of result.unknwonOptions) {
     console.log(`Unknown option: ${unknown}.`);
 }
 if (result.success) {
-    if (result.existOption("help")) {
-        console.info("This is help text");
-        process.exit(0);
+    if (result.existOption("input")) {
+        console.info(`Input: ${result.getOption("input")}`);
     }
     for (let argv of result.arguments) {
         console.log(`Found Argument: ${argv}`);
@@ -38,4 +42,4 @@ if (result.success) {
 else {
     console.error(result.error);
 }
-//# sourceMappingURL=sample-01.js.map
+//# sourceMappingURL=sample-06.js.map

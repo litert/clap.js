@@ -35,6 +35,38 @@
             "cwd": "${workspaceRoot}",
             "sourceMaps": true,
             "showAsyncStacks": true
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Sample 06",
+            "program": "${workspaceRoot}\\sources\\samples\\sample-06.ts",
+            "args": [
+                "-itest.js"
+            ],
+            "outFiles": [
+                "${workspaceRoot}\\dist\\*.js",
+                "${workspaceRoot}\\dist\\**\\*.js"
+            ],
+            "cwd": "${workspaceRoot}",
+            "sourceMaps": true,
+            "showAsyncStacks": true
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Sample 05",
+            "program": "${workspaceRoot}\\sources\\samples\\sample-05.ts",
+            "args": [
+                "-i"
+            ],
+            "outFiles": [
+                "${workspaceRoot}\\dist\\*.js",
+                "${workspaceRoot}\\dist\\**\\*.js"
+            ],
+            "cwd": "${workspaceRoot}",
+            "sourceMaps": true,
+            "showAsyncStacks": true
         }
     ]
 }
