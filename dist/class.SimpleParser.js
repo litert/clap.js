@@ -76,6 +76,17 @@ class SimpleParser {
         let piece = cmdArgs[cursor];
         let option;
         piece = piece.trim();
+        if (this._settings.shortAssign && /^-[A-Za-z]\=.*$/.test(piece)) {
+            // short-assign pattern
+            return this._onShortAssignOption(cmdArgs, cursor, result);
+        }
+        else if (this._settings.shortAttach && /^-[a-zA-Z]/.test(piece)) {
+            option = this._shortOptions[piece[1]];
+            if (option && option.withArgument) {
+                // short-attach pattern
+                return this._onShortAttachOption(option, piece, result);
+            }
+        }
         if (/^-[a-zA-Z]+$/.test(piece)) {
             option = this._shortOptions[piece[1]];
             if (piece.length === 2) {
@@ -87,17 +98,10 @@ class SimpleParser {
                 // short-compact pattern
                 return this._onShortCompactedOption(piece, result);
             }
-            // short-attach pattern
-            return this._onShortAttachOption(option, piece, result);
         }
-        else if (/^-[A-Za-z]\=.+$/.test(piece)) {
-            // short-assign pattern
-            return this._onShortAssignOption(cmdArgs, cursor, result);
-        }
-        else if (/^--[-A-Z0-9a-z]+\=.+$/.test(piece)) {
+        else if (/^--[-A-Z0-9a-z]+\=.*$/.test(piece)) {
             // full-assign pattern
             return this._onFullAssignOption(cmdArgs, cursor, result);
-            // error: only mono can be used in assign pattern.
         }
         else if (/^--[-A-Z0-9a-z]+$/.test(piece)) {
             // full-alone pattern
@@ -129,15 +133,18 @@ class SimpleParser {
      * @param result  The result object
      */
     _onShortAttachOption(option, piece, result) {
-        if (!this._settings.shortAttach) {
-            throw new core_1.Exception(Errors.E_FORBIDDEN_ATTACH, "Attaching an argument with an option is not allowed.");
+        let arg = piece.slice(2);
+        if (arg.length === 0) {
+            if (option.defaultArgument === undefined) {
+                throw new core_1.Exception(Errors.E_LACK_OPTION_ARG, `Option "${piece}" requires an argument.`);
+            }
+            arg = option.defaultArgument;
         }
-        // short-attach pattern
         if (option.repeatable) {
-            result.addOption(option.name, piece.slice(2));
+            result.addOption(option.name, arg);
         }
         else {
-            result.setOption(option.name, piece.slice(2));
+            result.setOption(option.name, arg);
         }
         return 1;
     }
@@ -169,9 +176,6 @@ class SimpleParser {
      * @param result  The result object
      */
     _onShortAssignOption(cmdArgs, cursor, result) {
-        if (!this._settings.shortAssign) {
-            throw new core_1.Exception(Errors.E_FORBIDDEN_ASSIGN, `Assign mode is not allow.`);
-        }
         let piece = cmdArgs[cursor];
         let option = this._shortOptions[piece[1]];
         if (!option) {
@@ -179,11 +183,18 @@ class SimpleParser {
             return 1;
         }
         if (option.isInput()) {
+            let arg = piece.slice(3);
+            if (arg.length === 0) {
+                if (option.defaultArgument === undefined) {
+                    throw new core_1.Exception(Errors.E_LACK_OPTION_ARG, `Option "-${option.shortcut}" requires an argument.`);
+                }
+                arg = option.defaultArgument;
+            }
             if (option.repeatable) {
-                result.addOption(option.name, piece.slice(3));
+                result.addOption(option.name, arg);
             }
             else {
-                result.setOption(option.name, piece.slice(3));
+                result.setOption(option.name, arg);
             }
             return 1;
         }
@@ -208,11 +219,18 @@ class SimpleParser {
             return 1;
         }
         if (option.isInput()) {
+            let arg = piece.slice(3 + name.length);
+            if (arg.length === 0) {
+                if (option.defaultArgument === undefined) {
+                    throw new core_1.Exception(Errors.E_LACK_OPTION_ARG, `Option "-${option.shortcut}" requires an argument.`);
+                }
+                arg = option.defaultArgument;
+            }
             if (option.repeatable) {
-                result.addOption(option.name, piece.slice(3 + name.length));
+                result.addOption(option.name, arg);
             }
             else {
-                result.setOption(option.name, piece.slice(3 + name.length));
+                result.setOption(option.name, arg);
             }
             return 1;
         }
@@ -239,7 +257,16 @@ class SimpleParser {
             return 1;
         }
         if (!this._settings.follow) {
-            throw new core_1.Exception(Errors.E_LACK_OPTION_ARG, `An argument is required for option "${cmdArgs[cursor]}".`);
+            if (option.defaultArgument !== undefined) {
+                if (option.repeatable) {
+                    result.addOption(option.name, option.defaultArgument);
+                }
+                else {
+                    result.setOption(option.name, option.defaultArgument);
+                }
+                return 1;
+            }
+            throw new core_1.Exception(Errors.E_LACK_OPTION_ARG, `Option "${cmdArgs[cursor]}" requires an argument.`);
         }
         let nextPiece = cmdArgs[cursor + 1];
         if (nextPiece === undefined ||

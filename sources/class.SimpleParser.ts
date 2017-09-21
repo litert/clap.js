@@ -139,6 +139,31 @@ export class SimpleParser implements External.ISimpleParser {
 
         piece = piece.trim();
 
+        if (this._settings.shortAssign && /^-[A-Za-z]\=.*$/.test(piece)) {
+
+            // short-assign pattern
+
+            return this._onShortAssignOption(
+                cmdArgs,
+                cursor,
+                result
+            );
+        }
+        else if (this._settings.shortAttach && /^-[a-zA-Z]/.test(piece)) {
+
+            option = this._shortOptions[piece[1]];
+
+            if (option && option.withArgument) {
+
+                // short-attach pattern
+                return this._onShortAttachOption(
+                    option,
+                    piece,
+                    result
+                );
+            }
+        }
+
         if (/^-[a-zA-Z]+$/.test(piece)) {
 
             option = this._shortOptions[piece[1]];
@@ -165,25 +190,8 @@ export class SimpleParser implements External.ISimpleParser {
                     result
                 );
             }
-
-            // short-attach pattern
-            return this._onShortAttachOption(
-                option,
-                piece,
-                result
-            );
         }
-        else if (/^-[A-Za-z]\=.+$/.test(piece)) {
-
-            // short-assign pattern
-
-            return this._onShortAssignOption(
-                cmdArgs,
-                cursor,
-                result
-            );
-        }
-        else if (/^--[-A-Z0-9a-z]+\=.+$/.test(piece)) {
+        else if (/^--[-A-Z0-9a-z]+\=.*$/.test(piece)) {
 
             // full-assign pattern
 
@@ -192,8 +200,6 @@ export class SimpleParser implements External.ISimpleParser {
                 cursor,
                 result
             );
-
-            // error: only mono can be used in assign pattern.
         }
         else if (/^--[-A-Z0-9a-z]+$/.test(piece)) {
 
@@ -255,28 +261,33 @@ export class SimpleParser implements External.ISimpleParser {
         result: Internal.IParseResult
     ): number {
 
-        if (!this._settings.shortAttach) {
+        let arg = piece.slice(2);
 
-            throw new Exception(
-                Errors.E_FORBIDDEN_ATTACH,
-                "Attaching an argument with an option is not allowed."
-            );
+        if (arg.length === 0) {
+
+            if (option.defaultArgument === undefined) {
+
+                throw new Exception(
+                    Errors.E_LACK_OPTION_ARG,
+                    `Option "${piece}" requires an argument.`
+                );
+            }
+
+            arg = option.defaultArgument;
         }
-
-        // short-attach pattern
 
         if (option.repeatable) {
 
             result.addOption(
                 option.name,
-                piece.slice(2)
+                arg
             );
         }
         else {
 
             result.setOption(
                 option.name,
-                piece.slice(2)
+                arg
             );
         }
 
@@ -333,14 +344,6 @@ export class SimpleParser implements External.ISimpleParser {
         result: Internal.IParseResult
     ): number {
 
-        if (!this._settings.shortAssign) {
-
-            throw new Exception(
-                Errors.E_FORBIDDEN_ASSIGN,
-                `Assign mode is not allow.`
-            );
-        }
-
         let piece = cmdArgs[cursor];
 
         let option = this._shortOptions[piece[1]];
@@ -353,18 +356,33 @@ export class SimpleParser implements External.ISimpleParser {
 
         if (option.isInput()) {
 
+            let arg = piece.slice(3);
+
+            if (arg.length === 0) {
+
+                if (option.defaultArgument === undefined) {
+
+                    throw new Exception(
+                        Errors.E_LACK_OPTION_ARG,
+                        `Option "-${option.shortcut}" requires an argument.`
+                    );
+                }
+
+                arg = option.defaultArgument;
+            }
+
             if (option.repeatable) {
 
                 result.addOption(
                     option.name,
-                    piece.slice(3)
+                    arg
                 );
             }
             else {
 
                 result.setOption(
                     option.name,
-                    piece.slice(3)
+                    arg
                 );
             }
 
@@ -412,18 +430,33 @@ export class SimpleParser implements External.ISimpleParser {
 
         if (option.isInput()) {
 
+            let arg = piece.slice(3 + name.length);
+
+            if (arg.length === 0) {
+
+                if (option.defaultArgument === undefined) {
+
+                    throw new Exception(
+                        Errors.E_LACK_OPTION_ARG,
+                        `Option "-${option.shortcut}" requires an argument.`
+                    );
+                }
+
+                arg = option.defaultArgument;
+            }
+
             if (option.repeatable) {
 
                 result.addOption(
                     option.name,
-                    piece.slice(3 + name.length)
+                    arg
                 );
             }
             else {
 
                 result.setOption(
                     option.name,
-                    piece.slice(3 + name.length)
+                    arg
                 );
             }
 
@@ -480,10 +513,30 @@ export class SimpleParser implements External.ISimpleParser {
 
         if (!this._settings.follow) {
 
+            if (option.defaultArgument !== undefined) {
+
+                if (option.repeatable) {
+
+                    result.addOption(
+                        option.name,
+                        option.defaultArgument
+                    );
+                }
+                else {
+
+                    result.setOption(
+                        option.name,
+                        option.defaultArgument
+                    );
+                }
+
+                return 1;
+            }
+
             throw new Exception(
 
                 Errors.E_LACK_OPTION_ARG,
-                `An argument is required for option "${cmdArgs[cursor]}".`
+                `Option "${cmdArgs[cursor]}" requires an argument.`
             );
         }
 
