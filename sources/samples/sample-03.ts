@@ -23,31 +23,36 @@ parser.addOption({
 
     "name": "output",
     "description": "Determine the path to the output file.",
-    "shortName": "o",
-    "argPlaceholders": ["FILE"]
+    "shortcut": "o",
+    "withArgument": true
 });
 
 parser.addOption({
 
     "name": "alone",
     "description": "just for test.",
-    "shortName": "a"
+    "shortcut": "a"
 });
 
 parser.addOption({
 
     "name": "detail",
     "description": "just for test.",
-    "shortName": "d"
+    "shortcut": "d"
 });
 
 let result = parser.parse();
+
+for (let unknown of result.unknwonOptions) {
+
+    console.log(`Unknown option: ${unknown}.`);
+}
 
 if (result.success) {
 
     if (result.existOption("output")) {
 
-        console.log(`Output File: ${result.getOption("output").FILE}`);
+        console.log(`Output File: ${result.getOption("output")}`);
     }
     else {
 

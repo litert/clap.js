@@ -1,4 +1,4 @@
-#!node
+"use strict";
 /*
    +----------------------------------------------------------------------+
    | LiteRT Clap.js Library                                               |
@@ -13,45 +13,27 @@
    | Authors: Angus Fenying <i.am.x.fenying@gmail.com>                    |
    +----------------------------------------------------------------------+
  */
-
-/* tslint:disable:no-console */
-
-import * as LibClap from "./";
-
-let parser = LibClap.createSimpleParser({
-    "shortAssign": true,
-    "shortAttach": true
-});
-
-parser.addOption({
-    "name": "file",
-    "shortcut": "f",
-    "description": "The file to be handled.",
-    "withArgument": true
-});
-
-parser.addOption({
-    "name": "output",
-    "shortcut": "o",
-    "description": "The path to output result.",
-    "withArgument": true,
-    "defaultArgument": "output.txt"
-});
-
-parser.addOption({
-    "name": "include",
-    "shortcut": "i",
-    "description": "The extra files to be included.",
-    "withArgument": true,
-    "repeatable": true
-});
-
-parser.addOption({
-    "name": "overwrite",
-    "description": "Overwrite existing output file.",
-    "shortcut": "w"
-});
-
-let clap: LibClap.IParseResult = parser.parse();
-
-console.info(JSON.stringify(clap, null, 4));
+const core_1 = require("@litert/core");
+const Errors = require("./errors");
+class AbstractCommand {
+    constructor(opts) {
+        this._name = opts.name;
+        this._description = opts.description;
+        if (opts.shortcut !== undefined
+            && !/^[A-Za-z]$/.test(opts.shortcut)) {
+            throw new core_1.Exception(Errors.E_INVALID_SHORT_COMMAND, `Shortcut of command "${opts.name}" must be a single alphabet charactor.`);
+        }
+        this._shortcut = opts.shortcut;
+    }
+    get name() {
+        return this._name;
+    }
+    get description() {
+        return this._description;
+    }
+    get shortcut() {
+        return this._shortcut;
+    }
+}
+module.exports = AbstractCommand;
+//# sourceMappingURL=class.AbstractCommand.js.map

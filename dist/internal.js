@@ -1,4 +1,4 @@
-#!node
+"use strict";
 /*
    +----------------------------------------------------------------------+
    | LiteRT Clap.js Library                                               |
@@ -13,45 +13,5 @@
    | Authors: Angus Fenying <i.am.x.fenying@gmail.com>                    |
    +----------------------------------------------------------------------+
  */
-
-/* tslint:disable:no-console */
-
-import * as LibClap from "./";
-
-let parser = LibClap.createSimpleParser({
-    "shortAssign": true,
-    "shortAttach": true
-});
-
-parser.addOption({
-    "name": "file",
-    "shortcut": "f",
-    "description": "The file to be handled.",
-    "withArgument": true
-});
-
-parser.addOption({
-    "name": "output",
-    "shortcut": "o",
-    "description": "The path to output result.",
-    "withArgument": true,
-    "defaultArgument": "output.txt"
-});
-
-parser.addOption({
-    "name": "include",
-    "shortcut": "i",
-    "description": "The extra files to be included.",
-    "withArgument": true,
-    "repeatable": true
-});
-
-parser.addOption({
-    "name": "overwrite",
-    "description": "Overwrite existing output file.",
-    "shortcut": "w"
-});
-
-let clap: LibClap.IParseResult = parser.parse();
-
-console.info(JSON.stringify(clap, null, 4));
+Object.defineProperty(exports, "__esModule", { value: true });
+//# sourceMappingURL=internal.js.map

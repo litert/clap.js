@@ -17,37 +17,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@litert/core");
 const class_ParseResult_1 = require("./class.ParseResult");
 const Errors = require("./errors");
-const class_Commands_1 = require("./class.Commands");
+const MainCommand = require("./class.MainCommand");
 const class_SimpleParser_1 = require("./class.SimpleParser");
 class CommandParser extends class_SimpleParser_1.SimpleParser {
-    constructor() {
-        super();
+    constructor(opts) {
+        super(opts);
         this._mainCommands = {};
+        this._shortMainCommands = {};
     }
     addCommand(opts) {
         opts.name = opts.name.toLowerCase();
-        if (opts.shortName) {
-            opts.shortName = opts.shortName.toLowerCase();
-        }
         if (this._mainCommands[opts.name]) {
-            let tmp = new class_Commands_1.MainCommand(opts);
-            tmp.enableSubCommand = this._mainCommands[opts.name].enableSubCommand;
-            this._mainCommands[opts.name] = tmp;
+            throw new core_1.Exception(Errors.E_DUPLICATED_MAIN_COMMAND, `Main command "${opts.name}" already exists.`);
         }
-        else {
-            this._mainCommands[opts.name] = new class_Commands_1.MainCommand(opts);
-        }
-        if (opts.shortName) {
-            this._mainCommands[opts.shortName] = this._mainCommands[opts.name];
+        this._mainCommands[opts.name] = new MainCommand(opts);
+        if (opts.shortcut) {
+            if (this._shortMainCommands[opts.shortcut]) {
+                throw new core_1.Exception(Errors.E_DUPLICATED_MAIN_SHORTCUT, `Shourcut "${opts.shortcut}" of main command already exists.`);
+            }
+            this._shortMainCommands[opts.shortcut] = this._mainCommands[opts.name];
         }
         return this;
     }
     addSubCommand(main, opts) {
         main = main.toLowerCase();
-        opts.name = opts.name.toLowerCase();
-        if (opts.shortName) {
-            opts.shortName = opts.shortName.toLowerCase();
-        }
         if (this._mainCommands[main]) {
             this._mainCommands[main].addSubCommand(opts);
         }
@@ -57,48 +50,58 @@ class CommandParser extends class_SimpleParser_1.SimpleParser {
         return this;
     }
     parse() {
-        let ret;
-        this._commands = [];
-        let tmp = super.parse();
-        ret = new class_ParseResult_1.CommandParseResult(tmp.options, tmp.arguments, this._commands);
-        if (tmp.success) {
-            switch (this._commands.length) {
-                case 0:
-                    ret.setFailure(new core_1.Exception(Errors.E_LACK_MAIN_COMMAND, "No command input."));
-                    break;
-                case 1:
-                    if (this._mainCommands[this._commands[0]].enableSubCommand) {
-                        ret.setFailure(new core_1.Exception(Errors.E_LACK_SUB_COMMAND, "No sub command input."));
-                        break;
-                    }
-                default:
-                    ret.setSuccess();
+        let cmdArgs = process.argv.slice(2);
+        let cursor = 0;
+        let ret = new class_ParseResult_1.CommandParseResult();
+        try {
+            while (cursor < cmdArgs.length) {
+                cursor += this._parseLoop(cmdArgs, cursor, ret);
             }
+            if (!ret.mainCommand) {
+                throw new core_1.Exception(Errors.E_LACK_MAIN_COMMAND, "No command input.");
+            }
+            if (!ret.subCommand && this._mainCommands[ret.mainCommand].enableSubCommand) {
+                throw new core_1.Exception(Errors.E_LACK_SUB_COMMAND, "No sub command input.");
+            }
+            ret.setSuccess();
         }
-        else {
-            ret.setFailure(tmp.error);
+        catch (e) {
+            ret.setFailure(e);
         }
         return ret;
     }
-    _hookNotOption(val) {
-        val = val.toLowerCase();
-        if (!this._commands.length) {
-            if (this._mainCommands[val] !== undefined) {
-                this._commands.push(this._mainCommands[val].name);
-                return true;
-            }
-            throw new core_1.Exception(Errors.E_INVALID_MAIN_COMMAND, `Command "${val}" is not supported.`);
+    _parseLoop(cmdArgs, cursor, result) {
+        let piece = cmdArgs[cursor];
+        if (piece[0] !== "-") {
+            return this._tryParseCommand(piece, result);
         }
-        let mc = this._mainCommands[this._commands[0]];
-        if (mc.enableSubCommand && this._commands.length === 1) {
-            let sc = mc.findSubCommand(val);
-            if (sc) {
-                this._commands.push(sc.name);
-                return true;
-            }
-            throw new core_1.Exception(Errors.E_INVALID_SUB_COMMAND, `Command "${val}" is not sub command of "${mc.name}".`);
+        return this._onHandlingOption(cmdArgs, cursor, result);
+    }
+    _tryParseCommand(piece, result) {
+        if (!Object.keys(this._mainCommands).length) {
+            result.addArgument(piece);
+            return 1;
         }
-        return false;
+        if (!result.mainCommand) {
+            let mainCommand = piece.length === 1 ?
+                this._shortMainCommands[piece] :
+                this._mainCommands[piece.toLowerCase()];
+            if (!mainCommand) {
+                throw new core_1.Exception(Errors.E_INVALID_MAIN_COMMAND, `Main command "${piece}" not found.`);
+            }
+            result.setMainCommand(mainCommand.name);
+            return 1;
+        }
+        else if (!result.subCommand) {
+            let subCommand = this._mainCommands[result.mainCommand].findSubCommand(piece);
+            if (!subCommand) {
+                throw new core_1.Exception(Errors.E_INVALID_MAIN_COMMAND, `Sub command "${piece}" not found.`);
+            }
+            result.setSubCommand(subCommand.name);
+            return 1;
+        }
+        result.addArgument(piece);
+        return 1;
     }
 }
 exports.CommandParser = CommandParser;

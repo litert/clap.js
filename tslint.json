@@ -18,7 +18,8 @@
         "one-line": [false],
         "object-literal-key-quotes": [false],
         "array-type": false,
-        "no-angle-bracket-type-assertion": false
+        "no-angle-bracket-type-assertion": false,
+        "no-conditional-assignment": false
     },
     "rulesDirectory": []
 }

@@ -16,13 +16,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 /* tslint:disable:no-console */
 const Clap = require("../index");
-let parser = Clap.createSimpleParser();
+let parser = Clap.createSimpleParser({
+    "shortAssign": true
+});
 parser.addOption({
     "name": "Help",
     "description": "Display the help text.",
-    "shortName": "h"
+    "shortcut": "h"
 });
 let result = parser.parse();
+for (let unknown of result.unknwonOptions) {
+    console.log(`Unknown option: ${unknown}.`);
+}
 if (result.success) {
     if (result.existOption("help")) {
         console.info("This is help text");

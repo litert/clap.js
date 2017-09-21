@@ -13,38 +13,40 @@
    | Authors: Angus Fenying <i.am.x.fenying@gmail.com>                    |
    +----------------------------------------------------------------------+
  */
-Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@litert/core");
 const Errors = require("./errors");
-class MainCommand {
+const core_1 = require("@litert/core");
+const AbstractCommand = require("./class.AbstractCommand");
+class MainCommand extends AbstractCommand {
+    get name() {
+        return this._name;
+    }
     constructor(opts) {
-        this.name = opts.name;
-        this.description = opts.description;
-        this.shortName = opts.shortName;
-        if (this.shortName !== undefined
-            && !/^[A-Za-z0-9]$/.test(this.shortName)) {
-            throw new core_1.Exception(Errors.E_INVALID_SHORT_COMMAND, `Short name of command "${opts.name}" must be a single charactor.`);
-        }
+        super(opts);
         this._subCommands = {};
+        this._shortSubCommands = {};
     }
     addSubCommand(opts) {
+        opts.name = opts.name.toLowerCase();
+        if (this._subCommands[opts.name]) {
+            throw new core_1.Exception(Errors.E_DUPLICATED_SUB_COMMAND, `Sub command "${opts.name}" already exists.`);
+        }
         this._subCommands[opts.name] = new SubCommandOption(opts);
-        if (opts.shortName) {
-            this._subCommands[opts.shortName] = this._subCommands[opts.name];
+        if (opts.shortcut) {
+            if (this._shortSubCommands[opts.shortcut]) {
+                throw new core_1.Exception(Errors.E_DUPLICATED_SUB_SHORTCUT, `Shourcut "${opts.shortcut}" of sub command already exists.`);
+            }
+            this._shortSubCommands[opts.shortcut] = this._subCommands[opts.name];
         }
         this.enableSubCommand = true;
         return this;
     }
     findSubCommand(name) {
-        return this.enableSubCommand ? this._subCommands[name] : undefined;
+        return name.length === 1 ?
+            this._shortSubCommands[name] :
+            this._subCommands[name.toLowerCase()];
     }
 }
-exports.MainCommand = MainCommand;
-class SubCommandOption {
-    constructor(opts) {
-        this.name = opts.name;
-        this.description = opts.description;
-        this.shortName = opts.shortName;
-    }
+class SubCommandOption extends AbstractCommand {
 }
-//# sourceMappingURL=class.Commands.js.map
+module.exports = MainCommand;
+//# sourceMappingURL=class.MainCommand.js.map

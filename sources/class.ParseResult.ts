@@ -14,9 +14,9 @@
  */
 
 import { IDictionary, Exception } from "@litert/core";
-import { IParseResult, ICommandParseResult } from "./interfaces";
+import * as Internal from "./internal";
 
-export class ParseResult implements IParseResult {
+export class ParseResult implements Internal.IParseResult {
 
     protected _success: boolean;
 
@@ -24,18 +24,63 @@ export class ParseResult implements IParseResult {
 
     protected _arguments: string[];
 
-    protected _options: IDictionary<IDictionary<string>[]>;
+    protected _unknownOptions: string[];
 
-    public constructor(opts: IDictionary<IDictionary<string>[]>, args: string[]) {
+    protected _options: IDictionary<string[]>;
 
-        this._options = opts;
+    public constructor() {
 
-        this._arguments = args;
+        this._options = {};
+
+        this._arguments = [];
+
+        this._unknownOptions = [];
     }
 
-    public get options(): IDictionary<IDictionary<string>[]> {
+    public addArgument(val: string): void {
+
+        this._arguments.push(val);
+    }
+
+    public addUnknownOption(name: string): void {
+
+        if (this._unknownOptions.indexOf(name) === -1) {
+
+            this._unknownOptions.push(name);
+        }
+    }
+
+    public addOption(name: string, value: string): void {
+
+        if (!this._options[name]) {
+
+            this._options[name] = [];
+        }
+
+        this._options[name].push(value);
+    }
+
+    public setOption(name: string, data: string): void {
+
+        this._options[name] = [data];
+    }
+
+    public setFlagOption(name: string): void {
+
+        if (!this._options[name]) {
+
+            this._options[name] = [];
+        }
+    }
+
+    public get options(): IDictionary<string[]> {
 
         return this._options;
+    }
+
+    public get unknwonOptions(): string[] {
+
+        return this._unknownOptions;
     }
 
     public get success(): boolean {
@@ -63,7 +108,7 @@ export class ParseResult implements IParseResult {
         return this._options[name] ? true : false;
     }
 
-    public get optionCount(): number {
+    public get optionsNumber(): number {
 
         return Object.keys(this._options).length;
     }
@@ -73,7 +118,7 @@ export class ParseResult implements IParseResult {
         return Object.keys(this._options);
     }
 
-    public get argumentCount(): number {
+    public get argumentsNumber(): number {
 
         return this._arguments.length;
     }
@@ -83,12 +128,12 @@ export class ParseResult implements IParseResult {
         return this._options[name] && this._options[name].length > 1 ? true : false;
     }
 
-    public countOption(name: string): number {
+    public getOptionLength(name: string): number {
 
         return this._options[name] ? this._options[name].length : 0;
     }
 
-    public getOption(name: string, index: number = 0): IDictionary<string> {
+    public getOption(name: string, index: number = 0): string {
 
         return this._options[name] && this._options[name][index];
     }
@@ -104,19 +149,15 @@ export class ParseResult implements IParseResult {
     }
 }
 
-export class CommandParseResult extends ParseResult implements ICommandParseResult {
+export class CommandParseResult extends ParseResult implements Internal.ICommandParseResult {
 
     protected _mainCommand: string;
 
     protected _subCommand: string;
 
-    public constructor(opts: IDictionary<IDictionary<string>[]>, args: string[], cmds: string[]) {
+    public constructor() {
 
-        super(opts, args);
-
-        this._mainCommand = cmds[0];
-
-        this._subCommand = cmds[1];
+        super();
     }
 
     public setSuccess(): void {
@@ -137,5 +178,15 @@ export class CommandParseResult extends ParseResult implements ICommandParseResu
     public get subCommand(): string {
 
         return this._subCommand;
+    }
+
+    public setMainCommand(cmd: string): void {
+
+        this._mainCommand = cmd;
+    }
+
+    public setSubCommand(cmd: string): void {
+
+        this._subCommand = cmd;
     }
 }

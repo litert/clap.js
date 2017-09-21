@@ -20,13 +20,17 @@ let parser = Clap.createSimpleParser();
 parser.addOption({
     "name": "output",
     "description": "Determine the path to the output file.",
-    "shortName": "o",
-    "argPlaceholders": ["FILE"]
+    "shortcut": "o",
+    "withArgument": true,
+    "defaultArgument": "default.txt"
 });
 let result = parser.parse();
+for (let unknown of result.unknwonOptions) {
+    console.log(`Unknown option: ${unknown}.`);
+}
 if (result.success) {
     if (result.existOption("output")) {
-        console.log(`Output File: ${result.getOption("output").FILE}`);
+        console.log(`Output File: ${result.getOption("output")}`);
     }
     else {
         console.log(`Output File: default.txt`);

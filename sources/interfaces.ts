@@ -13,7 +13,7 @@
    +----------------------------------------------------------------------+
  */
 
-import { IDictionary, Exception } from "@litert/core";
+import { Exception } from "@litert/core";
 
 export interface IOptionSetting {
 
@@ -28,11 +28,20 @@ export interface IOptionSetting {
     "description": string;
 
     /**
-     * Set the placeholder of option arguments.
+     * Determine whether this option requires a argument.
      *
-     * Leave blank of an empty array if no arguments are required.
+     * Default: false
      */
-    "argPlaceholders"?: string[];
+    "withArgument"?: boolean;
+
+    /**
+     * Set the default value for argument of this option.
+     *
+     * Only if withArgument is set to true, this field is available.
+     *
+     * Default: null
+     */
+    "defaultArgument"?: string;
 
     /**
      * Set the shortcut of this option. e.g. use i as shortcut of include.
@@ -40,19 +49,14 @@ export interface IOptionSetting {
      * Notice:
      *
      *  1. Only one charactor shortcut is allowed.
-     *  2. Short name is case-sensitive.
+     *  2. Shortcut is case-sensitive.
      */
-    "shortName"?: string;
-
-    /**
-     * Set to true to determine this option is required.
-     */
-    "required"?: boolean;
+    "shortcut"?: string;
 
     /**
      * Determine whether the option should and could be used repeadedly.
      */
-    "multi"?: boolean;
+    "repeatable"?: boolean;
 }
 
 export interface IParseResult {
@@ -73,19 +77,24 @@ export interface IParseResult {
     "optionNames": string[];
 
     /**
-     * How many options are found.
+     * How many types of options are found.
      */
-    "optionCount": number;
+    "optionsNumber": number;
 
     /**
      * How many arguments found.
      */
-    "argumentCount": number;
+    "argumentsNumber": number;
 
     /**
      * Get list of all arguments found.
      */
     "arguments": string[];
+
+    /**
+     * Get list of all arguments found.
+     */
+    "unknwonOptions": string[];
 
     /**
      * Check if an option is set.
@@ -100,12 +109,12 @@ export interface IParseResult {
     /**
      * Check how many times an option is set.
      */
-    countOption(name: string): number;
+    getOptionLength(name: string): number;
 
     /**
      * Get arguments list of option by index.
      */
-    getOption(name: string, index?: number): IDictionary<string>;
+    getOption(name: string, index?: number): string;
 
     /**
      * The the value of argument by index.
@@ -156,10 +165,12 @@ export interface ICommandSettings {
     "description": string;
 
     /**
-     * The short name of command, such as using i as the shortcut of install
+     * The shortcut of command, such as using i as the shortcut of install
      * like the way NPM works.
+     *
+     * > Shortcut of command is case-sensitive.
      */
-    "shortName"?: string;
+    "shortcut"?: string;
 }
 
 export interface ICommandParser extends ISimpleParser {
@@ -181,4 +192,35 @@ export interface ICommandParser extends ISimpleParser {
      * Do parse the commandline arguments.
      */
     parse(): ICommandParseResult;
+}
+
+export interface IParserSettings {
+
+    /**
+     * Enable "-x arg1 arg2 .." or "--Xxx arg1 arg2 ..."
+     *
+     * Default: true
+     */
+    "follow"?: boolean;
+
+    /**
+     * Enable "--Xxx=arg2"
+     *
+     * Default: true
+     */
+    "fullAssign"?: boolean;
+
+    /**
+     * Enable "-x=arg1"
+     *
+     * Default: true
+     */
+    "shortAssign"?: boolean;
+
+    /**
+     * Enable "-xarg1"
+     *
+     * Default: true
+     */
+    "shortAttach"?: boolean;
 }

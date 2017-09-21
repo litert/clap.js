@@ -17,16 +17,23 @@
 
 import * as Clap from "../index";
 
-let parser = Clap.createSimpleParser();
+let parser = Clap.createSimpleParser({
+    "shortAssign": true
+});
 
 parser.addOption({
 
     "name": "Help",
     "description": "Display the help text.",
-    "shortName": "h"
+    "shortcut": "h"
 });
 
 let result = parser.parse();
+
+for (let unknown of result.unknwonOptions) {
+
+    console.log(`Unknown option: ${unknown}.`);
+}
 
 if (result.success) {
 

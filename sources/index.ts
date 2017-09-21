@@ -19,12 +19,12 @@ export * from "./interfaces";
 import * as Def from "./interfaces";
 export import Errors = require("./errors");
 
-export function createCommandParser(): Def.ICommandParser {
+export function createCommandParser(opts?: Def.IParserSettings): Def.ICommandParser {
 
-    return new Cmd.CommandParser();
+    return new Cmd.CommandParser(opts);
 }
 
-export function createSimpleParser(): Def.ISimpleParser {
+export function createSimpleParser(opts?: Def.IParserSettings): Def.ISimpleParser {
 
-    return new Simple.SimpleParser();
+    return new Simple.SimpleParser(opts);
 }

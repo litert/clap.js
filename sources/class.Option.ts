@@ -13,166 +13,67 @@
    +----------------------------------------------------------------------+
  */
 
-import { IDictionary, Exception } from "@litert/core";
+import { Exception } from "@litert/core";
 import * as Errors from "./errors";
-import { IOptionSetting } from "./interfaces";
+import * as External from "./interfaces";
+import * as Internal from "./internal";
 
-export interface IOptionHandleResult {
-
-    "success": boolean;
-
-    "advance"?: number;
-
-    "data"?: IDictionary<string>;
-}
-
-export interface IOptionHandleOkayResult extends IOptionHandleResult {
-
-    "success": true;
-
-    "advance"?: number;
-
-    "data"?: IDictionary<string>;
-}
-
-export interface IOption extends IOptionSetting {
-
-    handle(args: string[], current: number): IOptionHandleResult;
-}
-
-export abstract class OptionConstructor implements IOption {
+class Option implements Internal.IOption {
 
     public name: string;
 
     public description: string;
 
-    public argPlaceholders: string[];
+    public withArgument: boolean;
 
-    public shortName?: string;
+    public defaultArgument: string;
 
-    public multi?: boolean;
+    public shortcut?: string;
 
-    public required?: boolean;
+    public repeatable?: boolean;
 
-    public constructor(opts: IOptionSetting) {
+    public constructor(opts: External.IOptionSetting) {
 
-        if (opts.shortName) {
+        if (opts.shortcut) {
 
-            if (opts.shortName.length !== 1
-                || !/^[0-9a-zA-Z]$/.test(opts.shortName)
+            if (opts.shortcut.length !== 1
+                || !/^[a-zA-Z]$/.test(opts.shortcut)
             ) {
 
                 throw new Exception(
                     Errors.E_INVALID_SHORT_OPTION,
-                    "Short name of option must a single alphabet or digtal charactor."
+                    `Shortcut of option "--${opts.name}" must a single alphabet charactor.`
                 );
             }
         }
 
         this.name = opts.name;
         this.description = opts.description;
-        this.shortName = opts.shortName;
-        this.multi = opts.multi;
-        this.required = opts.required;
+        this.shortcut = opts.shortcut;
+        this.repeatable = opts.repeatable;
 
-        if (opts.argPlaceholders) {
+        this.withArgument = opts.withArgument ? true : false;
 
-            this.argPlaceholders = opts.argPlaceholders;
+        if (this.withArgument && opts.defaultArgument !== undefined) {
+
+            this.defaultArgument = opts.defaultArgument;
         }
     }
 
-    public abstract handle(args: string[], current: number): IOptionHandleResult;
-}
+    public isInput(): boolean {
 
-export class ArgLessOptionHandler extends OptionConstructor {
-
-    public constructor(opts: IOptionSetting) {
-
-        super(opts);
+        return this.withArgument;
     }
 
-    public handle(args: string[], current: number): IOptionHandleResult {
+    public isOptionalInput(): boolean {
 
-        let ret: IOptionHandleResult = {
-            "success": false
-        };
+        return this.defaultArgument !== undefined;
+    }
 
-        let arg = args[current];
+    public isFlag(): boolean {
 
-        if (arg === `--${this.name}`) {
-
-            ret.success = true;
-            ret.advance = 1;
-        }
-        else if (arg.match(/^-[a-zA-Z0-9]+$/)
-                && this.shortName
-                && arg.indexOf(this.shortName) > 0
-        ) {
-
-            args[current] = arg = arg.replace(this.shortName, "");
-
-            ret.success = true;
-
-            ret.advance = arg === "-" ? 1 : 0;
-        }
-
-        return ret;
+        return !this.withArgument;
     }
 }
 
-export class ArgOptionHandler extends OptionConstructor {
-
-    public constructor(opts: IOptionSetting) {
-
-        super(opts);
-    }
-
-    public handle(args: string[], current: number): IOptionHandleResult {
-
-        let ret: IOptionHandleResult = {
-            "success": false
-        };
-
-        let arg = args[current];
-
-        if (arg === `--${this.name}`
-            || (this.shortName && arg === `-${this.shortName}`)
-        ) {
-
-            ret.success = true;
-
-            let i: number = 1;
-
-            ret.data = {};
-
-            for (let ph of this.argPlaceholders) {
-
-                if (current + i >= args.length) {
-
-                    throw new Exception(
-                        Errors.E_LACK_OPTION_ARG,
-                        `Failed to read argument ${ph} for option --${this.name}.`
-                    );
-                }
-
-                if (args[current + i] !== undefined) {
-
-                    ret.data[ph] = args[current + i];
-                }
-                else {
-
-                    throw new Exception(
-                        Errors.E_LACK_OPTION_ARG,
-                        `Failed to read argument ${ph} for option --${this.name}.`
-                    );
-                }
-
-                i++;
-            }
-
-            ret.advance = 1 + this.argPlaceholders.length;
-        }
-
-        return ret;
-    }
-}
+export = Option;

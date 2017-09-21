@@ -15,12 +15,38 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 class ParseResult {
-    constructor(opts, args) {
-        this._options = opts;
-        this._arguments = args;
+    constructor() {
+        this._options = {};
+        this._arguments = [];
+        this._unknownOptions = [];
+    }
+    addArgument(val) {
+        this._arguments.push(val);
+    }
+    addUnknownOption(name) {
+        if (this._unknownOptions.indexOf(name) === -1) {
+            this._unknownOptions.push(name);
+        }
+    }
+    addOption(name, value) {
+        if (!this._options[name]) {
+            this._options[name] = [];
+        }
+        this._options[name].push(value);
+    }
+    setOption(name, data) {
+        this._options[name] = [data];
+    }
+    setFlagOption(name) {
+        if (!this._options[name]) {
+            this._options[name] = [];
+        }
     }
     get options() {
         return this._options;
+    }
+    get unknwonOptions() {
+        return this._unknownOptions;
     }
     get success() {
         return this._success;
@@ -37,19 +63,19 @@ class ParseResult {
     existOption(name) {
         return this._options[name] ? true : false;
     }
-    get optionCount() {
+    get optionsNumber() {
         return Object.keys(this._options).length;
     }
     get optionNames() {
         return Object.keys(this._options);
     }
-    get argumentCount() {
+    get argumentsNumber() {
         return this._arguments.length;
     }
     isMultiOption(name) {
         return this._options[name] && this._options[name].length > 1 ? true : false;
     }
-    countOption(name) {
+    getOptionLength(name) {
         return this._options[name] ? this._options[name].length : 0;
     }
     getOption(name, index = 0) {
@@ -64,10 +90,8 @@ class ParseResult {
 }
 exports.ParseResult = ParseResult;
 class CommandParseResult extends ParseResult {
-    constructor(opts, args, cmds) {
-        super(opts, args);
-        this._mainCommand = cmds[0];
-        this._subCommand = cmds[1];
+    constructor() {
+        super();
     }
     setSuccess() {
         this._success = true;
@@ -80,6 +104,12 @@ class CommandParseResult extends ParseResult {
     }
     get subCommand() {
         return this._subCommand;
+    }
+    setMainCommand(cmd) {
+        this._mainCommand = cmd;
+    }
+    setSubCommand(cmd) {
+        this._subCommand = cmd;
     }
 }
 exports.CommandParseResult = CommandParseResult;

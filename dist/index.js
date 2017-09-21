@@ -17,12 +17,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Cmd = require("./class.CommandParser");
 const Simple = require("./class.SimpleParser");
 exports.Errors = require("./errors");
-function createCommandParser() {
-    return new Cmd.CommandParser();
+function createCommandParser(opts) {
+    return new Cmd.CommandParser(opts);
 }
 exports.createCommandParser = createCommandParser;
-function createSimpleParser() {
-    return new Simple.SimpleParser();
+function createSimpleParser(opts) {
+    return new Simple.SimpleParser(opts);
 }
 exports.createSimpleParser = createSimpleParser;
 //# sourceMappingURL=index.js.map

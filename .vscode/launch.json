@@ -19,6 +19,22 @@
             "cwd": "${workspaceRoot}",
             "sourceMaps": true,
             "showAsyncStacks": true
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Sample 01",
+            "program": "${workspaceRoot}\\sources\\samples\\sample-01.ts",
+            "args": [
+                "-h"
+            ],
+            "outFiles": [
+                "${workspaceRoot}\\dist\\*.js",
+                "${workspaceRoot}\\dist\\**\\*.js"
+            ],
+            "cwd": "${workspaceRoot}",
+            "sourceMaps": true,
+            "showAsyncStacks": true
         }
     ]
 }

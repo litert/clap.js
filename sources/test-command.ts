@@ -1,3 +1,4 @@
+#!node
 /*
    +----------------------------------------------------------------------+
    | LiteRT Clap.js Library                                               |
@@ -21,14 +22,15 @@ let parser = LibClap.createCommandParser();
 
 parser.addOption({
     "name": "file",
-    "shortName": "f",
+    "shortcut": "f",
     "description": "The file to be handled.",
-    "argPlaceholders": ["FILE"]
+    "withArgument": true,
+    "repeatable": true
 }).addOption({
     "name": "output",
-    "shortName": "o",
+    "shortcut": "o",
     "description": "The path to output result.",
-    "argPlaceholders": ["OUTPUT"]
+    "withArgument": true
 }).addOption({
     "name": "overwrite",
     "description": "Overwrite existing output file."
@@ -37,11 +39,11 @@ parser.addOption({
 parser.addCommand({
     "name": "activate",
     "description": "Activate the item.",
-    "shortName": "a"
+    "shortcut": "a"
 }).addCommand({
     "name": "deactivate",
     "description": "Activate the item.",
-    "shortName": "d"
+    "shortcut": "d"
 }).addSubCommand("activate", {
     "name": "game",
     "description": "Activate a game."

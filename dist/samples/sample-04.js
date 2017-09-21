@@ -20,27 +20,30 @@ let parser = Clap.createSimpleParser();
 parser.addOption({
     "name": "output",
     "description": "Determine the path to the output file.",
-    "shortName": "o",
-    "argPlaceholders": ["FILE"]
+    "shortcut": "o",
+    "withArgument": true
 });
 parser.addOption({
     "name": "include",
     "description": "Add a path to include.",
-    "shortName": "i",
-    "argPlaceholders": ["PATH"],
-    "multi": true
+    "shortcut": "i",
+    "withArgument": true,
+    "repeatable": true
 });
 let result = parser.parse();
+for (let unknown of result.unknwonOptions) {
+    console.log(`Unknown option: ${unknown}.`);
+}
 if (result.success) {
     if (result.existOption("output")) {
-        console.log(`Output File: ${result.getOption("output").FILE}`);
+        console.log(`Output File: ${result.getOption("output")}`);
     }
     else {
         console.log(`Output File: default.txt`);
     }
     if (result.existOption("include")) {
-        for (let i = 0; i < result.countOption("include"); i++) {
-            console.log(`Include: ${result.getOption("include", i).PATH}`);
+        for (let i = 0; i < result.getOptionLength("include"); i++) {
+            console.log(`Include: ${result.getOption("include", i)}`);
         }
     }
     for (let argv of result.arguments) {

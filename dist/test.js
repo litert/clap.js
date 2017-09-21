@@ -1,45 +1,35 @@
+#!node
 "use strict";
-/*
-   +----------------------------------------------------------------------+
-   | LiteRT Clap.js Library                                               |
-   +----------------------------------------------------------------------+
-   | Copyright (c) 2007-2017 Fenying Studio                               |
-   +----------------------------------------------------------------------+
-   | This source file is subject to version 2.0 of the Apache license,    |
-   | that is bundled with this package in the file LICENSE, and is        |
-   | available through the world-wide-web at the following url:           |
-   | https://github.com/litert/clap.js/blob/master/LICENSE                |
-   +----------------------------------------------------------------------+
-   | Authors: Angus Fenying <i.am.x.fenying@gmail.com>                    |
-   +----------------------------------------------------------------------+
- */
 Object.defineProperty(exports, "__esModule", { value: true });
-/* tslint:disable:no-console */
 const LibClap = require("./");
-let parser = LibClap.createSimpleParser();
+let parser = LibClap.createSimpleParser({
+    "shortAssign": true,
+    "shortAttach": true
+});
 parser.addOption({
     "name": "file",
-    "shortName": "f",
+    "shortcut": "f",
     "description": "The file to be handled.",
-    "argPlaceholders": ["FILE"]
+    "withArgument": true
 });
 parser.addOption({
     "name": "output",
-    "shortName": "o",
+    "shortcut": "o",
     "description": "The path to output result.",
-    "argPlaceholders": ["OUTPUT"]
+    "withArgument": true,
+    "defaultArgument": "output.txt"
 });
 parser.addOption({
     "name": "include",
-    "shortName": "i",
+    "shortcut": "i",
     "description": "The extra files to be included.",
-    "argPlaceholders": ["FILE", "LINE"],
-    "multi": true,
-    "required": true
+    "withArgument": true,
+    "repeatable": true
 });
 parser.addOption({
     "name": "overwrite",
-    "description": "Overwrite existing output file."
+    "description": "Overwrite existing output file.",
+    "shortcut": "w"
 });
 let clap = parser.parse();
 console.info(JSON.stringify(clap, null, 4));
