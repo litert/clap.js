@@ -49,8 +49,7 @@ class CommandParser extends class_SimpleParser_1.SimpleParser {
         }
         return this;
     }
-    parse() {
-        let cmdArgs = process.argv.slice(2);
+    parse(cmdArgs) {
         let cursor = 0;
         let ret = new class_ParseResult_1.CommandParseResult();
         try {

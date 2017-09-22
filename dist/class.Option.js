@@ -17,6 +17,9 @@ const core_1 = require("@litert/core");
 const Errors = require("./errors");
 class Option {
     constructor(opts) {
+        if (!/^[-a-zA-Z0-9]+$/.test(opts.name)) {
+            throw new core_1.Exception(Errors.E_INVALID_OPTION_NAME, `Name of option "--${opts.name}" is invalid.`);
+        }
         if (opts.shortcut) {
             if (opts.shortcut.length !== 1
                 || !/^[a-zA-Z]$/.test(opts.shortcut)) {

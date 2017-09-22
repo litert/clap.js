@@ -88,9 +88,7 @@ export class CommandParser extends SimpleParser implements External.ICommandPars
         return this;
     }
 
-    public parse(): External.ICommandParseResult {
-
-        let cmdArgs: string[] = process.argv.slice(2);
+    public parse(cmdArgs: string[]): External.ICommandParseResult {
 
         let cursor: number = 0;
 

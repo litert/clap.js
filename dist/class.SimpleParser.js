@@ -43,14 +43,19 @@ class SimpleParser {
     }
     addOption(opts) {
         opts.name = opts.name.toLowerCase();
+        if (this._options[opts.name]) {
+            throw new core_1.Exception(Errors.E_DUPLICATED_OPTION_NAME, `Option "--${opts.name}" already exists.`);
+        }
         this._options[opts.name] = new Option(opts);
         if (opts.shortcut) {
+            if (this._shortOptions[opts.shortcut]) {
+                throw new core_1.Exception(Errors.E_DUPLICATED_OPTION_SHORTCUT, `Option shortcut "-${opts.shortcut}" already exists.`);
+            }
             this._shortOptions[opts.shortcut] = this._options[opts.name];
         }
         return this;
     }
-    parse() {
-        let cmdArgs = process.argv.slice(2);
+    parse(cmdArgs) {
         let cursor = 0;
         let ret = new class_ParseResult_1.ParseResult();
         try {

@@ -77,16 +77,6 @@ export interface IParseResult {
     "optionNames": string[];
 
     /**
-     * How many types of options are found.
-     */
-    "optionsNumber": number;
-
-    /**
-     * How many arguments found.
-     */
-    "argumentsNumber": number;
-
-    /**
      * Get list of all arguments found.
      */
     "arguments": string[];
@@ -104,7 +94,7 @@ export interface IParseResult {
     /**
      * Check if an option is multi set.
      */
-    isMultiOption(name: string): boolean;
+    isOptionRepeated(name: string): boolean;
 
     /**
      * Check how many times an option is set.
@@ -115,11 +105,6 @@ export interface IParseResult {
      * Get arguments list of option by index.
      */
     getOption(name: string, index?: number): string;
-
-    /**
-     * The the value of argument by index.
-     */
-    getArgument(index: number): string;
 }
 
 export interface ICommandParseResult extends IParseResult {
@@ -145,7 +130,7 @@ export interface ISimpleParser {
     /**
      * Do parse the commandline arguments.
      */
-    parse(): IParseResult;
+    parse(cmdArgs: string[]): IParseResult;
 }
 
 export interface ICommandSettings {
@@ -156,6 +141,8 @@ export interface ICommandSettings {
      * Which is also the type in value from console to specify the command.
      *
      * This is case-insensitive.
+     *
+     * Format: ^[a-z0-9A-Z][-\w]+$
      */
     "name": string;
 
@@ -169,6 +156,8 @@ export interface ICommandSettings {
      * like the way NPM works.
      *
      * > Shortcut of command is case-sensitive.
+     *
+     * Format: ^[A-Za-z]$
      */
     "shortcut"?: string;
 }
@@ -191,7 +180,7 @@ export interface ICommandParser extends ISimpleParser {
     /**
      * Do parse the commandline arguments.
      */
-    parse(): ICommandParseResult;
+    parse(cmdArgs: string[]): ICommandParseResult;
 }
 
 export interface IParserSettings {
@@ -206,21 +195,21 @@ export interface IParserSettings {
     /**
      * Enable "--Xxx=arg2"
      *
-     * Default: true
+     * Default: false
      */
     "fullAssign"?: boolean;
 
     /**
      * Enable "-x=arg1"
      *
-     * Default: true
+     * Default: false
      */
     "shortAssign"?: boolean;
 
     /**
      * Enable "-xarg1"
      *
-     * Default: true
+     * Default: false
      */
     "shortAttach"?: boolean;
 }

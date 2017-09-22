@@ -108,22 +108,12 @@ export class ParseResult implements Internal.IParseResult {
         return this._options[name] ? true : false;
     }
 
-    public get optionsNumber(): number {
-
-        return Object.keys(this._options).length;
-    }
-
     public get optionNames(): string[] {
 
         return Object.keys(this._options);
     }
 
-    public get argumentsNumber(): number {
-
-        return this._arguments.length;
-    }
-
-    public isMultiOption(name: string): boolean {
+    public isOptionRepeated(name: string): boolean {
 
         return this._options[name] && this._options[name].length > 1 ? true : false;
     }
@@ -136,11 +126,6 @@ export class ParseResult implements Internal.IParseResult {
     public getOption(name: string, index: number = 0): string {
 
         return this._options[name] && this._options[name][index];
-    }
-
-    public getArgument(index: number = 0): string {
-
-        return this._arguments[index];
     }
 
     public get arguments(): string[] {

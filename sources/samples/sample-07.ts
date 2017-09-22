@@ -37,7 +37,7 @@ parser.addCommand({
     "description": "The go command."
 });
 
-let result = parser.parse();
+let result = parser.parse(process.argv.slice(2));
 
 for (let unknown of result.unknwonOptions) {
 

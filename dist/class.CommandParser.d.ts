@@ -7,7 +7,7 @@ export declare class CommandParser extends SimpleParser implements External.ICom
     constructor(opts?: External.IParserSettings);
     addCommand(opts: External.ICommandSettings): External.ICommandParser;
     addSubCommand(main: string, opts: External.ICommandSettings): External.ICommandParser;
-    parse(): External.ICommandParseResult;
+    parse(cmdArgs: string[]): External.ICommandParseResult;
     protected _parseLoop(cmdArgs: string[], cursor: number, result: Internal.ICommandParseResult): number;
     protected _tryParseCommand(piece: string, result: Internal.ICommandParseResult): number;
 }

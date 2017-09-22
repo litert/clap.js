@@ -7,7 +7,7 @@ export declare class SimpleParser implements External.ISimpleParser {
     protected _settings: External.IParserSettings;
     constructor(opts?: External.IParserSettings);
     addOption(opts: External.IOptionSetting): SimpleParser;
-    parse(): External.IParseResult;
+    parse(cmdArgs: string[]): External.IParseResult;
     protected _parseLoop(cmdArgs: string[], cursor: number, result: Internal.IParseResult): number;
     protected _onHandlingOption(cmdArgs: string[], cursor: number, result: Internal.IParseResult): number;
     /**

@@ -19,13 +19,10 @@ export declare class ParseResult implements Internal.IParseResult {
     setSuccess(): void;
     setFailure(error: Exception): void;
     existOption(name: string): boolean;
-    readonly optionsNumber: number;
     readonly optionNames: string[];
-    readonly argumentsNumber: number;
-    isMultiOption(name: string): boolean;
+    isOptionRepeated(name: string): boolean;
     getOptionLength(name: string): number;
     getOption(name: string, index?: number): string;
-    getArgument(index?: number): string;
     readonly arguments: string[];
 }
 export declare class CommandParseResult extends ParseResult implements Internal.ICommandParseResult {

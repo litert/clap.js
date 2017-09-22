@@ -62,6 +62,6 @@ parser.addCommand({
     "name": "Version",
     "description": "Print the version of application."
 });
-let clap = parser.parse();
+let clap = parser.parse(process.argv.slice(2));
 console.info(JSON.stringify(clap, null, 4));
 //# sourceMappingURL=test-command.js.map

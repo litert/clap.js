@@ -124,22 +124,22 @@ const E_FORBIDDEN_ASSIGN: number = 0x0009;
 const E_ASSIGN_TO_FLAG: number = 0x000A;
 
 /**
- * 主命令已经注册。
+ * 主命令已经注册，不能重复添加。
  */
 const E_DUPLICATED_MAIN_COMMAND: number = 0x000B;
 
 /**
- * 该主命令的简写式已经被注册。
+ * 该主命令的简写式已经被注册，不能重复添加。
  */
 const E_DUPLICATED_MAIN_SHORTCUT: number = 0x000C;
 
 /**
- * 子命令已经注册。
+ * 子命令已经注册，不能重复添加。
  */
 const E_DUPLICATED_SUB_COMMAND: number = 0x000D;
 
 /**
- * 该子命令的简写式已经被注册。
+ * 该子命令的简写式已经被注册，不能重复添加。
  */
 const E_DUPLICATED_SUB_SHORTCUT: number = 0x000E;
 
@@ -147,6 +147,21 @@ const E_DUPLICATED_SUB_SHORTCUT: number = 0x000E;
  * 命令名称不合法。
  */
 const E_INVALID_COMMAND_NAME: number = 0x000F;
+
+/**
+ * 该选项名称已经被使用，不能重复添加。
+ */
+const E_DUPLICATED_OPTION_NAME: number = 0x0010;
+
+/**
+ * 该选项简写式已经被使用，不能重复添加。
+ */
+const E_DUPLICATED_OPTION_SHORTCUT: number = 0x0011;
+
+/**
+ * 选项名称格式不合法。
+ */
+const E_INVALID_OPTION_NAME: number = 0x0012;
 ```
 
 > [快速入门](./01-get-start.md) | [返回目录](./index.md)

@@ -34,6 +34,15 @@ class Option implements Internal.IOption {
 
     public constructor(opts: External.IOptionSetting) {
 
+        if ( !/^[-a-zA-Z0-9]+$/.test(opts.name)
+        ) {
+
+            throw new Exception(
+                Errors.E_INVALID_OPTION_NAME,
+                `Name of option "--${opts.name}" is invalid.`
+            );
+        }
+
         if (opts.shortcut) {
 
             if (opts.shortcut.length !== 1

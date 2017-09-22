@@ -74,4 +74,16 @@ exports.E_DUPLICATED_SUB_SHORTCUT = 0x000E;
  * The name of command is invalid.
  */
 exports.E_INVALID_COMMAND_NAME = 0x000F;
+/**
+ * The name of option already exists.
+ */
+exports.E_DUPLICATED_OPTION_NAME = 0x0010;
+/**
+ * The shortcut of option already exists.
+ */
+exports.E_DUPLICATED_OPTION_SHORTCUT = 0x0011;
+/**
+ * Name of option is invalid.
+ */
+exports.E_INVALID_OPTION_NAME = 0x0012;
 //# sourceMappingURL=errors.js.map

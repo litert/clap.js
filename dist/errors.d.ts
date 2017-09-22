@@ -58,3 +58,15 @@ export declare const E_DUPLICATED_SUB_SHORTCUT: number;
  * The name of command is invalid.
  */
 export declare const E_INVALID_COMMAND_NAME: number;
+/**
+ * The name of option already exists.
+ */
+export declare const E_DUPLICATED_OPTION_NAME: number;
+/**
+ * The shortcut of option already exists.
+ */
+export declare const E_DUPLICATED_OPTION_SHORTCUT: number;
+/**
+ * Name of option is invalid.
+ */
+export declare const E_INVALID_OPTION_NAME: number;

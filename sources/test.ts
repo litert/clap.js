@@ -51,6 +51,6 @@ parser.addOption({
     "shortcut": "w"
 });
 
-let clap: LibClap.IParseResult = parser.parse();
+let clap: LibClap.IParseResult = parser.parse(process.argv.slice(2));
 
 console.info(JSON.stringify(clap, null, 4));

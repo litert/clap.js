@@ -64,7 +64,7 @@ parser.addSubCommand("deactivate", {
     "description": "Deactivate an account."
 });
 
-let result = parser.parse();
+let result = parser.parse(process.argv.slice(2));
 
 for (let unknown of result.unknwonOptions) {
 

@@ -63,16 +63,10 @@ class ParseResult {
     existOption(name) {
         return this._options[name] ? true : false;
     }
-    get optionsNumber() {
-        return Object.keys(this._options).length;
-    }
     get optionNames() {
         return Object.keys(this._options);
     }
-    get argumentsNumber() {
-        return this._arguments.length;
-    }
-    isMultiOption(name) {
+    isOptionRepeated(name) {
         return this._options[name] && this._options[name].length > 1 ? true : false;
     }
     getOptionLength(name) {
@@ -80,9 +74,6 @@ class ParseResult {
     }
     getOption(name, index = 0) {
         return this._options[name] && this._options[name][index];
-    }
-    getArgument(index = 0) {
-        return this._arguments[index];
     }
     get arguments() {
         return this._arguments.slice(0);

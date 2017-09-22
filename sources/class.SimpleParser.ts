@@ -66,9 +66,25 @@ export class SimpleParser implements External.ISimpleParser {
 
         opts.name = opts.name.toLowerCase();
 
+        if (this._options[opts.name]) {
+
+            throw new Exception(
+                Errors.E_DUPLICATED_OPTION_NAME,
+                `Option "--${opts.name}" already exists.`
+            );
+        }
+
         this._options[opts.name] = new Option(opts);
 
         if (opts.shortcut) {
+
+            if (this._shortOptions[opts.shortcut]) {
+
+                throw new Exception(
+                    Errors.E_DUPLICATED_OPTION_SHORTCUT,
+                    `Option shortcut "-${opts.shortcut}" already exists.`
+                );
+            }
 
             this._shortOptions[opts.shortcut] = this._options[opts.name];
         }
@@ -76,9 +92,7 @@ export class SimpleParser implements External.ISimpleParser {
         return this;
     }
 
-    public parse(): External.IParseResult {
-
-        let cmdArgs: string[] = process.argv.slice(2);
+    public parse(cmdArgs: string[]): External.IParseResult {
 
         let cursor: number = 0;
 

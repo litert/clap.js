@@ -30,11 +30,11 @@ npm i https://github.com/litert/clap.js --save
 
 ### 2.1. 标志选项基本用法
 
-> **标志选项**是指没有额外参数，仅需使用 -X 或者 --xxxx 作为开关的选项。
->
-> 典型例子是 ls 命令的 -a 或者 -l 选项，这些选项没有附加参数，仅作为功能开关。
->
-> 注：shortcut 是选项/命令的简写形式，只能是单个字母，区分大小写。
+**标志选项**是指没有额外参数，仅需使用 -X 或者 --xxxx 作为开关的选项。
+
+典型例子是 ls 命令的 -a 或者 -l 选项，这些选项没有附加参数，仅作为功能开关。
+
+**注：shortcut 是选项/命令的简写形式，只能是单个字母，区分大小写。**
 
 ```ts
 // File: sources/samples/sample-01.ts
@@ -48,10 +48,10 @@ parser.addOption({
 
     "name": "Help",
     "description": "Display the help text.",
-    "shortcut": "h" // shortcut 是可选选项。
+    "shortcut": "h" // shortcut 是可选选项，即选项的简写式。
 });
 
-let result = parser.parse();
+let result = parser.parse(process.argv.slice(2));
 
 // 将无法识别的选项列举出来，通过 unknwonOptions 字段可以读取出来。
 for (let unknown of result.unknwonOptions) {
@@ -143,7 +143,7 @@ parser.addOption({
     "withArgument": true // 指定 output 选项要求一个参数
 });
 
-let result = parser.parse();
+let result = parser.parse(process.argv.slice(2));
 
 for (let unknown of result.unknwonOptions) {
 
@@ -243,7 +243,7 @@ parser.addOption({
     "shortcut": "d"
 });
 
-let result = parser.parse();
+let result = parser.parse(process.argv.slice(2));
 
 for (let unknown of result.unknwonOptions) {
 
@@ -376,7 +376,7 @@ parser.addOption({
     "repeatable": true    // 可以重复使用
 });
 
-let result = parser.parse();
+let result = parser.parse(process.argv.slice(2));
 
 for (let unknown of result.unknwonOptions) {
 
@@ -453,7 +453,7 @@ parser.addOption({
     "withArgument": true
 });
 
-let result = parser.parse();
+let result = parser.parse(process.argv.slice(2));
 
 for (let unknown of result.unknwonOptions) {
 
@@ -529,7 +529,7 @@ parser.addOption({
     "withArgument": true
 });
 
-let result = parser.parse();
+let result = parser.parse(process.argv.slice(2));
 
 for (let unknown of result.unknwonOptions) {
 

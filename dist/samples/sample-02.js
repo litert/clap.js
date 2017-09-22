@@ -23,7 +23,7 @@ parser.addOption({
     "shortcut": "o",
     "withArgument": true
 });
-let result = parser.parse();
+let result = parser.parse(process.argv.slice(2));
 for (let unknown of result.unknwonOptions) {
     console.log(`Unknown option: ${unknown}.`);
 }

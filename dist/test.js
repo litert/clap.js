@@ -45,6 +45,6 @@ parser.addOption({
     "description": "Overwrite existing output file.",
     "shortcut": "w"
 });
-let clap = parser.parse();
+let clap = parser.parse(process.argv.slice(2));
 console.info(JSON.stringify(clap, null, 4));
 //# sourceMappingURL=test.js.map
