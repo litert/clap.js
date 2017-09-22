@@ -34,5 +34,8 @@
   },
   "dependencies": {
     "@litert/core": "git+https://github.com/litert/core.js.git#v0.1.1"
+  },
+  "engines": {
+    "node": ">=8.0.0"
   }
 }

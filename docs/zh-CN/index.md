@@ -1,5 +1,9 @@
 # LiteRT/Clap 文档
 
+## 概述
+
+Clap.js 是一个用于解析命令行参数的 Node.js 库，用 TypeScript 编写。
+
 ## 目录
 
 - [快速入门](./01-get-start.md)

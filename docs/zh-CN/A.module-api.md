@@ -1,5 +1,7 @@
 # 模块接口
 
+> [返回目录](./index.md)
+
 ## 1. 方法 createSimpleParser
 
 该方法创建一个简单命令行参数解析器对象。
@@ -72,7 +74,7 @@ function createCommandParser(
 
 ```ts
 /**
- * 选项的短名称必须是单个字母或数字。
+ * 选项的简写式必须是单个字母或数字。
  */
 const E_INVALID_SHORT_OPTION: number = 0x0001;
 
@@ -87,27 +89,27 @@ const E_LACK_OPTION_ARG: number = 0x0002;
 const E_FORBIDDEN_COMPACT: number = 0x0003;
 
 /**
- * 一级命令不存在
+ * 主命令不存在
  */
 const E_INVALID_MAIN_COMMAND: number = 0x0004;
 
 /**
- * 二级命令不存在
+ * 子命令不存在
  */
 const E_INVALID_SUB_COMMAND: number = 0x0005;
 
 /**
- * 命令的快捷方式必须是单个字母。
+ * 命令的简写式必须是单个字母。
  */
 const E_INVALID_SHORT_COMMAND: number = 0x0006;
 
 /**
- * 未输入一级命令。
+ * 未输入主命令。
  */
 const E_LACK_MAIN_COMMAND: number = 0x0007;
 
 /**
- * 未输入二级命令。
+ * 未输入子命令。
  */
 const E_LACK_SUB_COMMAND: number = 0x0008;
 
@@ -122,22 +124,22 @@ const E_FORBIDDEN_ASSIGN: number = 0x0009;
 const E_ASSIGN_TO_FLAG: number = 0x000A;
 
 /**
- * 一级命令已经注册。
+ * 主命令已经注册。
  */
 const E_DUPLICATED_MAIN_COMMAND: number = 0x000B;
 
 /**
- * 该一级命令的快捷方式已经被注册。
+ * 该主命令的简写式已经被注册。
  */
 const E_DUPLICATED_MAIN_SHORTCUT: number = 0x000C;
 
 /**
- * 二级命令已经注册。
+ * 子命令已经注册。
  */
 const E_DUPLICATED_SUB_COMMAND: number = 0x000D;
 
 /**
- * 该二级命令的快捷方式已经被注册。
+ * 该子命令的简写式已经被注册。
  */
 const E_DUPLICATED_SUB_SHORTCUT: number = 0x000E;
 
@@ -146,3 +148,5 @@ const E_DUPLICATED_SUB_SHORTCUT: number = 0x000E;
  */
 const E_INVALID_COMMAND_NAME: number = 0x000F;
 ```
+
+> [快速入门](./01-get-start.md) | [返回目录](./index.md)
