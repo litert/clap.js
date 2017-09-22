@@ -140,4 +140,9 @@ const E_DUPLICATED_SUB_COMMAND: number = 0x000D;
  * 该二级命令的快捷方式已经被注册。
  */
 const E_DUPLICATED_SUB_SHORTCUT: number = 0x000E;
+
+/**
+ * 命令名称不合法。
+ */
+const E_INVALID_COMMAND_NAME: number = 0x000F;
 ```

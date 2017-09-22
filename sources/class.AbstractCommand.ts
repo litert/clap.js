@@ -27,6 +27,14 @@ abstract class AbstractCommand implements ICommandSettings {
 
     public constructor(opts: ICommandSettings) {
 
+        if (!/^[a-z0-9A-Z][-\w]+$/.test(opts.name)) {
+
+            throw new Exception(
+                Errors.E_INVALID_COMMAND_NAME,
+                `Name "${opts.name}" for command is invalid.`
+            );
+        }
+
         this._name = opts.name;
         this._description = opts.description;
 

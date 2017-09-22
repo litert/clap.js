@@ -70,4 +70,8 @@ exports.E_DUPLICATED_SUB_COMMAND = 0x000D;
  * The shortcut of sub command already exists.
  */
 exports.E_DUPLICATED_SUB_SHORTCUT = 0x000E;
+/**
+ * The name of command is invalid.
+ */
+exports.E_INVALID_COMMAND_NAME = 0x000F;
 //# sourceMappingURL=errors.js.map

@@ -17,6 +17,9 @@ const core_1 = require("@litert/core");
 const Errors = require("./errors");
 class AbstractCommand {
     constructor(opts) {
+        if (!/^[a-z0-9A-Z][-\w]+$/.test(opts.name)) {
+            throw new core_1.Exception(Errors.E_INVALID_COMMAND_NAME, `Name "${opts.name}" for command is invalid.`);
+        }
         this._name = opts.name;
         this._description = opts.description;
         if (opts.shortcut !== undefined

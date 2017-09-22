@@ -54,3 +54,7 @@ export declare const E_DUPLICATED_SUB_COMMAND: number;
  * The shortcut of sub command already exists.
  */
 export declare const E_DUPLICATED_SUB_SHORTCUT: number;
+/**
+ * The name of command is invalid.
+ */
+export declare const E_INVALID_COMMAND_NAME: number;

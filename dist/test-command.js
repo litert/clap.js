@@ -46,6 +46,9 @@ parser.addCommand({
 }).addSubCommand("activate", {
     "name": "song",
     "description": "Activate a song."
+}).addSubCommand("activate", {
+    "name": "my-account",
+    "description": "Activate a song."
 }).addSubCommand("deactivate", {
     "name": "game",
     "description": "Activate a game."
