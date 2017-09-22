@@ -7,8 +7,18 @@
 ### 1.1. 方法签名
 
 ```ts
-function createSimpleParser(): ISimpleParser;
+function createSimpleParser(
+    opts?: IParserSettings
+): ISimpleParser;
 ```
+
+#### 1.2. 参数说明
+
+-   `opts` 可选
+
+    该参数用于传递一个配置项给解析器对象。
+
+    参考：[接口 IParserSettings](./interface.IParserSettings.md)
 
 ## 2. 方法 createCommandParser
 
@@ -17,8 +27,18 @@ function createSimpleParser(): ISimpleParser;
 ### 2.1. 方法签名
 
 ```ts
-function createCommandParser(): ICommandParser;
+function createCommandParser(
+    opts?: IParserSettings
+): ICommandParser;
 ```
+
+#### 2.2. 参数说明
+
+-   `opts` 可选
+
+    该参数用于传递一个配置项给解析器对象。
+
+    参考：[接口 IParserSettings](./interface.IParserSettings.md)
 
 ## 3. 接口 ISimpleParser
 
@@ -44,7 +64,11 @@ function createCommandParser(): ICommandParser;
 
 [点击查看详细](./interface.ICommandParser.md)。
 
-## 9. 常量
+## 9. 接口 IParserSettings
+
+[点击查看详细](./interface.IParserSettings.md)。
+
+## 10. 常量
 
 ```ts
 /**
@@ -58,22 +82,22 @@ const E_INVALID_SHORT_OPTION: number = 0x0001;
 const E_LACK_OPTION_ARG: number = 0x0002;
 
 /**
- * 未输入某个必须选项。
+ * 只有标志选项才可以用在选项组合中。
  */
-const E_LACK_OPTION: number = 0x0003;
+const E_FORBIDDEN_COMPACT: number = 0x0003;
 
 /**
- * 一级命令不可用。
+ * 一级命令不存在
  */
 const E_INVALID_MAIN_COMMAND: number = 0x0004;
 
 /**
- * 二级命令不可用。
+ * 二级命令不存在
  */
 const E_INVALID_SUB_COMMAND: number = 0x0005;
 
 /**
- * 命令的短名称必须是单个字母或数字。
+ * 命令的快捷方式必须是单个字母。
  */
 const E_INVALID_SHORT_COMMAND: number = 0x0006;
 
@@ -86,4 +110,34 @@ const E_LACK_MAIN_COMMAND: number = 0x0007;
  * 未输入二级命令。
  */
 const E_LACK_SUB_COMMAND: number = 0x0008;
+
+/**
+ * 选项参数赋值风格未被允许。
+ */
+const E_FORBIDDEN_ASSIGN: number = 0x0009;
+
+/**
+ * 只有带参选项才可以被赋值。
+ */
+const E_ASSIGN_TO_FLAG: number = 0x000A;
+
+/**
+ * 一级命令已经注册。
+ */
+const E_DUPLICATED_MAIN_COMMAND: number = 0x000B;
+
+/**
+ * 该一级命令的快捷方式已经被注册。
+ */
+const E_DUPLICATED_MAIN_SHORTCUT: number = 0x000C;
+
+/**
+ * 二级命令已经注册。
+ */
+const E_DUPLICATED_SUB_COMMAND: number = 0x000D;
+
+/**
+ * 该二级命令的快捷方式已经被注册。
+ */
+const E_DUPLICATED_SUB_SHORTCUT: number = 0x000E;
 ```

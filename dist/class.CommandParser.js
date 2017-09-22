@@ -93,12 +93,15 @@ class CommandParser extends class_SimpleParser_1.SimpleParser {
             return 1;
         }
         else if (!result.subCommand) {
-            let subCommand = this._mainCommands[result.mainCommand].findSubCommand(piece);
-            if (!subCommand) {
-                throw new core_1.Exception(Errors.E_INVALID_MAIN_COMMAND, `Sub command "${piece}" not found.`);
+            let mainCommand = this._mainCommands[result.mainCommand];
+            if (mainCommand.enableSubCommand) {
+                let subCommand = mainCommand.findSubCommand(piece);
+                if (!subCommand) {
+                    throw new core_1.Exception(Errors.E_INVALID_SUB_COMMAND, `Sub command "${piece}" not found.`);
+                }
+                result.setSubCommand(subCommand.name);
+                return 1;
             }
-            result.setSubCommand(subCommand.name);
-            return 1;
         }
         result.addArgument(piece);
         return 1;

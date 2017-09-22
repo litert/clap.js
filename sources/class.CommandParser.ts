@@ -187,20 +187,25 @@ export class CommandParser extends SimpleParser implements External.ICommandPars
         }
         else if (!result.subCommand) {
 
-            let subCommand = this._mainCommands[result.mainCommand].findSubCommand(
-                piece
-            );
+            let mainCommand = this._mainCommands[result.mainCommand];
 
-            if (!subCommand) {
+            if (mainCommand.enableSubCommand) {
 
-                throw new Exception(
-                    Errors.E_INVALID_MAIN_COMMAND,
-                    `Sub command "${piece}" not found.`
+                let subCommand = mainCommand.findSubCommand(
+                    piece
                 );
-            }
 
-            result.setSubCommand(subCommand.name);
-            return 1;
+                if (!subCommand) {
+
+                    throw new Exception(
+                        Errors.E_INVALID_SUB_COMMAND,
+                        `Sub command "${piece}" not found.`
+                    );
+                }
+
+                result.setSubCommand(subCommand.name);
+                return 1;
+            }
         }
 
         result.addArgument(piece);

@@ -1,5 +1,5 @@
 /**
- * Shortcut of option must a single alphabet or digtal charactor.
+ * Shortcut of option must a single alphabet charactor.
  */
 export declare const E_INVALID_SHORT_OPTION: number;
 /**
@@ -19,7 +19,7 @@ export declare const E_INVALID_MAIN_COMMAND: number;
  */
 export declare const E_INVALID_SUB_COMMAND: number;
 /**
- * Shortcut of command must a single alphabet or digtal charactor.
+ * Shortcut of command must a single alphabet charactor.
  */
 export declare const E_INVALID_SHORT_COMMAND: number;
 /**
@@ -31,13 +31,9 @@ export declare const E_LACK_MAIN_COMMAND: number;
  */
 export declare const E_LACK_SUB_COMMAND: number;
 /**
- * Only argument-option can be use in assign mode.
+ * Assign mode is forbidden.
  */
 export declare const E_FORBIDDEN_ASSIGN: number;
-/**
- * Attach mode is not enabled.
- */
-export declare const E_FORBIDDEN_ATTACH: number;
 /**
  * Cannot assign a value to a flag option.
  */
@@ -47,6 +43,10 @@ export declare const E_ASSIGN_TO_FLAG: number;
  */
 export declare const E_DUPLICATED_MAIN_COMMAND: number;
 /**
+ * The shortcut of main command already exists.
+ */
+export declare const E_DUPLICATED_MAIN_SHORTCUT: number;
+/**
  * The sub command already exists.
  */
 export declare const E_DUPLICATED_SUB_COMMAND: number;
@@ -54,7 +54,3 @@ export declare const E_DUPLICATED_SUB_COMMAND: number;
  * The shortcut of sub command already exists.
  */
 export declare const E_DUPLICATED_SUB_SHORTCUT: number;
-/**
- * The shortcut of main command already exists.
- */
-export declare const E_DUPLICATED_MAIN_SHORTCUT: number;

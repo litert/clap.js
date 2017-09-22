@@ -15,7 +15,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * Shortcut of option must a single alphabet or digtal charactor.
+ * Shortcut of option must a single alphabet charactor.
  */
 exports.E_INVALID_SHORT_OPTION = 0x0001;
 /**
@@ -35,7 +35,7 @@ exports.E_INVALID_MAIN_COMMAND = 0x0004;
  */
 exports.E_INVALID_SUB_COMMAND = 0x0005;
 /**
- * Shortcut of command must a single alphabet or digtal charactor.
+ * Shortcut of command must a single alphabet charactor.
  */
 exports.E_INVALID_SHORT_COMMAND = 0x0006;
 /**
@@ -47,21 +47,21 @@ exports.E_LACK_MAIN_COMMAND = 0x0007;
  */
 exports.E_LACK_SUB_COMMAND = 0x0008;
 /**
- * Only argument-option can be use in assign mode.
+ * Assign mode is forbidden.
  */
 exports.E_FORBIDDEN_ASSIGN = 0x0009;
 /**
- * Attach mode is not enabled.
- */
-exports.E_FORBIDDEN_ATTACH = 0x000A;
-/**
  * Cannot assign a value to a flag option.
  */
-exports.E_ASSIGN_TO_FLAG = 0x000B;
+exports.E_ASSIGN_TO_FLAG = 0x000A;
 /**
  * The main command already exists.
  */
-exports.E_DUPLICATED_MAIN_COMMAND = 0x000C;
+exports.E_DUPLICATED_MAIN_COMMAND = 0x000B;
+/**
+ * The shortcut of main command already exists.
+ */
+exports.E_DUPLICATED_MAIN_SHORTCUT = 0x000C;
 /**
  * The sub command already exists.
  */
@@ -70,8 +70,4 @@ exports.E_DUPLICATED_SUB_COMMAND = 0x000D;
  * The shortcut of sub command already exists.
  */
 exports.E_DUPLICATED_SUB_SHORTCUT = 0x000E;
-/**
- * The shortcut of main command already exists.
- */
-exports.E_DUPLICATED_MAIN_SHORTCUT = 0x000F;
 //# sourceMappingURL=errors.js.map
