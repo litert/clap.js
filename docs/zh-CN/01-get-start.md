@@ -114,9 +114,9 @@ This is help text
 node dist/samples/sample-01.js -H "hello world!" friend
 ```
 
-则 `"hello world!"` 和 `friend` 会被当成参数，可以通过 `result.arguments` 属性或者 
-`result.getArgument` 方法读取到。至于 `-H` 不被识别，会被通过 `result.unknownOptions`
-读取出来。例如上面这条命令可以得到输出如下：
+则 `"hello world!"` 和 `friend` 会被当成参数，可以通过 `result.arguments` 属性读取
+到。至于 `-H` 不被识别，会被通过 `result.unknownOptions`读取出来。例如上面这条命令可
+以得到输出如下：
 
 ```
 $ node dist/samples/sample-01.js -H "hello world!" friend
