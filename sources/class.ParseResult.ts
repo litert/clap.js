@@ -13,7 +13,8 @@
    +----------------------------------------------------------------------+
  */
 
-import { IDictionary, Exception } from "@litert/core";
+import { IDictionary } from "@litert/core";
+import Exception = require("./class.Exception");
 import * as Internal from "./internal";
 
 export class ParseResult implements Internal.IParseResult {

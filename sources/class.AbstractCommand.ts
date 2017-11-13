@@ -13,7 +13,7 @@
    +----------------------------------------------------------------------+
  */
 
-import { Exception } from "@litert/core";
+import Exception = require("./class.Exception");
 import * as Errors from "./errors";
 import { ICommandSettings } from "./interfaces";
 

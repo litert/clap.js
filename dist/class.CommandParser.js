@@ -14,7 +14,7 @@
    +----------------------------------------------------------------------+
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@litert/core");
+const Exception = require("./class.Exception");
 const class_ParseResult_1 = require("./class.ParseResult");
 const Errors = require("./errors");
 const MainCommand = require("./class.MainCommand");
@@ -28,12 +28,12 @@ class CommandParser extends class_SimpleParser_1.SimpleParser {
     addCommand(opts) {
         opts.name = opts.name.toLowerCase();
         if (this._mainCommands[opts.name]) {
-            throw new core_1.Exception(Errors.E_DUPLICATED_MAIN_COMMAND, `Main command "${opts.name}" already exists.`);
+            throw new Exception(Errors.E_DUPLICATED_MAIN_COMMAND, `Main command "${opts.name}" already exists.`);
         }
         this._mainCommands[opts.name] = new MainCommand(opts);
         if (opts.shortcut) {
             if (this._shortMainCommands[opts.shortcut]) {
-                throw new core_1.Exception(Errors.E_DUPLICATED_MAIN_SHORTCUT, `Shourcut "${opts.shortcut}" of main command already exists.`);
+                throw new Exception(Errors.E_DUPLICATED_MAIN_SHORTCUT, `Shourcut "${opts.shortcut}" of main command already exists.`);
             }
             this._shortMainCommands[opts.shortcut] = this._mainCommands[opts.name];
         }
@@ -45,7 +45,7 @@ class CommandParser extends class_SimpleParser_1.SimpleParser {
             this._mainCommands[main].addSubCommand(opts);
         }
         else {
-            throw new core_1.Exception(Errors.E_INVALID_MAIN_COMMAND, `Main command "${main}" not found.`);
+            throw new Exception(Errors.E_INVALID_MAIN_COMMAND, `Main command "${main}" not found.`);
         }
         return this;
     }
@@ -57,10 +57,10 @@ class CommandParser extends class_SimpleParser_1.SimpleParser {
                 cursor += this._parseLoop(cmdArgs, cursor, ret);
             }
             if (!ret.mainCommand) {
-                throw new core_1.Exception(Errors.E_LACK_MAIN_COMMAND, "No command input.");
+                throw new Exception(Errors.E_LACK_MAIN_COMMAND, "No command input.");
             }
             if (!ret.subCommand && this._mainCommands[ret.mainCommand].enableSubCommand) {
-                throw new core_1.Exception(Errors.E_LACK_SUB_COMMAND, "No sub command input.");
+                throw new Exception(Errors.E_LACK_SUB_COMMAND, "No sub command input.");
             }
             ret.setSuccess();
         }
@@ -86,7 +86,7 @@ class CommandParser extends class_SimpleParser_1.SimpleParser {
                 this._shortMainCommands[piece] :
                 this._mainCommands[piece.toLowerCase()];
             if (!mainCommand) {
-                throw new core_1.Exception(Errors.E_INVALID_MAIN_COMMAND, `Main command "${piece}" not found.`);
+                throw new Exception(Errors.E_INVALID_MAIN_COMMAND, `Main command "${piece}" not found.`);
             }
             result.setMainCommand(mainCommand.name);
             return 1;
@@ -96,7 +96,7 @@ class CommandParser extends class_SimpleParser_1.SimpleParser {
             if (mainCommand.enableSubCommand) {
                 let subCommand = mainCommand.findSubCommand(piece);
                 if (!subCommand) {
-                    throw new core_1.Exception(Errors.E_INVALID_SUB_COMMAND, `Sub command "${piece}" not found.`);
+                    throw new Exception(Errors.E_INVALID_SUB_COMMAND, `Sub command "${piece}" not found.`);
                 }
                 result.setSubCommand(subCommand.name);
                 return 1;

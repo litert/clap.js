@@ -1,4 +1,5 @@
-import { IDictionary, Exception } from "@litert/core";
+import { IDictionary } from "@litert/core";
+import Exception = require("./class.Exception");
 import * as Internal from "./internal";
 export declare class ParseResult implements Internal.IParseResult {
     protected _success: boolean;

@@ -13,30 +13,12 @@
    | Authors: Angus Fenying <i.am.x.fenying@gmail.com>                    |
    +----------------------------------------------------------------------+
  */
-const Exception = require("./class.Exception");
-const Errors = require("./errors");
-class AbstractCommand {
-    constructor(opts) {
-        if (!/^[a-z0-9A-Z][-\w]+$/.test(opts.name)) {
-            throw new Exception(Errors.E_INVALID_COMMAND_NAME, `Name "${opts.name}" for command is invalid.`);
-        }
-        this._name = opts.name;
-        this._description = opts.description;
-        if (opts.shortcut !== undefined
-            && !/^[A-Za-z]$/.test(opts.shortcut)) {
-            throw new Exception(Errors.E_INVALID_SHORT_COMMAND, `Shortcut of command "${opts.name}" must be a single alphabet charactor.`);
-        }
-        this._shortcut = opts.shortcut;
-    }
-    get name() {
-        return this._name;
-    }
-    get description() {
-        return this._description;
-    }
-    get shortcut() {
-        return this._shortcut;
+const Core = require("@litert/core");
+class Exception extends Core.Exception {
+    constructor(error, message) {
+        super(error, message);
+        this._type = "litert/clap";
     }
 }
-module.exports = AbstractCommand;
-//# sourceMappingURL=class.AbstractCommand.js.map
+module.exports = Exception;
+//# sourceMappingURL=class.Exception.js.map

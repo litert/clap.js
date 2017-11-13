@@ -13,17 +13,17 @@
    | Authors: Angus Fenying <i.am.x.fenying@gmail.com>                    |
    +----------------------------------------------------------------------+
  */
-const core_1 = require("@litert/core");
+const Exception = require("./class.Exception");
 const Errors = require("./errors");
 class Option {
     constructor(opts) {
         if (!/^[-a-zA-Z0-9]+$/.test(opts.name)) {
-            throw new core_1.Exception(Errors.E_INVALID_OPTION_NAME, `Name of option "--${opts.name}" is invalid.`);
+            throw new Exception(Errors.E_INVALID_OPTION_NAME, `Name of option "--${opts.name}" is invalid.`);
         }
         if (opts.shortcut) {
             if (opts.shortcut.length !== 1
                 || !/^[a-zA-Z]$/.test(opts.shortcut)) {
-                throw new core_1.Exception(Errors.E_INVALID_SHORT_OPTION, `Shortcut of option "--${opts.name}" must a single alphabet charactor.`);
+                throw new Exception(Errors.E_INVALID_SHORT_OPTION, `Shortcut of option "--${opts.name}" must a single alphabet charactor.`);
             }
         }
         this.name = opts.name;

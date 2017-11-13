@@ -14,7 +14,7 @@
    +----------------------------------------------------------------------+
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-const core_1 = require("@litert/core");
+const Exception = require("./class.Exception");
 const Errors = require("./errors");
 const class_ParseResult_1 = require("./class.ParseResult");
 const Option = require("./class.Option");
@@ -44,12 +44,12 @@ class SimpleParser {
     addOption(opts) {
         opts.name = opts.name.toLowerCase();
         if (this._options[opts.name]) {
-            throw new core_1.Exception(Errors.E_DUPLICATED_OPTION_NAME, `Option "--${opts.name}" already exists.`);
+            throw new Exception(Errors.E_DUPLICATED_OPTION_NAME, `Option "--${opts.name}" already exists.`);
         }
         this._options[opts.name] = new Option(opts);
         if (opts.shortcut) {
             if (this._shortOptions[opts.shortcut]) {
-                throw new core_1.Exception(Errors.E_DUPLICATED_OPTION_SHORTCUT, `Option shortcut "-${opts.shortcut}" already exists.`);
+                throw new Exception(Errors.E_DUPLICATED_OPTION_SHORTCUT, `Option shortcut "-${opts.shortcut}" already exists.`);
             }
             this._shortOptions[opts.shortcut] = this._options[opts.name];
         }
@@ -141,7 +141,7 @@ class SimpleParser {
         let arg = piece.slice(2);
         if (arg.length === 0) {
             if (option.defaultArgument === undefined) {
-                throw new core_1.Exception(Errors.E_LACK_OPTION_ARG, `Option "${piece}" requires an argument.`);
+                throw new Exception(Errors.E_LACK_OPTION_ARG, `Option "${piece}" requires an argument.`);
             }
             arg = option.defaultArgument;
         }
@@ -167,7 +167,7 @@ class SimpleParser {
                 continue;
             }
             if (!option.isFlag()) {
-                throw new core_1.Exception(Errors.E_FORBIDDEN_COMPACT, `Option "-${shortName}" is not a flag option, cannot be compacted.`);
+                throw new Exception(Errors.E_FORBIDDEN_COMPACT, `Option "-${shortName}" is not a flag option, cannot be compacted.`);
             }
             result.setFlagOption(option.name);
         }
@@ -191,7 +191,7 @@ class SimpleParser {
             let arg = piece.slice(3);
             if (arg.length === 0) {
                 if (option.defaultArgument === undefined) {
-                    throw new core_1.Exception(Errors.E_LACK_OPTION_ARG, `Option "-${option.shortcut}" requires an argument.`);
+                    throw new Exception(Errors.E_LACK_OPTION_ARG, `Option "-${option.shortcut}" requires an argument.`);
                 }
                 arg = option.defaultArgument;
             }
@@ -203,7 +203,7 @@ class SimpleParser {
             }
             return 1;
         }
-        throw new core_1.Exception(Errors.E_ASSIGN_TO_FLAG, `Cannot assign a value to flag option "-${option.shortcut}".`);
+        throw new Exception(Errors.E_ASSIGN_TO_FLAG, `Cannot assign a value to flag option "-${option.shortcut}".`);
     }
     /**
      * Pattern: --input=a.ts --output=a.ts
@@ -214,7 +214,7 @@ class SimpleParser {
      */
     _onFullAssignOption(cmdArgs, cursor, result) {
         if (!this._settings.fullAssign) {
-            throw new core_1.Exception(Errors.E_FORBIDDEN_ASSIGN, `Assign mode is not allow.`);
+            throw new Exception(Errors.E_FORBIDDEN_ASSIGN, `Assign mode is not allow.`);
         }
         let piece = cmdArgs[cursor];
         let name = piece.slice(2, piece.indexOf("="));
@@ -227,7 +227,7 @@ class SimpleParser {
             let arg = piece.slice(3 + name.length);
             if (arg.length === 0) {
                 if (option.defaultArgument === undefined) {
-                    throw new core_1.Exception(Errors.E_LACK_OPTION_ARG, `Option "-${option.shortcut}" requires an argument.`);
+                    throw new Exception(Errors.E_LACK_OPTION_ARG, `Option "-${option.shortcut}" requires an argument.`);
                 }
                 arg = option.defaultArgument;
             }
@@ -239,7 +239,7 @@ class SimpleParser {
             }
             return 1;
         }
-        throw new core_1.Exception(Errors.E_ASSIGN_TO_FLAG, `Cannot assign a value to flag option "-${option.shortcut}".`);
+        throw new Exception(Errors.E_ASSIGN_TO_FLAG, `Cannot assign a value to flag option "-${option.shortcut}".`);
     }
     /**
      * Pattern: --hello --world --input a.ts --output a.js ...
@@ -271,7 +271,7 @@ class SimpleParser {
                 }
                 return 1;
             }
-            throw new core_1.Exception(Errors.E_LACK_OPTION_ARG, `Option "${cmdArgs[cursor]}" requires an argument.`);
+            throw new Exception(Errors.E_LACK_OPTION_ARG, `Option "${cmdArgs[cursor]}" requires an argument.`);
         }
         let nextPiece = cmdArgs[cursor + 1];
         if (nextPiece === undefined ||
@@ -285,7 +285,7 @@ class SimpleParser {
                 }
                 return 1;
             }
-            throw new core_1.Exception(Errors.E_LACK_OPTION_ARG, `Option "${cmdArgs[cursor]}" requires an argument.`);
+            throw new Exception(Errors.E_LACK_OPTION_ARG, `Option "${cmdArgs[cursor]}" requires an argument.`);
         }
         if (option.repeatable) {
             result.addOption(option.name, nextPiece);

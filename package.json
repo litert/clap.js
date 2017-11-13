@@ -1,6 +1,6 @@
 {
   "name": "@litert/clap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A simple library for parsing commandline arguments.",
   "main": "dist/index.js",
   "scripts": {
@@ -30,10 +30,10 @@
   "types": "dist/index.d.ts",
   "devDependencies": {
     "@types/node": "^8.0.6",
-    "typescript": "^2.5.2"
+    "typescript": "^2.6.1"
   },
   "dependencies": {
-    "@litert/core": "git+https://github.com/litert/core.js.git#v0.1.1"
+    "@litert/core": "git+https://github.com/litert/core.js.git#v0.2.0"
   },
   "engines": {
     "node": ">=8.0.0"

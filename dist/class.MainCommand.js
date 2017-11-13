@@ -14,7 +14,7 @@
    +----------------------------------------------------------------------+
  */
 const Errors = require("./errors");
-const core_1 = require("@litert/core");
+const Exception = require("./class.Exception");
 const AbstractCommand = require("./class.AbstractCommand");
 class MainCommand extends AbstractCommand {
     get name() {
@@ -28,12 +28,12 @@ class MainCommand extends AbstractCommand {
     addSubCommand(opts) {
         opts.name = opts.name.toLowerCase();
         if (this._subCommands[opts.name]) {
-            throw new core_1.Exception(Errors.E_DUPLICATED_SUB_COMMAND, `Sub command "${opts.name}" already exists.`);
+            throw new Exception(Errors.E_DUPLICATED_SUB_COMMAND, `Sub command "${opts.name}" already exists.`);
         }
         this._subCommands[opts.name] = new SubCommandOption(opts);
         if (opts.shortcut) {
             if (this._shortSubCommands[opts.shortcut]) {
-                throw new core_1.Exception(Errors.E_DUPLICATED_SUB_SHORTCUT, `Shourcut "${opts.shortcut}" of sub command already exists.`);
+                throw new Exception(Errors.E_DUPLICATED_SUB_SHORTCUT, `Shourcut "${opts.shortcut}" of sub command already exists.`);
             }
             this._shortSubCommands[opts.shortcut] = this._subCommands[opts.name];
         }

@@ -14,7 +14,8 @@
  */
 
 import * as Errors from "./errors";
-import { IDictionary, Exception } from "@litert/core";
+import { IDictionary } from "@litert/core";
+import Exception = require("./class.Exception");
 import { ICommandSettings } from "./interfaces";
 import { IMainCommandSettings } from "./internal";
 import AbstractCommand = require("./class.AbstractCommand");

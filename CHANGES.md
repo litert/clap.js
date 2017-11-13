@@ -2,6 +2,10 @@
 
 [Dep:LRT.Core]: https://github.com/litert/core.js
 
+## v0.1.1
+
+- Updated dependency [`@litert/core`][Dep:LRT.Core] to **0.2.0** version.
+
 ## v0.1.0
 
 - Restructured the exposed interfaces.

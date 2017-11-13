@@ -13,7 +13,8 @@
    +----------------------------------------------------------------------+
  */
 
-import { IDictionary, Exception } from "@litert/core";
+import { IDictionary } from "@litert/core";
+import Exception = require("./class.Exception");
 import { CommandParseResult } from "./class.ParseResult";
 import * as External from "./interfaces";
 import * as Errors from "./errors";
