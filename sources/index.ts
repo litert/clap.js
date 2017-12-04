@@ -18,6 +18,7 @@ import * as Simple from "./class.SimpleParser";
 export * from "./interfaces";
 import * as Def from "./interfaces";
 export import Errors = require("./errors");
+export * from "./class.Exception";
 
 export function createCommandParser(opts?: Def.IParserSettings): Def.ICommandParser {
 

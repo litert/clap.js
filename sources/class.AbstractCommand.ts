@@ -13,7 +13,7 @@
    +----------------------------------------------------------------------+
  */
 
-import Exception = require("./class.Exception");
+import Exception from "./class.Exception";
 import * as Errors from "./errors";
 import { ICommandSettings } from "./interfaces";
 

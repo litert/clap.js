@@ -15,14 +15,16 @@
 
 import * as Core from "@litert/core";
 
+export const EXCEPTION_TYPE: string = "litert/clap";
+
 class Exception extends Core.Exception {
 
     public constructor(error: number, message: string) {
 
         super(error, message);
 
-        this._type = "litert/clap";
+        this._type = EXCEPTION_TYPE;
     }
 }
 
-export = Exception;
+export default Exception;

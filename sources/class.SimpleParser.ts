@@ -14,7 +14,7 @@
  */
 
 import { IDictionary } from "@litert/core";
-import Exception = require("./class.Exception");
+import Exception from "./class.Exception";
 import * as Errors from "./errors";
 import { ParseResult } from "./class.ParseResult";
 import * as Internal from "./internal";

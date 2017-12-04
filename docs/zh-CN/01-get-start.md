@@ -4,17 +4,11 @@
 
 ## 1. 安装
 
-本项目并未发布到 npmjs.org，因此你目前只能通过如下方式安装：
+通过 NPM 安装：
 
 ```sh
-npm i https://github.com/litert/clap.js --save
+npm i @litert/clap--save
 ```
-
-> 国内用户可以使用：
->
-> ```sh
-> npm i https://gitee.com/litert/clap.js --save
-> ```
 
 安装成功后，就可以开始用它处理命令行参数了，下面逐个看实例。
 

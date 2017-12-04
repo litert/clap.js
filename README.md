@@ -1,20 +1,16 @@
 # LiteRT/Clap.js
 
+[![npm version](https://img.shields.io/npm/v/@litert/clap.svg?colorB=brightgreen)](https://www.npmjs.com/package/@litert/clap)
+[![License](https://img.shields.io/npm/l/@litert/clap.svg?maxAge=2592000?style=plastic)](https://github.com/litert/clap/blob/master/LICENSE)
+[![node](https://img.shields.io/node/v/@litert/clap.svg?colorB=brightgreen)](https://nodejs.org/dist/latest-v8.x/)
+[![GitHub issues](https://img.shields.io/github/issues/litert/clap.js.svg)](https://github.com/litert/clap.js/issues)
+
 A simple library for parsing commandline arguments.
 
 ## Installation
 
-This package will not published to NPM yet, thus you could install it by using
-following command:
-
 ```sh
-npm i https://github.com/litert/clap.js --save
-```
-
-or install a stable version
-
-```sh
-npm i https://github.com/litert/clap.js#v0.1.0 --save
+npm i @litert/clap --save
 ```
 
 ## Documents

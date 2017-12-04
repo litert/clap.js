@@ -13,7 +13,7 @@
    +----------------------------------------------------------------------+
  */
 
-import { Exception } from "@litert/core";
+import Exception from "./class.Exception";
 
 export interface IOptionSetting {
 

@@ -14,7 +14,7 @@
  */
 
 import * as External from "./interfaces";
-import { Exception } from "@litert/core";
+import Exception from "./class.Exception";
 
 export interface IOptionHandleResult {
 

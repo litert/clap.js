@@ -4,7 +4,7 @@
 
 ## v0.1.1
 
-- Updated dependency [`@litert/core`][Dep:LRT.Core] to **0.2.0** version.
+- Update the dependencies.
 
 ## v0.1.0
 
