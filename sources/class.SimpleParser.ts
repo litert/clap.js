@@ -19,13 +19,14 @@ import * as Errors from "./errors";
 import { ParseResult } from "./class.ParseResult";
 import * as Internal from "./internal";
 import * as External from "./interfaces";
-import Option = require("./class.Option");
+import Option from "./class.Option";
 
 const DEFAULT_PARSER_OPTIONS: External.IParserSettings = {
     "follow": true,
     "fullAssign": false,
     "shortAssign": false,
-    "shortAttach": false
+    "shortAttach": false,
+    "allowOptionsOnly": true
 };
 
 export class SimpleParser implements External.ISimpleParser {
@@ -63,7 +64,7 @@ export class SimpleParser implements External.ISimpleParser {
         }
     }
 
-    public addOption(opts: External.IOptionSetting): SimpleParser {
+    public addOption(opts: External.IOptionSetting): this {
 
         opts.name = opts.name.toLowerCase();
 
@@ -606,3 +607,5 @@ export class SimpleParser implements External.ISimpleParser {
     }
 
 }
+
+export default SimpleParser;

@@ -34,6 +34,13 @@ interface IParserSettings {
      * 默认值： false
      */
     "shortAttach"?: boolean;
+
+    /**
+     * 允许只使用选项，而不使用命令。
+     *
+     * 默认值： true
+     */
+    "allowOptionsOnly"?: boolean;
 }
 ```
 

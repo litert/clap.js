@@ -17,7 +17,7 @@ interface ISimpleParser extends ISimpleParser {
      *
      * @param opts   选项信息
      */
-    addOption(opts: IOptionSetting): ISimpleParser;
+    addOption(opts: IOptionSetting): this;
 
     /**
      * 开始分析。

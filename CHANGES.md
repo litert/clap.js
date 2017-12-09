@@ -2,6 +2,10 @@
 
 [Dep:LRT.Core]: https://github.com/litert/core.js
 
+## v0.2.0
+
+- Now allows that only options input without commands in command mode.
+
 ## v0.1.1
 
 - Update the dependencies.

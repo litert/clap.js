@@ -17,7 +17,7 @@ import Exception from "./class.Exception";
 import * as Errors from "./errors";
 import { ICommandSettings } from "./interfaces";
 
-abstract class AbstractCommand implements ICommandSettings {
+export abstract class AbstractCommand implements ICommandSettings {
 
     protected _name: string;
 
@@ -67,4 +67,4 @@ abstract class AbstractCommand implements ICommandSettings {
     }
 }
 
-export = AbstractCommand;
+export default AbstractCommand;

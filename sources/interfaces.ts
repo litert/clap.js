@@ -125,7 +125,7 @@ export interface ISimpleParser {
     /**
      * Add a supported option to be parsed.
      */
-    addOption(opts: IOptionSetting): ISimpleParser;
+    addOption(opts: IOptionSetting): this;
 
     /**
      * Do parse the commandline arguments.
@@ -167,7 +167,7 @@ export interface ICommandParser extends ISimpleParser {
     /**
      * Add a new supported command to be parsed.
      */
-    addCommand(opts: ICommandSettings): ICommandParser;
+    addCommand(opts: ICommandSettings): this;
 
     /**
      * Add a new sub command for an existed command, to be parsed.
@@ -175,7 +175,7 @@ export interface ICommandParser extends ISimpleParser {
     addSubCommand(
         main: string,
         opts: ICommandSettings
-    ): ICommandParser;
+    ): this;
 
     /**
      * Do parse the commandline arguments.
@@ -212,4 +212,11 @@ export interface IParserSettings {
      * Default: false
      */
     "shortAttach"?: boolean;
+
+    /**
+     * Enable use options only, without command.
+     *
+     * Default: true
+     */
+    "allowOptionsOnly"?: boolean;
 }

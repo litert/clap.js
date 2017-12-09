@@ -97,7 +97,7 @@ Help command is found.
 Input: test.txt
 
 $ node dist/samples/sample-07.js --input test.txt
-Exception { _errno: 7, _message: 'No command input.' }
+Input: test.txt
 ```
 
 使用命令解析器时，必须输入命令，否则会返回错误。

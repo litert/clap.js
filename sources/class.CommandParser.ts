@@ -19,8 +19,8 @@ import { CommandParseResult } from "./class.ParseResult";
 import * as External from "./interfaces";
 import * as Errors from "./errors";
 import * as Internal from "./internal";
-import MainCommand = require("./class.MainCommand");
-import { SimpleParser } from "./class.SimpleParser";
+import MainCommand from "./class.MainCommand";
+import SimpleParser from "./class.SimpleParser";
 
 export class CommandParser extends SimpleParser implements External.ICommandParser {
 
@@ -37,7 +37,7 @@ export class CommandParser extends SimpleParser implements External.ICommandPars
         this._shortMainCommands = {};
     }
 
-    public addCommand(opts: External.ICommandSettings): External.ICommandParser {
+    public addCommand(opts: External.ICommandSettings): this {
 
         opts.name = opts.name.toLowerCase();
 
@@ -70,7 +70,7 @@ export class CommandParser extends SimpleParser implements External.ICommandPars
     public addSubCommand(
         main: string,
         opts: External.ICommandSettings
-    ): External.ICommandParser {
+    ): this {
 
         main = main.toLowerCase();
 
@@ -106,20 +106,25 @@ export class CommandParser extends SimpleParser implements External.ICommandPars
                 );
             }
 
-            if (!ret.mainCommand) {
+            if (!this._settings.allowOptionsOnly) {
 
-                throw new Exception(
-                    Errors.E_LACK_MAIN_COMMAND,
-                    "No command input."
-                );
-            }
+                if (!ret.mainCommand) {
 
-            if (!ret.subCommand && this._mainCommands[ret.mainCommand].enableSubCommand) {
+                    throw new Exception(
+                        Errors.E_LACK_MAIN_COMMAND,
+                        "No command input."
+                    );
+                }
 
-                throw new Exception(
-                    Errors.E_LACK_SUB_COMMAND,
-                    "No sub command input."
-                );
+                if (!ret.subCommand
+                    && this._mainCommands[ret.mainCommand].enableSubCommand
+                ) {
+
+                    throw new Exception(
+                        Errors.E_LACK_SUB_COMMAND,
+                        "No sub command input."
+                    );
+                }
             }
 
             ret.setSuccess();

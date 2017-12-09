@@ -18,9 +18,9 @@ import { IDictionary } from "@litert/core";
 import Exception from "./class.Exception";
 import { ICommandSettings } from "./interfaces";
 import { IMainCommandSettings } from "./internal";
-import AbstractCommand = require("./class.AbstractCommand");
+import AbstractCommand from "./class.AbstractCommand";
 
-class MainCommand extends AbstractCommand implements IMainCommandSettings {
+export class MainCommand extends AbstractCommand implements IMainCommandSettings {
 
     public enableSubCommand?: boolean;
 
@@ -84,4 +84,4 @@ class MainCommand extends AbstractCommand implements IMainCommandSettings {
 
 class SubCommandOption extends AbstractCommand {}
 
-export = MainCommand;
+export default MainCommand;

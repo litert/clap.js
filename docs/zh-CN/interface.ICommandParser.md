@@ -17,7 +17,7 @@ interface ICommandParser extends ISimpleParser {
      *
      * @param opts   主命令信息
      */
-    addCommand(opts: ICommandSettings): ICommandParser;
+    addCommand(opts: ICommandSettings): this;
 
     /**
      * 为一个主命令添加一个新的子命令。遇到如下情况时会抛出异常：
@@ -36,7 +36,7 @@ interface ICommandParser extends ISimpleParser {
     addSubCommand(
         main: string,
         opts: ICommandSettings
-    ): ICommandParser;
+    ): this;
 
     /**
      * 开始分析

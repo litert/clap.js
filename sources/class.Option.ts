@@ -18,7 +18,7 @@ import * as Errors from "./errors";
 import * as External from "./interfaces";
 import * as Internal from "./internal";
 
-class Option implements Internal.IOption {
+export class Option implements Internal.IOption {
 
     public name: string;
 
@@ -85,4 +85,4 @@ class Option implements Internal.IOption {
     }
 }
 
-export = Option;
+export default Option;
