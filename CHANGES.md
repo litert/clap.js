@@ -2,6 +2,11 @@
 
 [Dep:LRT.Core]: https://github.com/litert/core.js
 
+## v0.2.1
+
+- Upgraded @litert/core to the v0.3.x.
+- Upgraded TypeScript to the v2.7.x.
+
 ## v0.2.0
 
 - Now allows that only options input without commands in command mode.
