@@ -1,6 +1,6 @@
 {
   "name": "@litert/clap",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A simple library for parsing commandline arguments.",
   "main": "dist/index.js",
   "scripts": {
@@ -38,6 +38,6 @@
     "node": ">=8.0.0"
   },
   "dependencies": {
-    "@litert/core": "^0.3.3"
+    "@litert/core": "^0.6.0"
   }
 }

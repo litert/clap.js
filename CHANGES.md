@@ -2,9 +2,13 @@
 
 [Dep:LRT.Core]: https://github.com/litert/core.js
 
+## v0.2.2
+
+- Upgraded [`@litert/core`][Dep:LRT.Core] to the v0.6.0.
+
 ## v0.2.1
 
-- Upgraded @litert/core to the v0.3.x.
+- Upgraded [`@litert/core`][Dep:LRT.Core] to the v0.3.x.
 - Upgraded TypeScript to the v2.7.x.
 
 ## v0.2.0
