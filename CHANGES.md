@@ -2,6 +2,14 @@
 
 [Dep:LRT.Core]: https://github.com/litert/core.js
 
+## v1.0.0
+
+- Upgraded [`@litert/core`][Dep:LRT.Core] to the v1.0.x.
+- Refactored the APIs, for more easier usage.
+- Added `windows` style options supports.
+- Added `go` style options supports.
+- Added unlimited commands supports.
+
 ## v0.2.2
 
 - Upgraded [`@litert/core`][Dep:LRT.Core] to the v0.6.0.
