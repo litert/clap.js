@@ -36,7 +36,7 @@ export interface ICommandSettings {
     /**
      * Specify a shortcut or alias for this command.
      */
-    "alias"?: string | string[];
+    "aliases"?: string | string[];
 }
 
 export interface IOptionSettings {
@@ -82,6 +82,8 @@ export interface ICommandResult {
 
     "name": string;
 
+    "id": number;
+
     "options": Record<string, string[]>;
 
     "flags": Record<string, boolean>;
@@ -103,6 +105,13 @@ export interface IResult {
      * The parsed flags.
      */
     "flags": Record<string, boolean>;
+
+    /**
+     * Unrecognizable options.
+     *
+     * > Only `assign-style` input option will be here.
+     */
+    "unknownOptions": string[];
 
     /**
      * The parsed arguments.
@@ -142,127 +151,172 @@ export interface IParser {
     parse(args: string[]): IResult | false;
 }
 
+export type DeepPartial<T> = {
+    [P in keyof T]?: DeepPartial<T[P]>;
+};
+
+export interface IParserHelpConfig {
+
+    /**
+     * Display the HELP info for each command automatically.
+     */
+    "delegated": boolean;
+
+    /**
+     * Use command and sub-command `help`.
+     *
+     * @default true
+     */
+    "useCommand": boolean;
+
+    /**
+     * Use `-h` for shortcut.
+     *
+     * @default true
+     */
+    "shortFlag": boolean;
+
+    /**
+     * Use `--help` (or `-help` when `go` style).
+     *
+     * @default true
+     */
+    "longFlag": boolean;
+}
+
+export interface IParserCommandConfig {
+
+    /**
+     * Specify the case-sensitivity of commands.
+     *
+     * @default false
+     */
+    "caseSensitive": boolean;
+
+    /**
+     * Specify the case-sensitivity of commands aliases.
+     *
+     * @default true
+     */
+    "aliasCaseSensitive": boolean;
+}
+
+export interface IParserArgumentConfig {
+
+    /**
+     * The minimal quantity of input arguments.
+     *
+     * @default 0
+     */
+    "minimalInputs": number;
+}
+
+export interface IParserOptionShortcutConfig {
+
+    /**
+     * Specify the case-sensitivity of options shortcuts.
+     *
+     * @default true
+     */
+    "caseSensitive": boolean;
+
+    /**
+     * Allow assign an argument for an option in `-aARG` style or not.
+     *
+     * @default true
+     */
+    "attachArgument": boolean;
+
+    /**
+     * Allow assign an argument for an option in `-a=ARG` style or not.
+     *
+     * @default true
+     */
+    "assignArgument": boolean;
+
+    /**
+     * Allow assign an argument for an option in `-a ARG` style or not.
+     *
+     * @default true
+     */
+    "followArgument": boolean;
+
+    /**
+     * Allow mix shortcuts or not.
+     *
+     * @default true
+     */
+    "mix": boolean;
+}
+
+export interface IParserLongOptionConfig {
+
+    /**
+     * Specify the case-sensitivity of options.
+     *
+     * @default false
+     */
+    "caseSensitive": boolean;
+
+    /**
+     * Allow assign an argument for an option in `--add=ARG` style or not.
+     *
+     * @default true
+     */
+    "assignArgument": boolean;
+
+    /**
+     * Allow assign an argument for an option in `--add ARG` style or not.
+     *
+     * @default true
+     */
+    "followArgument": boolean;
+}
+
+export interface IParserOptionConfig {
+
+    /**
+     * The options/flags after first argument will be treat as arguments.
+     *
+     * @default false
+     */
+    "notAfterArguments": boolean;
+
+    /**
+     * Treat unknwon options/flags as arguments.
+     */
+    "unknownAsArguments": boolean;
+
+    /**
+     * The options for options shortcuts.
+     */
+    "shortcut": IParserOptionShortcutConfig;
+
+    /**
+     * The options for options shortcuts.
+     */
+    "long": IParserLongOptionConfig;
+}
+
 export interface IParserConfig {
 
     /**
      * Generate help text.
      */
-    "help": {
-
-        /**
-         * Display the HELP info for each command automatically.
-         */
-        "delegated": boolean;
-
-        /**
-         * Use command and sub-command `help`.
-         *
-         * @default true
-         */
-        "useCommand": boolean;
-
-        /**
-         * Use `-h` for shortcut.
-         *
-         * @default true
-         */
-        "shortFlag": boolean;
-
-        /**
-         * Use `--help` (or `-help` when `go` style).
-         *
-         * @default true
-         */
-        "longFlag": boolean;
-    };
+    "help": IParserHelpConfig;
 
     /**
      * The settings about commands.
      */
-    "commands": {
+    "commands": IParserCommandConfig;
 
-        /**
-         * Specify the case-sensitive of commands.
-         *
-         * @default true
-         */
-        "caseSensitive": boolean;
-    };
+    /**
+     * The settings about arguments/
+     */
+    "arguments": IParserArgumentConfig;
 
     /**
      * The settings about options.
      */
-    "options": {
-
-        /**
-         * The options/flags after first argument will be treat as arguments.
-         *
-         * @default false
-         */
-        "notAfterArguments": boolean;
-
-        /**
-         * The style of options.
-         *
-         * - gnu        Use `-a` as shortcut and `--all` as long.
-         * - windows    Use `/a` as shortcut and `/all` as long.
-         * - go         Use `-a` as shortcut and `-all` as long (GNU traditional style).
-         * - auto       Use `gnu` under *nix system and `windows` on windows system.
-         */
-        "style": "auto" | "gnu" | "windows" | "go";
-
-        /**
-         * The options for options shortcuts.
-         */
-        "shortcut": {
-
-            /**
-             * Allow assign an argument for an option in `-aARG` style or not.
-             *
-             * @default true
-             */
-            "attachArgument": boolean;
-
-            /**
-             * Allow assign an argument for an option in `-a=ARG` style or not.
-             *
-             * @default true
-             */
-            "assignArgument": boolean;
-
-            /**
-             * Allow assign an argument for an option in `-a ARG` style or not.
-             *
-             * @default true
-             */
-            "followArgument": boolean;
-
-            /**
-             * Allow mix shortcuts or not.
-             *
-             * @default true
-             */
-            "mix": boolean;
-        };
-
-        /**
-         * The options for options shortcuts.
-         */
-        "long": {
-
-            /**
-             * Allow assign an argument for an option in `--add=ARG` style or not.
-             *
-             * @default true
-             */
-            "assignArgument": boolean;
-
-            /**
-             * Allow assign an argument for an option in `--add ARG` style or not.
-             *
-             * @default true
-             */
-            "followArgument": boolean;
-        };
-    };
+    "options": IParserOptionConfig;
 }
