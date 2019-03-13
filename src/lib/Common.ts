@@ -76,6 +76,13 @@ export interface IOptionSettings {
      * @default -1
      */
     "arguments"?: number;
+
+    /**
+     * The name for argument, used in HELP documents.
+     *
+     * @default "VALUE"
+     */
+    "argumentName"?: string;
 }
 
 export interface ICommandResult {
@@ -90,6 +97,11 @@ export interface ICommandResult {
 }
 
 export interface IResult {
+
+    /**
+     * Tell if this request showing help document.
+     */
+    "help": string;
 
     /**
      * The parsed commands.
@@ -138,9 +150,8 @@ export interface IParser {
     /**
      * Parse the input arguments.
      *
-     * @returns A `IResult` will be returned when parsed successfully. If help
-     * is handled by the parser, `false` will be returned. When error occurs,
-     * an exception will be thrown.
+     * @returns A `IResult` will be returned when parsed successfully. When
+     * error occurs, an exception will be thrown.
      *
      * @example
      *
@@ -148,7 +159,13 @@ export interface IParser {
      * parser.parse(process.argv.slice(2));
      * ```
      */
-    parse(args: string[]): IResult | false;
+    parse(args: string[]): IResult;
+
+    generateHelp(
+        appName: string,
+        path: string,
+        width?: number
+    ): string[];
 }
 
 export type DeepPartial<T> = {
@@ -167,21 +184,23 @@ export interface IParserHelpConfig {
      *
      * @default true
      */
-    "useCommand": boolean;
-
-    /**
-     * Use `-h` for shortcut.
-     *
-     * @default true
-     */
-    "shortFlag": boolean;
+    "command": boolean;
 
     /**
      * Use `--help` (or `-help` when `go` style).
      *
      * @default true
      */
-    "longFlag": boolean;
+    "flag": boolean;
+
+    /**
+     * Use `-h` for shortcut.
+     *
+     * > Only work while `flag` is set to `true`.
+     *
+     * @default true
+     */
+    "flagShortchut": boolean;
 }
 
 export interface IParserCommandConfig {

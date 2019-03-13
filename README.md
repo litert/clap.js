@@ -15,7 +15,7 @@ npm i @litert/clap --save
 
 ## Documents
 
-- [简体中文版](./docs/zh-CN/index.md)
+Preparing yet.
 
 ## License
 

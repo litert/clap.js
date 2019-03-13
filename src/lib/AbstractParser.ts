@@ -31,7 +31,9 @@ export class Option {
 
         public path?: string,
 
-        public parent?: Command
+        public parent?: Command,
+
+        public argName: string = "VALUE"
     ) {
 
     }
@@ -43,12 +45,12 @@ export class Option {
 
     public static isValidName(name: string): boolean {
 
-        return /^[a-zA-Z0-9][-a-zA-Z0-9]+$/.test(name);
+        return /^[a-z0-9][-a-z0-9]+$/i.test(name);
     }
 
     public static isValidShortcut(shortcut: string): boolean {
 
-        return /^[a-zA-Z0-9]$/.test(shortcut);
+        return /^[a-z0-9]$/i.test(shortcut);
     }
 
 }
@@ -73,7 +75,7 @@ export class Command {
 
         public description: string,
 
-        public alias?: string[],
+        public aliases?: string[],
 
         public parent?: Command
     ) {
@@ -99,6 +101,16 @@ export class Command {
         return null;
     }
 
+    public get hasSubCommands(): boolean {
+
+        return !!Object.keys(this.subCommands).length;
+    }
+
+    public get hasOptions(): boolean {
+
+        return !!Object.keys(this.options).length;
+    }
+
     public getOptionByShortcut(shortcut: string): Option | null {
 
         if (this.optionShortcuts[shortcut]) {
@@ -116,12 +128,12 @@ export class Command {
 
     public static isValidName(name: string): boolean {
 
-        return /^[-a-zA-Z0-9]+$/.test(name);
+        return /^[a-z0-9][-a-z0-9]*$/i.test(name);
     }
 
     public static isValidPath(path: string): boolean {
 
-        return /^[-a-zA-Z0-9]+(\.[-a-zA-Z0-9]+)*$/.test(path);
+        return /^[a-z0-9][-a-z0-9]*(\.[a-z0-9][-a-z0-9]*)*$/i.test(path);
     }
 }
 
@@ -143,6 +155,50 @@ export abstract class AbstractParser implements C.IParser {
         this._cmdAliases = {};
         this._options = {};
         this._optionShortcuts = {};
+
+        if (this._config.help.delegated) {
+
+            if (
+                !this._config.help.flag &&
+                !this._config.help.command
+            ) {
+
+                throw new E.E_CONFLICT_CONFIG({
+                    "message": "Must enable at least one of help-command or help-flag."
+                });
+            }
+        }
+
+        if (this._config.help.delegated && this._config.help.flag) {
+
+            this.addOption({
+                "name": "help",
+                "description": "Display the help information.",
+                "shortcut": this._config.help.flagShortchut ? "h" : undefined,
+                "arguments": 0
+            });
+        }
+
+        if (
+            !this._config.options.long.followArgument &&
+            !this._config.options.long.assignArgument
+        ) {
+
+            throw new E.E_CONFLICT_CONFIG({
+                "message": "Must enable at least one of follow-mode or assign-mode."
+            });
+        }
+
+        if (
+            !this._config.options.shortcut.followArgument &&
+            !this._config.options.shortcut.assignArgument &&
+            !this._config.options.shortcut.attachArgument
+        ) {
+
+            throw new E.E_CONFLICT_CONFIG({
+                "message": "Must enable at least one of follow-mode, attach-mode or assign-mode."
+            });
+        }
     }
 
     public addCommand(settings: C.ICommandSettings): this {
@@ -156,7 +212,7 @@ export abstract class AbstractParser implements C.IParser {
 
         if (settings.path) {
 
-            const cmd = this._findCommandByPath(settings.path);
+            const cmd = this._getCommandByPath(settings.path);
 
             if (!cmd) {
 
@@ -249,7 +305,8 @@ export abstract class AbstractParser implements C.IParser {
                     settings,
                     path,
                     optName,
-                    optShortcut
+                    optShortcut,
+                    settings.argumentName
                 );
             }
         }
@@ -258,7 +315,8 @@ export abstract class AbstractParser implements C.IParser {
             this._addOption(
                 settings,
                 optName,
-                optShortcut
+                optShortcut,
+                settings.argumentName
             );
         }
 
@@ -269,10 +327,11 @@ export abstract class AbstractParser implements C.IParser {
         settings: C.IOptionSettings,
         path: string,
         optName: string,
-        optShortcut: string | undefined
+        optShortcut: string | undefined,
+        argName?: string
     ): void {
 
-        const cmd = this._findCommandByPath(path);
+        const cmd = this._getCommandByPath(path);
 
         if (!cmd) {
 
@@ -301,7 +360,8 @@ export abstract class AbstractParser implements C.IParser {
             optShortcut,
             settings.arguments,
             path,
-            cmd
+            cmd,
+            argName
         );
 
         if (optShortcut) {
@@ -313,7 +373,8 @@ export abstract class AbstractParser implements C.IParser {
     protected _addOption(
         settings: C.IOptionSettings,
         optName: string,
-        optShortcut: string | undefined
+        optShortcut: string | undefined,
+        argName?: string
     ): void {
 
         if (this._options[optName]) {
@@ -334,7 +395,10 @@ export abstract class AbstractParser implements C.IParser {
             optName,
             settings.description,
             optShortcut,
-            settings.arguments
+            settings.arguments,
+            undefined,
+            undefined,
+            argName
         );
 
         if (optShortcut) {
@@ -413,7 +477,7 @@ export abstract class AbstractParser implements C.IParser {
         return ret;
     }
 
-    protected _findCommandByPath(path: string): Command | null {
+    protected _getCommandByPath(path: string): Command | null {
 
         path = this._prepareCommandPath(path);
 
@@ -434,5 +498,11 @@ export abstract class AbstractParser implements C.IParser {
         }
     }
 
-    public abstract parse(args: string[]): C.IResult | false;
+    public abstract parse(args: string[]): C.IResult;
+
+    public abstract generateHelp(
+        appName: string,
+        path: string,
+        width?: number
+    ): string[];
 }

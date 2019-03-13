@@ -23,6 +23,8 @@ import {
     Command
 } from "./AbstractParser";
 
+const MIN_TERM_WIDTH = 80;
+
 interface IContext {
 
     cursor: number;
@@ -43,13 +45,14 @@ interface IContext {
 
 class GNUParser extends AbstractParser {
 
-    public parse(args: string[]): C.IResult | false {
+    public parse(args: string[]): C.IResult {
 
         const ctx: IContext = {
 
             cursor: 0,
             segments: this._prepareArgs(args.slice()),
             result: {
+                help: "",
                 commands: [],
                 options: {},
                 unknownOptions: [],
@@ -88,9 +91,22 @@ class GNUParser extends AbstractParser {
             }
         }
 
-        if (ctx.result.arguments.length < this._config.arguments.minimalInputs) {
+        if (this._config.help.flag && ctx.result.flags.help) {
+
+            ctx.result.help = "true";
+        }
+
+        if (ctx.result.help) {
+
+            ctx.result.help = ctx.path || ".";
+        }
+        else if (ctx.result.arguments.length < this._config.arguments.minimalInputs) {
 
             throw new E.E_NO_ENOUGH_ARGUMENTS();
+        }
+        else if (ctx.command && ctx.command.info.hasSubCommands) {
+
+            throw new E.E_COMMAND_EXPECTED();
         }
 
         return ctx.result;
@@ -197,11 +213,18 @@ class GNUParser extends AbstractParser {
                 const scInfo = this._getOptionByShortuct(ctx, shortcut);
 
                 /**
-                 * If mixed-mode is used but forbidden, or no such an option.
+                 * If no such an option.
                  */
                 if (forceUnknown || !scInfo) {
 
-                    this._saveUnknownOptions(ctx, `-${shortcut}`);
+                    this._saveUnknownOptions(
+                        ctx,
+                        shortcuts.length === 1 ?
+                            theArg : j === shortcuts.length - 1 ?
+                                `-${theArg.slice(j + 1)}` :
+                                `-${shortcut}`
+                    );
+
                     continue;
                 }
 
@@ -309,6 +332,17 @@ class GNUParser extends AbstractParser {
         }
         else {
 
+            if (
+                this._config.help.delegated &&
+                this._config.help.command &&
+                theSeg.toLowerCase() === "help"
+            ) {
+
+                ctx.result.help = ".";
+
+                return true;
+            }
+
             info = this._cmds[theSeg];
         }
 
@@ -409,13 +443,18 @@ class GNUParser extends AbstractParser {
         expr?: string
     ): void {
 
+        expr = expr || ctx.segments[ctx.cursor];
+
         if (this._config.options.unknownAsArguments) {
 
-            ctx.result.arguments.push(expr || ctx.segments[ctx.cursor]);
+            ctx.result.arguments.push(expr);
         }
         else {
 
-            ctx.result.unknownOptions.push(expr || ctx.segments[ctx.cursor]);
+            if (!ctx.result.unknownOptions.includes(expr)) {
+
+                ctx.result.unknownOptions.push(expr);
+            }
         }
     }
 
@@ -494,14 +533,284 @@ class GNUParser extends AbstractParser {
 
         return args;
     }
+
+    public generateHelp(
+        appName: string,
+        path: string,
+        width: number= MIN_TERM_WIDTH
+    ): string[] {
+
+        if (width < MIN_TERM_WIDTH) {
+
+            width = MIN_TERM_WIDTH;
+        }
+
+        return (path && path !== ".") ?
+            this._generateCommandHelp(appName, path, width) :
+            this._generateRootHelp(appName, width);
+    }
+
+    private _generateCommandNames(cmd: Command): string {
+
+        if (cmd.aliases && cmd.aliases.length) {
+
+            return [cmd.name, ...cmd.aliases].join(", ");
+        }
+
+        return cmd.name;
+    }
+
+    private _generateOptionNames(option: Option): string {
+
+        const ARG_NAME = option.isFlag() ? "" : ` <${option.argName.toUpperCase()}>`;
+
+        if (option.shortcut) {
+
+            return `-${option.shortcut}, --${option.name}${ARG_NAME}`;
+        }
+
+        return U.indent(`--${option.name}${ARG_NAME}`);
+    }
+
+    private _generateCommandHelp(
+        appName: string,
+        path: string,
+        width: number
+    ): string[] {
+
+        const cmd = this._getCommandByPath(path);
+
+        if (!cmd) {
+
+            throw new E.E_COMMAND_NOT_FOUND_BY_PATH({
+                "metadata": { path }
+            });
+        }
+
+        const output: string[] = [];
+
+        const cmdHelpTips: string[] = [];
+
+        const cmdExpr = path.replace(/\./g, " ");
+
+        if (cmd.hasSubCommands) {
+
+            output.push(...U.wrapLines(
+                `Usage: ${appName} ${cmdExpr} [OPTIONS]... <COMMAND>... [ARGS]...`,
+                width,
+                2
+            ));
+
+            output.push("");
+
+            output.push("Commands:");
+
+            output.push("");
+
+            this._genHelpList(
+                output,
+                Object.values(cmd.subCommands).map(
+                    (o) => [
+                        this._generateCommandNames(o),
+                        o.description
+                    ]
+                ),
+                width
+            );
+
+            output.push("");
+
+            if (this._config.help.command) {
+
+                cmdHelpTips.push(`"${appName} help ${cmdExpr} <COMMAND>"`);
+            }
+
+            output.push("");
+        }
+        else if (cmd.hasOptions) {
+
+            output.push(`Usage: ${appName} ${cmdExpr} [OPTIONS]... [ARGS]...`);
+        }
+        else {
+
+            output.push(`Usage: ${appName} ${cmdExpr} [ARGS]...`);
+        }
+
+        if (cmd.hasOptions) {
+
+            output.push("");
+
+            output.push("Options:");
+
+            output.push("");
+
+            this._genHelpList(
+                output,
+                Object.values(cmd.options).map(
+                    (o) => [
+                        this._generateOptionNames(o),
+                        o.description
+                    ]
+                ),
+                width
+            );
+
+            if (cmd.hasSubCommands && this._config.help.flag) {
+
+                cmdHelpTips.push(`"${appName} ${cmdExpr} <COMMAND> --help"`);
+
+                if (this._config.help.flagShortchut) {
+
+                    cmdHelpTips.push(`"${appName} ${cmdExpr} <COMMAND> -h"`);
+                }
+            }
+
+            output.push("");
+        }
+
+        if (cmdHelpTips.length) {
+
+            output.push(...U.wrapLines(
+                `Use ${cmdHelpTips.join(", ")} to see more details.`,
+                width
+            ));
+        }
+
+        return output;
+    }
+
+    private _generateRootHelp(appName: string, width: number): string[] {
+
+        let output: string[] = [];
+
+        let cmdHelpTips: string[] = [];
+
+        const hasCommands = !!Object.keys(this._cmds).length;
+
+        if (hasCommands) {
+
+            output.push(`Usage: ${appName} [OPTIONS]... <COMMAND>... [ARGS]...`);
+
+            output.push("");
+
+            output.push("Commands:");
+
+            output.push("");
+
+            this._genHelpList(
+                output,
+                Object.values(this._cmds).map(
+                    (o) => [
+                        this._generateCommandNames(o),
+                        o.description
+                    ]
+                ),
+                width
+            );
+
+            output.push("");
+
+            if (this._config.help.command) {
+
+                cmdHelpTips.push(`"${appName} help <COMMAND>"`);
+            }
+
+            output.push("");
+        }
+        else if (!Object.keys(this._options).length) {
+
+            output.push(`Usage: ${appName} [ARGS]...`);
+        }
+        else {
+
+            output.push(`Usage: ${appName} [OPTIONS]... [ARGS]...`);
+        }
+
+        if (Object.keys(this._options).length) {
+
+            output.push("");
+
+            output.push("Options:");
+
+            output.push("");
+
+            this._genHelpList(
+                output,
+                Object.values(this._options).map(
+                    (o) => [
+                        this._generateOptionNames(o),
+                        o.description
+                    ]
+                ),
+                width
+            );
+
+            if (hasCommands && this._config.help.flag) {
+
+                cmdHelpTips.push(`"${appName} <COMMAND> --help"`);
+
+                if (this._config.help.flagShortchut) {
+
+                    cmdHelpTips.push(`"${appName} <COMMAND> -h"`);
+                }
+            }
+
+            output.push("");
+        }
+
+        if (cmdHelpTips.length) {
+
+            output.push(...U.wrapLines(
+                `Use ${cmdHelpTips.join(", ")} to see more details.`,
+                width
+            ));
+        }
+
+        return output;
+    }
+
+    private _genHelpList(
+        output: string[],
+        items: string[][],
+        width: number
+    ): void {
+
+        const LEFT_COL_TABS = Math.ceil(width / 16);
+        const LEFT_COL_WIDTH = LEFT_COL_TABS * 4;
+        const LEFT_COL_CONTENT_LENGTH = LEFT_COL_WIDTH - 6;
+
+        for (const row of items) {
+
+            const descr = U.wrapLines(
+                row[1],
+                width - LEFT_COL_WIDTH
+            );
+
+            // <len> + 4-spaces + 2-spaces
+            if (row[0].length > LEFT_COL_CONTENT_LENGTH) {
+
+                output.push(
+                    U.indent(row[0]),
+                    ...descr.map((x) => U.indent(x, LEFT_COL_TABS))
+                );
+            }
+            else {
+
+                output.push(
+                    U.indent(row[0]).padEnd(LEFT_COL_WIDTH, " ") + descr[0],
+                    ...descr.slice(1).map((x) => U.indent(x, LEFT_COL_TABS))
+                );
+            }
+        }
+    }
 }
 
 const DEFAULT_CONFIG: C.IParserConfig = {
     "help": {
         "delegated": true,
-        "longFlag": true,
-        "shortFlag": true,
-        "useCommand": true
+        "flag": true,
+        "flagShortchut": true,
+        "command": true
     },
     "arguments": {
 

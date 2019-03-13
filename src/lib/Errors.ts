@@ -16,7 +16,7 @@
 
 import * as Core from "@litert/core";
 
-export const ErrorHub = Core.createErrorHub("@litert/clap");
+export const ErrorHub = Core.createErrorHub<Record<string, any>>("@litert/clap");
 
 export const E_DUP_COMMAND_NAME = ErrorHub.define(
     null,
@@ -96,7 +96,7 @@ export const E_EXPECT_OPTION_ARGUMENT = ErrorHub.define(
 export const E_UNKNOWN_COMMAND = ErrorHub.define(
     null,
     "E_UNKNOWN_COMMAND",
-    "Missing the command."
+    "The command doesn't exist."
 );
 
 export const E_TOO_MANY_ARGUMENTS = ErrorHub.define(
@@ -109,4 +109,16 @@ export const E_NO_ENOUGH_ARGUMENTS = ErrorHub.define(
     null,
     "E_NO_ENOUGH_ARGUMENTS",
     "The quantity of arguments is not enough."
+);
+
+export const E_COMMAND_EXPECTED = ErrorHub.define(
+    null,
+    "E_COMMAND_EXPECTED",
+    "Missing command or sub command."
+);
+
+export const E_CONFLICT_CONFIG = ErrorHub.define(
+    null,
+    "E_CONFLICT_CONFIG",
+    "The configuration is invalid because it's conflicted."
 );
