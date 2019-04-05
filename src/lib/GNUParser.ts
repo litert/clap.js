@@ -527,7 +527,11 @@ class GNUParser extends AbstractParser {
                 pos,
                 -2,
                 "--",
-                args.splice(pos, args.length - pos).slice(1).join(" ")
+                args.splice(
+                    pos, args.length - pos
+                ).map(
+                    (x) => `"${x}"`
+                ).slice(1).join(" ")
             );
         }
 

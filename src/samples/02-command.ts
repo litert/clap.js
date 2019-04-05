@@ -91,7 +91,7 @@ parser.addOption({
 console.log(JSON.stringify(
     parser.parse([
         "help", "login", "-u=fenying", "-p=helloworld!", "-vcfff",
-        "--", "--username=fff", "--ccc=12313"
+        "--", "--username=fff", "--ccc=12313", "this is a test"
     ]),
     null,
     2
