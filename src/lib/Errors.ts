@@ -1,5 +1,5 @@
 /**
- *  Copyright 2019 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2020 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,111 +14,129 @@
  *  limitations under the License.
  */
 
-import * as Core from "@litert/core";
+import * as Core from '@litert/core';
 
-export const ErrorHub = Core.createErrorHub<Record<string, any>>("@litert/clap");
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const ErrorHub = Core.createErrorHub<Record<string, any>>('@litert/clap');
 
-export const E_DUP_COMMAND_NAME = ErrorHub.define(
+export const E_DUP_COMMAND_NAME = ErrorHub.define<Record<string, any>>(
     null,
-    "E_DUP_COMMAND_NAME",
-    "The name of command has been used already."
+    'E_DUP_COMMAND_NAME',
+    'The name of command has been used already.',
+    {}
 );
 
-export const E_DUP_COMMAND_ALIAS = ErrorHub.define(
+export const E_DUP_COMMAND_ALIAS = ErrorHub.define<Record<string, any>>(
     null,
-    "E_DUP_COMMAND_ALIAS",
-    "The alias of command has been used already."
+    'E_DUP_COMMAND_ALIAS',
+    'The alias of command has been used already.',
+    {}
 );
 
 /**
  * The command specified by path doesn't exist.
  */
-export const E_COMMAND_NOT_FOUND_BY_PATH = ErrorHub.define(
+export const E_COMMAND_NOT_FOUND_BY_PATH = ErrorHub.define<Record<string, any>>(
     null,
-    "E_COMMAND_NOT_FOUND_BY_PATH",
-    "The command specified by path doesn't exist."
+    'E_COMMAND_NOT_FOUND_BY_PATH',
+    'The command specified by path doesn\'t exist.',
+    {}
 );
 
-export const E_INVALID_COMMAND_NAME = ErrorHub.define(
+export const E_INVALID_COMMAND_NAME = ErrorHub.define<Record<string, any>>(
     null,
-    "E_INVALID_COMMAND_NAME",
-    "The name of command is invalid."
+    'E_INVALID_COMMAND_NAME',
+    'The name of command is invalid.',
+    {}
 );
 
-export const E_INVALID_COMMAND_ALIAS = ErrorHub.define(
+export const E_INVALID_COMMAND_ALIAS = ErrorHub.define<Record<string, any>>(
     null,
-    "E_INVALID_COMMAND_ALIAS",
-    "The alias of command is invalid."
+    'E_INVALID_COMMAND_ALIAS',
+    'The alias of command is invalid.',
+    {}
 );
 
-export const E_INVALID_COMMAND_PATH = ErrorHub.define(
+export const E_INVALID_COMMAND_PATH = ErrorHub.define<Record<string, any>>(
     null,
-    "E_INVALID_COMMAND_PATH",
-    "The path of command is invalid."
+    'E_INVALID_COMMAND_PATH',
+    'The path of command is invalid.',
+    {}
 );
 
-export const E_DUP_OPTION_NAME = ErrorHub.define(
+export const E_DUP_OPTION_NAME = ErrorHub.define<Record<string, any>>(
     null,
-    "E_DUP_OPTION_NAME",
-    "The name of option has been used already."
+    'E_DUP_OPTION_NAME',
+    'The name of option has been used already.',
+    {}
 );
 
-export const E_DUP_OPTION_SHORTCUT = ErrorHub.define(
+export const E_DUP_OPTION_SHORTCUT = ErrorHub.define<Record<string, any>>(
     null,
-    "E_DUP_OPTION_SHORTCUT",
-    "The name of option has been used already."
+    'E_DUP_OPTION_SHORTCUT',
+    'The name of option has been used already.',
+    {}
 );
 
-export const E_INVALID_OPTION_NAME = ErrorHub.define(
+export const E_INVALID_OPTION_NAME = ErrorHub.define<Record<string, any>>(
     null,
-    "E_INVALID_OPTION_NAME",
-    "The name of option is invalid."
+    'E_INVALID_OPTION_NAME',
+    'The name of option is invalid.',
+    {}
 );
 
-export const E_INVALID_OPTION_SHORTCUT = ErrorHub.define(
+export const E_INVALID_OPTION_SHORTCUT = ErrorHub.define<Record<string, any>>(
     null,
-    "E_INVALID_OPTION_SHORTCUT",
-    "The shortcut of option is invalid."
+    'E_INVALID_OPTION_SHORTCUT',
+    'The shortcut of option is invalid.',
+    {}
 );
 
-export const E_INCORRECT_OPTION_SHORTCUT_USAGE = ErrorHub.define(
+export const E_INCORRECT_OPTION_SHORTCUT_USAGE = ErrorHub.define<Record<string, any>>(
     null,
-    "E_INCORRECT_OPTION_SHORTCUT_USAGE",
-    "The option must be the last one in shortcut mixs usage."
+    'E_INCORRECT_OPTION_SHORTCUT_USAGE',
+    'The option must be the last one in shortcut mixs usage.',
+    {}
 );
 
-export const E_EXPECT_OPTION_ARGUMENT = ErrorHub.define(
+export const E_EXPECT_OPTION_ARGUMENT = ErrorHub.define<Record<string, any>>(
     null,
-    "E_EXPECT_OPTION_ARGUMENT",
-    "Missing the argument of an option."
+    'E_EXPECT_OPTION_ARGUMENT',
+    'Missing the argument of an option.',
+    {}
 );
 
-export const E_UNKNOWN_COMMAND = ErrorHub.define(
+export const E_UNKNOWN_COMMAND = ErrorHub.define<Record<string, any>>(
     null,
-    "E_UNKNOWN_COMMAND",
-    "The command doesn't exist."
+    'E_UNKNOWN_COMMAND',
+    'The command doesn\'t exist.',
+    {}
 );
 
-export const E_TOO_MANY_ARGUMENTS = ErrorHub.define(
+export const E_TOO_MANY_ARGUMENTS = ErrorHub.define<Record<string, any>>(
     null,
-    "E_TOO_MANY_ARGUMENTS",
-    "Too many arguments for the option."
+    'E_TOO_MANY_ARGUMENTS',
+    'Too many arguments for the option.',
+    {}
 );
 
-export const E_NO_ENOUGH_ARGUMENTS = ErrorHub.define(
+export const E_NO_ENOUGH_ARGUMENTS = ErrorHub.define<Record<string, any>>(
     null,
-    "E_NO_ENOUGH_ARGUMENTS",
-    "The quantity of arguments is not enough."
+    'E_NO_ENOUGH_ARGUMENTS',
+    'The quantity of arguments is not enough.',
+    {}
 );
 
-export const E_COMMAND_EXPECTED = ErrorHub.define(
+export const E_COMMAND_EXPECTED = ErrorHub.define<Record<string, any>>(
     null,
-    "E_COMMAND_EXPECTED",
-    "Missing command or sub command."
+    'E_COMMAND_EXPECTED',
+    'Missing command or sub command.',
+    {}
 );
 
-export const E_CONFLICT_CONFIG = ErrorHub.define(
+export const E_CONFLICT_CONFIG = ErrorHub.define<Record<string, any>>(
     null,
-    "E_CONFLICT_CONFIG",
-    "The configuration is invalid because it's conflicted."
+    'E_CONFLICT_CONFIG',
+    'The configuration is invalid because it\'s conflicted.',
+    {}
 );

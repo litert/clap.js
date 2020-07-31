@@ -1,5 +1,5 @@
 /**
- *  Copyright 2019 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2020 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 
-import * as C from "./Common";
-import * as E from "./Errors";
-import * as U from "./Utils";
+import * as C from './Common';
+import * as E from './Errors';
+import * as U from './Utils';
 import {
     AbstractParser,
     Option,
     Command
-} from "./AbstractParser";
+} from './AbstractParser';
 
 const MIN_TERM_WIDTH = 80;
 
@@ -35,9 +35,9 @@ interface IContext {
 
     command?: {
 
-        "info": Command;
+        'info': Command;
 
-        "result": C.ICommandResult;
+        'result': C.ICommandResult;
     };
 
     path?: string;
@@ -52,7 +52,7 @@ class GNUParser extends AbstractParser {
             cursor: 0,
             segments: this._prepareArgs(args.slice()),
             result: {
-                help: "",
+                help: '',
                 commands: [],
                 options: {},
                 unknownOptions: [],
@@ -80,7 +80,7 @@ class GNUParser extends AbstractParser {
 
             let theArg = ctx.segments[ctx.cursor];
 
-            if (theArg === "--") {
+            if (theArg === '--') {
 
                 theArg = ctx.segments[++ctx.cursor];
             }
@@ -93,20 +93,32 @@ class GNUParser extends AbstractParser {
 
         if (this._config.help.flag && ctx.result.flags.help) {
 
-            ctx.result.help = "true";
+            ctx.result.help = 'true';
         }
 
         if (ctx.result.help) {
 
-            ctx.result.help = ctx.path || ".";
+            ctx.result.help = ctx.path ?? '.';
         }
         else if (ctx.result.arguments.length < this._config.arguments.minimalInputs) {
 
             throw new E.E_NO_ENOUGH_ARGUMENTS();
         }
-        else if (ctx.command && ctx.command.info.hasSubCommands) {
+        else if (ctx.command?.info.hasSubCommands) {
 
             throw new E.E_COMMAND_EXPECTED();
+        }
+        else if (ctx.command?.info.maxArguments || ctx.command?.info.minArguments) {
+
+            if (ctx.command?.info.maxArguments > 0 && ctx.result.arguments.length > ctx.command?.info.maxArguments) {
+
+                throw new E.E_TOO_MANY_ARGUMENTS();
+            }
+
+            if (ctx.command?.info.minArguments > 0 && ctx.result.arguments.length < ctx.command?.info.minArguments) {
+
+                throw new E.E_NO_ENOUGH_ARGUMENTS();
+            }
         }
 
         return ctx.result;
@@ -132,7 +144,7 @@ class GNUParser extends AbstractParser {
                 return true;
             }
 
-            let [optName, optValue] = this._parseOption(theArg.slice(2));
+            const [optName, optValue] = this._parseOption(theArg.slice(2));
 
             if (optValue !== undefined && !this._config.options.long.assignArgument) {
 
@@ -180,7 +192,7 @@ class GNUParser extends AbstractParser {
             else {
 
                 throw new E.E_EXPECT_OPTION_ARGUMENT({
-                    "metadata": { "option": option.name }
+                    'metadata': { 'option': option.name }
                 });
             }
         }
@@ -197,7 +209,7 @@ class GNUParser extends AbstractParser {
          */
         if (/^-[a-zA-Z0-9]+/.test(theArg)) {
 
-            let [optName, optValue] = U.strSplit(theArg.slice(1), "=", 2);
+            let [optName, optValue] = U.strSplit(theArg.slice(1), '=', 2);
 
             /**
              * When mix-flags is off, the mixed flags shold be treat as unknown
@@ -293,7 +305,7 @@ class GNUParser extends AbstractParser {
                 else {
 
                     throw new E.E_EXPECT_OPTION_ARGUMENT({
-                        "metadata": { "option": scInfo.name }
+                        'metadata': { 'option': scInfo.name }
                     });
                 }
             }
@@ -335,10 +347,10 @@ class GNUParser extends AbstractParser {
             if (
                 this._config.help.delegated &&
                 this._config.help.command &&
-                theSeg.toLowerCase() === "help"
+                theSeg.toLowerCase() === 'help'
             ) {
 
-                ctx.result.help = ".";
+                ctx.result.help = '.';
 
                 return true;
             }
@@ -360,7 +372,7 @@ class GNUParser extends AbstractParser {
             if (!info) {
 
                 throw new E.E_UNKNOWN_COMMAND({
-                    "metadata": { "command": theSeg }
+                    'metadata': { 'command': theSeg }
                 });
             }
         }
@@ -374,7 +386,7 @@ class GNUParser extends AbstractParser {
 
         ctx.result.commands.push(result);
 
-        ctx.path = ctx.result.commands.map((x) => x.name).join(".");
+        ctx.path = ctx.result.commands.map((x) => x.name).join('.');
 
         ctx.command = {
 
@@ -389,7 +401,7 @@ class GNUParser extends AbstractParser {
 
         let ret = ctx.segments[++ctx.cursor];
 
-        if (ret === "--") {
+        if (ret === '--') {
 
             ret = ctx.segments[++ctx.cursor];
         }
@@ -400,7 +412,7 @@ class GNUParser extends AbstractParser {
         if (ret === undefined) {
 
             throw new E.E_EXPECT_OPTION_ARGUMENT({
-                "metadata": { optionName }
+                'metadata': { optionName }
             });
         }
 
@@ -409,7 +421,7 @@ class GNUParser extends AbstractParser {
 
     private _parseOption(expr: string): [string, string?] {
 
-        return U.strSplit(expr, "=", 2) as [string, string?];
+        return U.strSplit(expr, '=', 2) as [string, string?];
     }
 
     private _getOptionByName(ctx: IContext, name: string): Option {
@@ -418,8 +430,7 @@ class GNUParser extends AbstractParser {
 
         if (ctx.command) {
 
-            return ctx.command.info.getOptionByName(name) ||
-                    this._options[name];
+            return ctx.command.info.getOptionByName(name) ?? this._options[name];
         }
 
         return this._options[name];
@@ -431,8 +442,7 @@ class GNUParser extends AbstractParser {
 
         if (ctx.command) {
 
-            return ctx.command.info.getOptionByShortcut(shortcut) ||
-                    this._optionShortcuts[shortcut];
+            return ctx.command.info.getOptionByShortcut(shortcut) ?? this._optionShortcuts[shortcut];
         }
 
         return this._optionShortcuts[shortcut];
@@ -443,7 +453,7 @@ class GNUParser extends AbstractParser {
         expr?: string
     ): void {
 
-        expr = expr || ctx.segments[ctx.cursor];
+        expr = expr ?? ctx.segments[ctx.cursor];
 
         if (this._config.options.unknownAsArguments) {
 
@@ -493,7 +503,7 @@ class GNUParser extends AbstractParser {
         ) {
 
             throw new E.E_TOO_MANY_ARGUMENTS({
-                "metadata": { "optionName": option.name }
+                'metadata': { 'optionName': option.name }
             });
         }
     }
@@ -519,19 +529,19 @@ class GNUParser extends AbstractParser {
 
     private _prepareArgs(args: string[]): string[] {
 
-        const pos = args.indexOf("--");
+        const pos = args.indexOf('--');
 
         if (pos !== -1) {
 
             args.splice(
                 pos,
                 -2,
-                "--",
+                '--',
                 args.splice(
                     pos, args.length - pos
                 ).map(
                     (x) => `"${x}"`
-                ).slice(1).join(" ")
+                ).slice(1).join(' ')
             );
         }
 
@@ -549,16 +559,16 @@ class GNUParser extends AbstractParser {
             width = MIN_TERM_WIDTH;
         }
 
-        return (path && path !== ".") ?
+        return (path && path !== '.') ?
             this._generateCommandHelp(appName, path, width) :
             this._generateRootHelp(appName, width);
     }
 
     private _generateCommandNames(cmd: Command): string {
 
-        if (cmd.aliases && cmd.aliases.length) {
+        if (cmd.aliases?.length) {
 
-            return [cmd.name, ...cmd.aliases].join(", ");
+            return [cmd.name, ...cmd.aliases].join(', ');
         }
 
         return cmd.name;
@@ -566,7 +576,7 @@ class GNUParser extends AbstractParser {
 
     private _generateOptionNames(option: Option): string {
 
-        const ARG_NAME = option.isFlag() ? "" : ` <${option.argName.toUpperCase()}>`;
+        const ARG_NAME = option.isFlag() ? '' : ` <${option.argName.toUpperCase()}>`;
 
         if (option.shortcut) {
 
@@ -587,7 +597,7 @@ class GNUParser extends AbstractParser {
         if (!cmd) {
 
             throw new E.E_COMMAND_NOT_FOUND_BY_PATH({
-                "metadata": { path }
+                'metadata': { path }
             });
         }
 
@@ -595,7 +605,7 @@ class GNUParser extends AbstractParser {
 
         const cmdHelpTips: string[] = [];
 
-        const cmdExpr = path.replace(/\./g, " ");
+        const cmdExpr = path.replace(/\./g, ' ');
 
         if (cmd.hasSubCommands) {
 
@@ -605,11 +615,11 @@ class GNUParser extends AbstractParser {
                 2
             ));
 
-            output.push("");
+            output.push('');
 
-            output.push("Commands:");
+            output.push('Commands:');
 
-            output.push("");
+            output.push('');
 
             this._genHelpList(
                 output,
@@ -622,31 +632,29 @@ class GNUParser extends AbstractParser {
                 width
             );
 
-            output.push("");
-
             if (this._config.help.command) {
 
                 cmdHelpTips.push(`"${appName} help ${cmdExpr} <COMMAND>"`);
             }
-
-            output.push("");
         }
         else if (cmd.hasOptions) {
 
             output.push(`Usage: ${appName} ${cmdExpr} [OPTIONS]... [ARGS]...`);
+
+            output.push('');
         }
         else {
 
             output.push(`Usage: ${appName} ${cmdExpr} [ARGS]...`);
+
+            output.push('');
         }
 
         if (cmd.hasOptions) {
 
-            output.push("");
+            output.push('Options:');
 
-            output.push("Options:");
-
-            output.push("");
+            output.push('');
 
             this._genHelpList(
                 output,
@@ -668,14 +676,12 @@ class GNUParser extends AbstractParser {
                     cmdHelpTips.push(`"${appName} ${cmdExpr} <COMMAND> -h"`);
                 }
             }
-
-            output.push("");
         }
 
         if (cmdHelpTips.length) {
 
             output.push(...U.wrapLines(
-                `Use ${cmdHelpTips.join(", ")} to see more details.`,
+                `Use ${cmdHelpTips.join(', ')} to see more details.`,
                 width
             ));
         }
@@ -685,9 +691,9 @@ class GNUParser extends AbstractParser {
 
     private _generateRootHelp(appName: string, width: number): string[] {
 
-        let output: string[] = [];
+        const output: string[] = [];
 
-        let cmdHelpTips: string[] = [];
+        const cmdHelpTips: string[] = [];
 
         const hasCommands = !!Object.keys(this._cmds).length;
 
@@ -695,11 +701,11 @@ class GNUParser extends AbstractParser {
 
             output.push(`Usage: ${appName} [OPTIONS]... <COMMAND>... [ARGS]...`);
 
-            output.push("");
+            output.push('');
 
-            output.push("Commands:");
+            output.push('Commands:');
 
-            output.push("");
+            output.push('');
 
             this._genHelpList(
                 output,
@@ -712,31 +718,29 @@ class GNUParser extends AbstractParser {
                 width
             );
 
-            output.push("");
-
             if (this._config.help.command) {
 
                 cmdHelpTips.push(`"${appName} help <COMMAND>"`);
             }
-
-            output.push("");
         }
         else if (!Object.keys(this._options).length) {
 
             output.push(`Usage: ${appName} [ARGS]...`);
+
+            output.push('');
         }
         else {
 
             output.push(`Usage: ${appName} [OPTIONS]... [ARGS]...`);
+
+            output.push('');
         }
 
         if (Object.keys(this._options).length) {
 
-            output.push("");
+            output.push('Options:');
 
-            output.push("Options:");
-
-            output.push("");
+            output.push('');
 
             this._genHelpList(
                 output,
@@ -758,14 +762,12 @@ class GNUParser extends AbstractParser {
                     cmdHelpTips.push(`"${appName} <COMMAND> -h"`);
                 }
             }
-
-            output.push("");
         }
 
         if (cmdHelpTips.length) {
 
             output.push(...U.wrapLines(
-                `Use ${cmdHelpTips.join(", ")} to see more details.`,
+                `Use ${cmdHelpTips.join(', ')} to see more details.`,
                 width
             ));
         }
@@ -801,50 +803,55 @@ class GNUParser extends AbstractParser {
             else {
 
                 output.push(
-                    U.indent(row[0]).padEnd(LEFT_COL_WIDTH, " ") + descr[0],
+                    U.indent(row[0]).padEnd(LEFT_COL_WIDTH, ' ') + descr[0],
                     ...descr.slice(1).map((x) => U.indent(x, LEFT_COL_TABS))
                 );
             }
+        }
+
+        if (items.length) {
+
+            output.push('');
         }
     }
 }
 
 const DEFAULT_CONFIG: C.IParserConfig = {
-    "help": {
-        "delegated": true,
-        "flag": true,
-        "flagShortchut": true,
-        "command": true
+    'help': {
+        'delegated': true,
+        'flag': true,
+        'flagShortchut': true,
+        'command': true
     },
-    "arguments": {
+    'arguments': {
 
-        "minimalInputs": 0
+        'minimalInputs': 0
     },
-    "commands": {
+    'commands': {
 
-        "aliasCaseSensitive": false,
-        "caseSensitive": false
+        'aliasCaseSensitive': false,
+        'caseSensitive': false
     },
-    "options": {
-        "notAfterArguments": false,
-        "unknownAsArguments": false,
-        "shortcut": {
-            "caseSensitive": true,
-            "attachArgument": true,
-            "assignArgument": true,
-            "followArgument": true,
-            "mix": true
+    'options': {
+        'notAfterArguments': false,
+        'unknownAsArguments': false,
+        'shortcut': {
+            'caseSensitive': true,
+            'attachArgument': true,
+            'assignArgument': true,
+            'followArgument': true,
+            'mix': true
         },
-        "long": {
+        'long': {
 
-            "caseSensitive": true,
-            "assignArgument": true,
-            "followArgument": true,
+            'caseSensitive': true,
+            'assignArgument': true,
+            'followArgument': true,
         }
     }
 };
 
 export function createGNUParser(config?: C.DeepPartial<C.IParserConfig>): C.IParser {
 
-    return new GNUParser(U.deepDefault(config || {}, DEFAULT_CONFIG));
+    return new GNUParser(U.deepDefault(config ?? {}, DEFAULT_CONFIG));
 }

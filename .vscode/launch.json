@@ -7,25 +7,25 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "[LiteRT/Clap.js] Sample 01 - Commandless",
-            "program": "${workspaceFolder}/src/samples/01-command-less.ts",
+            "name": "[LiteRT/Clap.js] example 01 - Commandless",
+            "program": "${workspaceFolder}/src/examples/01-command-less.ts",
             "cwd": "${workspaceFolder}",
             "sourceMaps": true,
             "outFiles": [
                 "${workspaceFolder}/lib/*.js",
-                "${workspaceFolder}/samples/*.js"
+                "${workspaceFolder}/examples/*.js"
             ]
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "[LiteRT/Clap.js] Sample 02 - Command help",
-            "program": "${workspaceFolder}/src/samples/02-command.ts",
+            "name": "[LiteRT/Clap.js] example 02 - Command help",
+            "program": "${workspaceFolder}/src/examples/02-command.ts",
             "cwd": "${workspaceFolder}",
             "sourceMaps": true,
             "outFiles": [
                 "${workspaceFolder}/lib/*.js",
-                "${workspaceFolder}/samples/*.js"
+                "${workspaceFolder}/examples/*.js"
             ]
         }
     ]

@@ -1,5 +1,5 @@
 /**
- *  Copyright 2019 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2020 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,24 +19,34 @@ export interface ICommandSettings {
     /**
      * Specify the command-path if the command is a sub-command.
      */
-    "path"?: string;
+    'path'?: string;
 
     /**
      * Specify the full command name.
      */
-    "name": string;
+    'name': string;
 
     /**
      * The description about this command.
      *
      * This will be displayed in HELP information.
      */
-    "description": string;
+    'description': string;
 
     /**
      * Specify a shortcut or alias for this command.
      */
-    "aliases"?: string | string[];
+    'aliases'?: string | string[];
+
+    /**
+     * The minimal quantity of arguments for this command.
+     */
+    'minArguments'?: number;
+
+    /**
+     * The maximum quantity of arguments for this command.
+     */
+    'maxArguments'?: number;
 }
 
 export interface IOptionSettings {
@@ -44,26 +54,26 @@ export interface IOptionSettings {
     /**
      * Specify the command-path if the option is for specific commands.
      */
-    "path"?: string | string[];
+    'path'?: string | string[];
 
     /**
      * Specify the full option name.
      */
-    "name": string;
+    'name': string;
 
     /**
      * The description about this option.
      *
      * This will be displayed in HELP information.
      */
-    "description": string;
+    'description': string;
 
     /**
      * Use a one-character shortcut for this option.
      *
      * **NOTICE: The shortcut is case-sensitive.**
      */
-    "shortcut"?: string;
+    'shortcut'?: string;
 
     /**
      * How many times this option could be repeatedly used to accept more
@@ -75,25 +85,25 @@ export interface IOptionSettings {
      *
      * @default -1
      */
-    "arguments"?: number;
+    'arguments'?: number;
 
     /**
      * The name for argument, used in HELP documents.
      *
      * @default "VALUE"
      */
-    "argumentName"?: string;
+    'argumentName'?: string;
 }
 
 export interface ICommandResult {
 
-    "name": string;
+    'name': string;
 
-    "id": number;
+    'id': number;
 
-    "options": Record<string, string[]>;
+    'options': Record<string, string[]>;
 
-    "flags": Record<string, boolean>;
+    'flags': Record<string, boolean>;
 }
 
 export interface IResult {
@@ -101,34 +111,34 @@ export interface IResult {
     /**
      * Tell if this request showing help document.
      */
-    "help": string;
+    'help': string;
 
     /**
      * The parsed commands.
      */
-    "commands": ICommandResult[];
+    'commands': ICommandResult[];
 
     /**
      * The parsed options.
      */
-    "options": Record<string, string[]>;
+    'options': Record<string, string[]>;
 
     /**
      * The parsed flags.
      */
-    "flags": Record<string, boolean>;
+    'flags': Record<string, boolean>;
 
     /**
      * Unrecognizable options.
      *
      * > Only `assign-style` input option will be here.
      */
-    "unknownOptions": string[];
+    'unknownOptions': string[];
 
     /**
      * The parsed arguments.
      */
-    "arguments": string[];
+    'arguments': string[];
 }
 
 export interface IParser {
@@ -177,21 +187,21 @@ export interface IParserHelpConfig {
     /**
      * Display the HELP info for each command automatically.
      */
-    "delegated": boolean;
+    'delegated': boolean;
 
     /**
      * Use command and sub-command `help`.
      *
      * @default true
      */
-    "command": boolean;
+    'command': boolean;
 
     /**
      * Use `--help` (or `-help` when `go` style).
      *
      * @default true
      */
-    "flag": boolean;
+    'flag': boolean;
 
     /**
      * Use `-h` for shortcut.
@@ -200,7 +210,7 @@ export interface IParserHelpConfig {
      *
      * @default true
      */
-    "flagShortchut": boolean;
+    'flagShortchut': boolean;
 }
 
 export interface IParserCommandConfig {
@@ -210,14 +220,14 @@ export interface IParserCommandConfig {
      *
      * @default false
      */
-    "caseSensitive": boolean;
+    'caseSensitive': boolean;
 
     /**
      * Specify the case-sensitivity of commands aliases.
      *
      * @default true
      */
-    "aliasCaseSensitive": boolean;
+    'aliasCaseSensitive': boolean;
 }
 
 export interface IParserArgumentConfig {
@@ -227,7 +237,7 @@ export interface IParserArgumentConfig {
      *
      * @default 0
      */
-    "minimalInputs": number;
+    'minimalInputs': number;
 }
 
 export interface IParserOptionShortcutConfig {
@@ -237,35 +247,35 @@ export interface IParserOptionShortcutConfig {
      *
      * @default true
      */
-    "caseSensitive": boolean;
+    'caseSensitive': boolean;
 
     /**
      * Allow assign an argument for an option in `-aARG` style or not.
      *
      * @default true
      */
-    "attachArgument": boolean;
+    'attachArgument': boolean;
 
     /**
      * Allow assign an argument for an option in `-a=ARG` style or not.
      *
      * @default true
      */
-    "assignArgument": boolean;
+    'assignArgument': boolean;
 
     /**
      * Allow assign an argument for an option in `-a ARG` style or not.
      *
      * @default true
      */
-    "followArgument": boolean;
+    'followArgument': boolean;
 
     /**
      * Allow mix shortcuts or not.
      *
      * @default true
      */
-    "mix": boolean;
+    'mix': boolean;
 }
 
 export interface IParserLongOptionConfig {
@@ -275,21 +285,21 @@ export interface IParserLongOptionConfig {
      *
      * @default false
      */
-    "caseSensitive": boolean;
+    'caseSensitive': boolean;
 
     /**
      * Allow assign an argument for an option in `--add=ARG` style or not.
      *
      * @default true
      */
-    "assignArgument": boolean;
+    'assignArgument': boolean;
 
     /**
      * Allow assign an argument for an option in `--add ARG` style or not.
      *
      * @default true
      */
-    "followArgument": boolean;
+    'followArgument': boolean;
 }
 
 export interface IParserOptionConfig {
@@ -299,22 +309,22 @@ export interface IParserOptionConfig {
      *
      * @default false
      */
-    "notAfterArguments": boolean;
+    'notAfterArguments': boolean;
 
     /**
      * Treat unknwon options/flags as arguments.
      */
-    "unknownAsArguments": boolean;
+    'unknownAsArguments': boolean;
 
     /**
      * The options for options shortcuts.
      */
-    "shortcut": IParserOptionShortcutConfig;
+    'shortcut': IParserOptionShortcutConfig;
 
     /**
      * The options for options shortcuts.
      */
-    "long": IParserLongOptionConfig;
+    'long': IParserLongOptionConfig;
 }
 
 export interface IParserConfig {
@@ -322,20 +332,20 @@ export interface IParserConfig {
     /**
      * Generate help text.
      */
-    "help": IParserHelpConfig;
+    'help': IParserHelpConfig;
 
     /**
      * The settings about commands.
      */
-    "commands": IParserCommandConfig;
+    'commands': IParserCommandConfig;
 
     /**
      * The settings about arguments/
      */
-    "arguments": IParserArgumentConfig;
+    'arguments': IParserArgumentConfig;
 
     /**
      * The settings about options.
      */
-    "options": IParserOptionConfig;
+    'options': IParserOptionConfig;
 }

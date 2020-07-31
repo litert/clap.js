@@ -2,6 +2,12 @@
 
 [Dep:LRT.Core]: https://github.com/litert/core.js
 
+## v1.1.0
+
+- Fixed: Removed the extra blank lines for empty segments.
+- Added: Arguments limitation for each commands.
+- Replaced: Switched to ESLint instead of the deprecated TSLint.
+
 ## v1.0.1
 
 - Fixed: The trailing arguments after `--` should be wrapped by quotes.

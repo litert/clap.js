@@ -1,5 +1,5 @@
 /**
- *  Copyright 2019 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2020 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import * as C from "./Common";
-import * as E from "./Errors";
+import * as C from './Common';
+import * as E from './Errors';
 
 export class Option {
 
@@ -33,7 +33,7 @@ export class Option {
 
         public parent?: Command,
 
-        public argName: string = "VALUE"
+        public argName: string = 'VALUE'
     ) {
 
     }
@@ -57,7 +57,7 @@ export class Option {
 
 export class Command {
 
-    protected static __idCounter: number = 0;
+    protected static _$idCounter: number = 0;
 
     public subCommands: Record<string, Command>;
 
@@ -67,7 +67,7 @@ export class Command {
 
     public optionShortcuts: Record<string, Option>;
 
-    public readonly id = Command.__idCounter++;
+    public readonly id = Command._$idCounter++;
 
     public constructor(
 
@@ -77,7 +77,11 @@ export class Command {
 
         public aliases?: string[],
 
-        public parent?: Command
+        public parent?: Command,
+
+        public readonly minArguments: number = 0,
+
+        public readonly maxArguments: number = 0
     ) {
 
         this.subCommands = {};
@@ -164,7 +168,7 @@ export abstract class AbstractParser implements C.IParser {
             ) {
 
                 throw new E.E_CONFLICT_CONFIG({
-                    "message": "Must enable at least one of help-command or help-flag."
+                    'message': 'Must enable at least one of help-command or help-flag.'
                 });
             }
         }
@@ -172,10 +176,10 @@ export abstract class AbstractParser implements C.IParser {
         if (this._config.help.delegated && this._config.help.flag) {
 
             this.addOption({
-                "name": "help",
-                "description": "Display the help information.",
-                "shortcut": this._config.help.flagShortchut ? "h" : undefined,
-                "arguments": 0
+                'name': 'help',
+                'description': 'Display the help information.',
+                'shortcut': this._config.help.flagShortchut ? 'h' : undefined,
+                'arguments': 0
             });
         }
 
@@ -185,7 +189,7 @@ export abstract class AbstractParser implements C.IParser {
         ) {
 
             throw new E.E_CONFLICT_CONFIG({
-                "message": "Must enable at least one of follow-mode or assign-mode."
+                'message': 'Must enable at least one of follow-mode or assign-mode.'
             });
         }
 
@@ -196,7 +200,7 @@ export abstract class AbstractParser implements C.IParser {
         ) {
 
             throw new E.E_CONFLICT_CONFIG({
-                "message": "Must enable at least one of follow-mode, attach-mode or assign-mode."
+                'message': 'Must enable at least one of follow-mode, attach-mode or assign-mode.'
             });
         }
     }
@@ -206,8 +210,7 @@ export abstract class AbstractParser implements C.IParser {
         const cmdName = this._prepareCommandName(settings.name);
 
         const aliases = settings.aliases ? (
-            Array.isArray(settings.aliases) ?
-            settings.aliases : [settings.aliases]
+            Array.isArray(settings.aliases) ? settings.aliases : [settings.aliases]
         ).map((x) => this._prepareCommandAlias(x)) : [];
 
         if (settings.path) {
@@ -217,14 +220,14 @@ export abstract class AbstractParser implements C.IParser {
             if (!cmd) {
 
                 throw new E.E_COMMAND_NOT_FOUND_BY_PATH({
-                    "metadata": { settings }
+                    'metadata': { settings }
                 });
             }
 
             if (cmd.subCommands[cmdName] || cmd.subCommandAliases[cmdName]) {
 
                 throw new E.E_DUP_COMMAND_NAME({
-                    "metadata": { settings }
+                    'metadata': { settings }
                 });
             }
 
@@ -233,7 +236,7 @@ export abstract class AbstractParser implements C.IParser {
                 if (cmd.subCommands[alias] || cmd.subCommandAliases[alias]) {
 
                     throw new E.E_DUP_COMMAND_ALIAS({
-                        "metadata": { settings, alias }
+                        'metadata': { settings, alias }
                     });
                 }
             }
@@ -242,7 +245,9 @@ export abstract class AbstractParser implements C.IParser {
                 cmdName,
                 settings.description,
                 aliases.length ? aliases : undefined,
-                cmd
+                cmd,
+                settings.minArguments,
+                settings.maxArguments,
             );
 
             for (const alias of aliases) {
@@ -255,7 +260,7 @@ export abstract class AbstractParser implements C.IParser {
             if (this._cmds[cmdName] || this._cmdAliases[cmdName]) {
 
                 throw new E.E_DUP_COMMAND_NAME({
-                    "metadata": { settings }
+                    'metadata': { settings }
                 });
             }
 
@@ -264,7 +269,7 @@ export abstract class AbstractParser implements C.IParser {
                 if (this._cmds[alias] || this._cmdAliases[alias]) {
 
                     throw new E.E_DUP_COMMAND_ALIAS({
-                        "metadata": { settings, alias }
+                        'metadata': { settings, alias }
                     });
                 }
             }
@@ -272,7 +277,10 @@ export abstract class AbstractParser implements C.IParser {
             this._cmds[cmdName] = new Command(
                 cmdName,
                 settings.description,
-                aliases.length ? aliases : undefined
+                aliases.length ? aliases : undefined,
+                undefined,
+                settings.minArguments,
+                settings.maxArguments,
             );
 
             for (const alias of aliases) {
@@ -289,8 +297,8 @@ export abstract class AbstractParser implements C.IParser {
         const optName = this._prepareOptionName(settings.name);
 
         const optShortcut = settings.shortcut ?
-                        this._prepareOptionShortcut(settings.shortcut) :
-                        undefined;
+            this._prepareOptionShortcut(settings.shortcut) :
+            undefined;
 
         if (settings.path) {
 
@@ -299,7 +307,7 @@ export abstract class AbstractParser implements C.IParser {
                 settings.path = [settings.path];
             }
 
-            for (let path of settings.path) {
+            for (const path of settings.path) {
 
                 this._addOptionByPath(
                     settings,
@@ -336,21 +344,21 @@ export abstract class AbstractParser implements C.IParser {
         if (!cmd) {
 
             throw new E.E_COMMAND_NOT_FOUND_BY_PATH({
-                "metadata": { settings }
+                'metadata': { settings }
             });
         }
 
         if (cmd.options[optName]) {
 
             throw new E.E_DUP_OPTION_NAME({
-                "metadata": { settings, path }
+                'metadata': { settings, path }
             });
         }
 
         if (optShortcut && cmd.optionShortcuts[optShortcut]) {
 
             throw new E.E_DUP_OPTION_SHORTCUT({
-                "metadata": { settings, path }
+                'metadata': { settings, path }
             });
         }
 
@@ -380,14 +388,14 @@ export abstract class AbstractParser implements C.IParser {
         if (this._options[optName]) {
 
             throw new E.E_DUP_OPTION_NAME({
-                "metadata": { settings }
+                'metadata': { settings }
             });
         }
 
         if (optShortcut && this._optionShortcuts[optShortcut]) {
 
             throw new E.E_DUP_OPTION_SHORTCUT({
-                "metadata": { settings }
+                'metadata': { settings }
             });
         }
 
@@ -414,7 +422,7 @@ export abstract class AbstractParser implements C.IParser {
         if (assert && !Command.isValidName(name)) {
 
             throw new E.E_INVALID_COMMAND_NAME({
-                "metadata": { name }
+                'metadata': { name }
             });
         }
 
@@ -428,7 +436,7 @@ export abstract class AbstractParser implements C.IParser {
         if (assert && !Command.isValidName(alias)) {
 
             throw new E.E_INVALID_COMMAND_ALIAS({
-                "metadata": { alias }
+                'metadata': { alias }
             });
         }
 
@@ -442,7 +450,7 @@ export abstract class AbstractParser implements C.IParser {
         if (assert && !Command.isValidPath(path)) {
 
             throw new E.E_INVALID_COMMAND_PATH({
-                "metadata": { path }
+                'metadata': { path }
             });
         }
 
@@ -456,7 +464,7 @@ export abstract class AbstractParser implements C.IParser {
         if (assert && !Option.isValidName(name)) {
 
             throw new E.E_INVALID_OPTION_NAME({
-                "metadata": { name }
+                'metadata': { name }
             });
         }
 
@@ -470,7 +478,7 @@ export abstract class AbstractParser implements C.IParser {
         if (assert && !Option.isValidShortcut(shortcut)) {
 
             throw new E.E_INVALID_OPTION_SHORTCUT({
-                "metadata": { shortcut }
+                'metadata': { shortcut }
             });
         }
 
@@ -483,7 +491,7 @@ export abstract class AbstractParser implements C.IParser {
 
         try {
 
-            const cmds = path.split(".");
+            const cmds = path.split('.');
 
             const mainCmd = cmds.splice(0, 1)[0];
 
@@ -492,7 +500,7 @@ export abstract class AbstractParser implements C.IParser {
                 this._cmds[mainCmd]
             );
         }
-        catch (e) {
+        catch {
 
             return null;
         }

@@ -1,5 +1,5 @@
 /**
- *  Copyright 2019 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2020 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
  *  limitations under the License.
  */
 
-import * as C from "./Common";
+import * as C from './Common';
 
 export function strSplit(
     str: string,
     delimiter: string,
     limit: number = -1
-) {
+): string[] {
 
     switch (limit) {
-    case -1:
-        return str.split(delimiter);
-    case 0:
-    case 1:
-        return [str];
+        case -1:
+            return str.split(delimiter);
+        case 0:
+        case 1:
+            return [str];
     }
 
-    let tmp = str.split(delimiter);
+    const tmp = str.split(delimiter);
 
     if (tmp.length <= limit) {
 
@@ -42,7 +42,7 @@ export function strSplit(
     return tmp;
 }
 
-export function deepDefault<T extends {}>(val: C.DeepPartial<T>, def: T): T {
+export function deepDefault<T extends Record<string, any>>(val: C.DeepPartial<T>, def: T): T {
 
     const ret: T = {} as any;
 
@@ -52,7 +52,7 @@ export function deepDefault<T extends {}>(val: C.DeepPartial<T>, def: T): T {
 
             ret[k] = def[k];
         }
-        else if (typeof def[k] === "object") {
+        else if (typeof def[k] === 'object') {
 
             ret[k] = def[k] === null ? def[k] : deepDefault(val[k] as any, def[k]);
         }
@@ -84,7 +84,7 @@ export function findMaxLength(s: string[]): number {
 
 export function indent(s: string, depth: number = 1): string {
 
-    return `${"    ".repeat(depth)}${s}`;
+    return `${'    '.repeat(depth)}${s}`;
 }
 
 /*
@@ -109,15 +109,15 @@ export function wrapLines(
 
     const lines = [];
 
-    let l = "";
+    let l = '';
 
-    for (const item of p.split(" ")) {
+    for (const item of p.split(' ')) {
 
         let tmp: string;
 
         if (l) {
 
-            tmp = l + " " + item;
+            tmp = l + ' ' + item;
         }
         else {
 
