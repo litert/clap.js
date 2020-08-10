@@ -2,6 +2,10 @@
 
 [Dep:LRT.Core]: https://github.com/litert/core.js
 
+## v1.2.0
+
+- Use the counter as the output of flags.
+
 ## v1.1.0
 
 - Fixed: Removed the extra blank lines for empty segments.

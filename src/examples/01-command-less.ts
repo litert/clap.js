@@ -50,7 +50,7 @@ parser.addOption({
 });
 
 const parseResult = parser.parse([
-    '-p=123', '--go', '-f=123', '-faaa', '-f', 'faaa', '-o', 'hello', 'hey'
+    '-p=123', '--go', '--go', '--go', '--go', '-f=123', '-faaa', '-f', 'faaa', '-o', 'hello', 'hey'
 ]);
 
 console.log(JSON.stringify(parseResult, null, 2));

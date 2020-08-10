@@ -518,13 +518,15 @@ class GNUParser extends AbstractParser {
          */
         if (flag.parent) {
 
-            (ctx.result.commands.find(
+            const cmd = ctx.result.commands.find(
                 (x) => x.id === (flag.parent as Command).id
-            ) as C.ICommandResult).flags[flag.name] = true;
+            ) as C.ICommandResult;
+
+            cmd.flags[flag.name] = (cmd.flags[flag.name] ?? 0) + 1;
             return;
         }
 
-        ctx.result.flags[flag.name] = true;
+        ctx.result.flags[flag.name] = (ctx.result.flags[flag.name] ?? 0) + 1;
     }
 
     private _prepareArgs(args: string[]): string[] {

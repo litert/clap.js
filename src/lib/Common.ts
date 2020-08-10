@@ -103,7 +103,7 @@ export interface ICommandResult {
 
     'options': Record<string, string[]>;
 
-    'flags': Record<string, boolean>;
+    'flags': Record<string, number>;
 }
 
 export interface IResult {
@@ -126,7 +126,7 @@ export interface IResult {
     /**
      * The parsed flags.
      */
-    'flags': Record<string, boolean>;
+    'flags': Record<string, number>;
 
     /**
      * Unrecognizable options.

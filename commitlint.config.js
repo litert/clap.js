@@ -14,6 +14,7 @@ module.exports = {
         'scope-enum': [2, 'always', [
             'parser',
             'rule',
+            'output',
             'doc',
             'lint',
             'branch',
