@@ -5,6 +5,7 @@
 ## v1.2.1
 
 - config(deps): updated the development deps.
+- config(project): use prepublishOnly hook instead of prepare.
 
 ## v1.2.0
 
