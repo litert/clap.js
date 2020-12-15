@@ -2,6 +2,10 @@
 
 [Dep:LRT.Core]: https://github.com/litert/core.js
 
+## v1.2.1
+
+- config(deps): updated the development deps.
+
 ## v1.2.0
 
 - Use the counter as the output of flags.
