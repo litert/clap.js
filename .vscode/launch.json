@@ -12,20 +12,18 @@
             "cwd": "${workspaceFolder}",
             "sourceMaps": true,
             "outFiles": [
-                "${workspaceFolder}/lib/*.js",
-                "${workspaceFolder}/examples/*.js"
+                "${workspaceFolder}/{lib,examples}/*.js",
             ]
         },
         {
             "type": "node",
             "request": "launch",
-            "name": "[LiteRT/Clap.js] example 02 - Command help",
+            "name": "[LiteRT/Clap.js] example 02 - Command Mode",
             "program": "${workspaceFolder}/src/examples/02-command.ts",
             "cwd": "${workspaceFolder}",
             "sourceMaps": true,
             "outFiles": [
-                "${workspaceFolder}/lib/*.js",
-                "${workspaceFolder}/examples/*.js"
+                "${workspaceFolder}/{lib,examples}/*.js",
             ]
         }
     ]

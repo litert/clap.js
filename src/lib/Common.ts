@@ -1,5 +1,5 @@
 /**
- *  Copyright 2020 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2021 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,338 +14,282 @@
  *  limitations under the License.
  */
 
-export interface ICommandSettings {
+export interface ICommandConfig {
 
     /**
-     * Specify the command-path if the command is a sub-command.
-     */
-    'path'?: string;
-
-    /**
-     * Specify the full command name.
-     */
-    'name': string;
-
-    /**
-     * The description about this command.
+     * The full name of sub command.
      *
-     * This will be displayed in HELP information.
+     * > The name is case-insensitive by default.
+     *
+     * @format `/^[a-z][-a-z0-9]+$/i`
      */
-    'description': string;
+    name: string;
 
     /**
-     * Specify a shortcut or alias for this command.
+     * The description of sub command, displayed in help.
      */
-    'aliases'?: string | string[];
+    description?: string;
 
     /**
-     * The minimal quantity of arguments for this command.
+     * The shortcut of sub command.
+     *
+     * > The shortcut is case-sensitive by default.
+     *
+     * @format `/^[a-z][-a-z0-9]+$/i`
      */
-    'minArguments'?: number;
-
-    /**
-     * The maximum quantity of arguments for this command.
-     */
-    'maxArguments'?: number;
+    shortcut?: string;
 }
 
-export interface IOptionSettings {
+export interface IFlagConfig {
 
     /**
-     * Specify the command-path if the option is for specific commands.
+     * The full name of a flag.
+     *
+     * @format /^[a-z][-a-z0-9]+$/i
      */
-    'path'?: string | string[];
+    name: string;
 
     /**
-     * Specify the full option name.
+     * The description of flag, displayed in help.
      */
-    'name': string;
+    description?: string;
 
     /**
-     * The description about this option.
+     * The single-character shortcut of this flag.
      *
-     * This will be displayed in HELP information.
+     * @format /^[A-Za-z0-9]$/
      */
-    'description': string;
-
-    /**
-     * Use a one-character shortcut for this option.
-     *
-     * **NOTICE: The shortcut is case-sensitive.**
-     */
-    'shortcut'?: string;
-
-    /**
-     * How many times this option could be repeatedly used to accept more
-     * arguments.
-     *
-     * Set to -1 if unlimited, or set to 0 if this option is a flag.
-     *
-     * > A flag means no argument acceptable.
-     *
-     * @default -1
-     */
-    'arguments'?: number;
-
-    /**
-     * The name for argument, used in HELP documents.
-     *
-     * @default "VALUE"
-     */
-    'argumentName'?: string;
+    shortcut?: string;
 }
 
-export interface ICommandResult {
-
-    'name': string;
-
-    'id': number;
-
-    'options': Record<string, string[]>;
-
-    'flags': Record<string, number>;
-}
-
-export interface IResult {
+export interface IOptionConfig {
 
     /**
-     * Tell if this request showing help document.
-     */
-    'help': string;
-
-    /**
-     * The parsed commands.
-     */
-    'commands': ICommandResult[];
-
-    /**
-     * The parsed options.
-     */
-    'options': Record<string, string[]>;
-
-    /**
-     * The parsed flags.
-     */
-    'flags': Record<string, number>;
-
-    /**
-     * Unrecognizable options.
+     * The full name of an option.
      *
-     * > Only `assign-style` input option will be here.
+     * @format /^[a-z][-a-z0-9]+$/i
      */
-    'unknownOptions': string[];
+    name: string;
 
     /**
-     * The parsed arguments.
+     * The description of option, displayed in help.
      */
-    'arguments': string[];
-}
-
-export interface IParser {
+    description?: string;
 
     /**
-     * Add a new command for parsing.
+     * The single-character shortcut of this option.
      *
-     * @param settings  The settings of the new command.
+     * @format /^[A-Za-z]$/
      */
-    addCommand(settings: ICommandSettings): this;
+    shortcut?: string;
 
     /**
-     * Add a new option for parsing.
+     * The parent command path of this option.
      *
-     * @param settings  The settings of the new option.
+     * > e.g.
+     * > - parent command path of option `--name` in `users create` should be `'users.create'`.
+     * > - parent command path of top level option should be `''` or omitted.
+     *
+     * @format /^([a-z][-a-z0-9]+(\.[a-z][-a-z0-9]+)+)?$/i
      */
-    addOption(settings: IOptionSettings): this;
+    parent?: string;
 
     /**
-     * Parse the input arguments.
+     * Allow use this option multiple times to receipt multiple arguments.
      *
-     * @returns A `IResult` will be returned when parsed successfully. When
-     * error occurs, an exception will be thrown.
-     *
-     * @example
-     *
-     * ```ts
-     * parser.parse(process.argv.slice(2));
-     * ```
-     */
-    parse(args: string[]): IResult;
-
-    generateHelp(
-        appName: string,
-        path: string,
-        width?: number
-    ): string[];
-}
-
-export type DeepPartial<T> = {
-    [P in keyof T]?: DeepPartial<T[P]>;
-};
-
-export interface IParserHelpConfig {
-
-    /**
-     * Display the HELP info for each command automatically.
-     */
-    'delegated': boolean;
-
-    /**
-     * Use command and sub-command `help`.
-     *
-     * @default true
-     */
-    'command': boolean;
-
-    /**
-     * Use `--help` (or `-help` when `go` style).
-     *
-     * @default true
-     */
-    'flag': boolean;
-
-    /**
-     * Use `-h` for shortcut.
-     *
-     * > Only work while `flag` is set to `true`.
-     *
-     * @default true
-     */
-    'flagShortchut': boolean;
-}
-
-export interface IParserCommandConfig {
-
-    /**
-     * Specify the case-sensitivity of commands.
+     * > When set to `false`, only the last argument will be receipted.
      *
      * @default false
      */
-    'caseSensitive': boolean;
-
-    /**
-     * Specify the case-sensitivity of commands aliases.
-     *
-     * @default true
-     */
-    'aliasCaseSensitive': boolean;
+    multiple?: boolean;
 }
 
-export interface IParserArgumentConfig {
+export interface IParseRuleBuilder {
 
     /**
-     * The minimal quantity of input arguments.
-     *
-     * @default 0
+     * Register a new sub command of current command.
      */
-    'minimalInputs': number;
+    addCommand(opts: ICommandConfig): this;
+
+    /**
+     * Register a new input option of current command.
+     */
+    addOption(opts: IOptionConfig): this;
+
+    /**
+     * Register a new input flag of current command.
+     */
+    addFlag(opts: IFlagConfig): this;
+
+    /**
+     * When a maximum quantity of arguments is set, the arguments after the one will be treat as tailing arguments.
+     * [Default: -1]
+     *
+     * > Pass `-1` as unlimited.
+     *
+     * @param qty The maximum quantity of arguments to be parsed.
+     */
+    setMaxArguments(qty: number): this;
+
+    /**
+     * Set a minimum quantity of arguments. [Default: 0]
+     *
+     * > Pass `0` as unlimited.
+     *
+     * @param qty The minimum quantity of arguments to be parsed.
+     */
+    setMinArguments(qty: number): this;
+
+    /**
+     * Start a building process of a sub command.
+     */
+    with(commandName: string, processor: (helper: IParseRuleBuilder) => void): this;
 }
 
-export interface IParserOptionShortcutConfig {
+export interface IHelper extends IParseRuleBuilder {
 
     /**
-     * Specify the case-sensitivity of options shortcuts.
-     *
-     * @default true
+     * Generate the help text about the parse result.
      */
-    'caseSensitive': boolean;
+    generateHelp(result?: IParseResult): string[];
 
     /**
-     * Allow assign an argument for an option in `-aARG` style or not.
-     *
-     * @default true
+     * Parse the command line arguments into structured result.
      */
-    'attachArgument': boolean;
-
-    /**
-     * Allow assign an argument for an option in `-a=ARG` style or not.
-     *
-     * @default true
-     */
-    'assignArgument': boolean;
-
-    /**
-     * Allow assign an argument for an option in `-a ARG` style or not.
-     *
-     * @default true
-     */
-    'followArgument': boolean;
-
-    /**
-     * Allow mix shortcuts or not.
-     *
-     * @default true
-     */
-    'mix': boolean;
+    parse(args: string[]): IParseResult;
 }
 
-export interface IParserLongOptionConfig {
+export interface IParserPreferences {
 
     /**
-     * Specify the case-sensitivity of options.
+     * Disable delegated command `help subcommands`.
      *
      * @default false
      */
-    'caseSensitive': boolean;
+    disableHelpCommand: boolean;
 
     /**
-     * Allow assign an argument for an option in `--add=ARG` style or not.
-     *
-     * @default true
-     */
-    'assignArgument': boolean;
-
-    /**
-     * Allow assign an argument for an option in `--add ARG` style or not.
-     *
-     * @default true
-     */
-    'followArgument': boolean;
-}
-
-export interface IParserOptionConfig {
-
-    /**
-     * The options/flags after first argument will be treat as arguments.
+     * Disable delegated flag `[subcommands] --help`.
      *
      * @default false
      */
-    'notAfterArguments': boolean;
+    disableHelpFlag: boolean;
 
     /**
-     * Treat unknwon options/flags as arguments.
+     * Disable delegated flag shortcut `[subcommands] -h`.
+     *
+     * @default false
      */
-    'unknownAsArguments': boolean;
+    disableHelpFlagShortcut: boolean;
 
     /**
-     * The options for options shortcuts.
+     * Treat flags/options after arguments as arguments.
+     *
+     * @default false
      */
-    'shortcut': IParserOptionShortcutConfig;
+    disableFlagsAfterArguments: boolean;
 
     /**
-     * The options for options shortcuts.
+     * Disable the option style of `-v<arg>`, while `v` is a shortcut.
+     *
+     * @default false
      */
-    'long': IParserLongOptionConfig;
+    disableOptionAttachMode: boolean;
+
+    /**
+     * Disable the option style of `--option-name=<arg>`.
+     *
+     * > When disabled, the input will be treat as argument.
+     *
+     * @default false
+     */
+    disableOptionAssignMode: boolean;
+
+    /**
+     * Disable the option style of `--option-name <arg>`.
+     *
+     * @default false
+     */
+    disableOptionFollowMode: boolean;
 }
 
-export interface IParserConfig {
+export type ILangPackage = Record<string, string>;
+
+export interface IHelperOptions {
 
     /**
-     * Generate help text.
+     * Title of the CLI application to be printed in the first line of help.
      */
-    'help': IParserHelpConfig;
+    title: string;
 
     /**
-     * The settings about commands.
+     * The CLI command entry.
      */
-    'commands': IParserCommandConfig;
+    command: string;
 
     /**
-     * The settings about arguments/
+     * The CLI description.
      */
-    'arguments': IParserArgumentConfig;
+    description: string;
 
     /**
-     * The settings about options.
+     * The preferences of parser.
+     *
+     * @see IParserPreferences
      */
-    'options': IParserOptionConfig;
+    preferences?: Partial<IParserPreferences>;
+
+    /**
+     * The i18n language package of translations.
+     *
+     * @default ENGLISH_LANG_PACKAGE
+     */
+    languagePackage?: ILangPackage;
+}
+
+export interface IParseResult {
+
+    /**
+     * Tell if command line arguments are parsed successfully.
+     */
+    successful: boolean;
+
+    /**
+     * The commands parsed from input.
+     */
+    commands: string[];
+
+    /**
+     * A key-value object records the options parsed from input.
+     *
+     * The keys of the object are the full name of options, while the values are array of input of each option.
+     */
+    options: Record<string, string[]>;
+
+    /**
+     * A key-value object records the flags parsed from input.
+     *
+     * The keys of the object are the full name of flags, while the values are the times of flags appeared.
+     */
+    flags: Record<string, number>;
+
+    /**
+     * The arguments parsed from input.
+     */
+    arguments: string[];
+
+    /**
+     * The arguments after '--' parsed from input.
+     */
+    tailingArguments: string[];
+
+    /**
+     * Unknown flags parsed from input.
+     */
+    unknownFlags: string[];
+}
+
+export interface ISubCommandParsedResult extends IParseResult {
+
+    name: string;
 }

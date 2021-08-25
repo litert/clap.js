@@ -1,5 +1,6 @@
+/* eslint-disable max-len */
 /**
- *  Copyright 2020 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2021 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,89 +15,132 @@
  *  limitations under the License.
  */
 
-// tslint:disable: no-console
+import * as $Clap from '../lib';
 
-import * as LibCLAP from '../lib';
-
-const parser = LibCLAP.createGNUParser();
-
-parser.addCommand({
-
-    'name': 'configure',
-    'description': 'Configure a profile for the application manually.',
-    'aliases': ['config']
-
-}).addCommand({
-
-    'name': 'api',
-    'description': 'Invoke specific API.',
-    'aliases': ['a']
-
-}).addCommand({
-
-    'name': 'login',
-    'description': 'Log into the system before invoking APIs.'
-
-}).addCommand({
-
-    'name': 'Logout',
-    'description': 'Logout from the system.'
-
-}).addCommand({
-
-    'name': 'ping',
-    'description': 'Ping the system to check if it\'s connectable. If logged in, it will check the session availability.'
-
-}).addCommand({
-
-    'name': 'use',
-    'description': 'Select a profile for applicaton to use.'
-
+const parser = $Clap.createHelper({
+    title: 'Test Docker Command Arguments',
+    command: 'docker',
+    description: 'This is a demo of clap.js with docker command.',
+    languagePackage: {
+        ...$Clap.ENGLISH_LANG_PACKAGE,
+        'cmd:network:create:arguments': '<network-name>'
+    }
 });
 
-parser.addCommand({
+parser
+    .addCommand({
+        name: 'run',
+        description: 'Start a new container.'
+    })
+    .with('run', (cmdRun) => cmdRun
+        .addOption({
+            'name': 'name',
+            'shortcut': 'n',
+            'description': 'The name of container.'
+        })
+        .addOption({
+            'name': 'port',
+            'shortcut': 'p',
+            'description': 'The ports mapping.',
+            'multiple': true
+        })
+        .addOption({
+            'name': 'volume',
+            'shortcut': 'v',
+            'description': 'The volume mapping.',
+            'multiple': true
+        })
+        .addFlag({
+            'name': 'daemon',
+            'shortcut': 'd',
+            'description': 'Run as daemon mode.'
+        })
+        .addFlag({
+            'name': 'terminal',
+            'shortcut': 't',
+            'description': 'Run as terminal mode.'
+        })
+        .addFlag({
+            'name': 'interactive',
+            'shortcut': 'i',
+            'description': 'Run as interactive mode.'
+        })
+        .setMaxArguments(1)
+        .setMinArguments(1)
+    )
+    .addCommand({
+        'name': 'network',
+        'description': 'Manage network resources.'
+    })
+    .with('network', (cmdNetwork) => cmdNetwork
+        .addCommand({
+            'name': 'create',
+            'description': 'Create a new network'
+        })
+        .with('create', (cmdNetworkCreate) => cmdNetworkCreate
+            .addOption({
+                'name': 'driver',
+                'description': 'The driver of new network'
+            })
+            .setMinArguments(1)
+            .setMaxArguments(1)
+        )
+        .addCommand({
+            'name': 'list',
+            'shortcut': 'ls',
+            'description': 'List all networks.'
+        })
+        .addCommand({
+            'name': 'delete',
+            'shortcut': 'rm',
+            'description': 'Delete given networks.'
+        })
+        .with('delete', (cmdNetworkDelete) => cmdNetworkDelete
+            .setMinArguments(1)
+            .setMaxArguments(1)
+        )
+    );
 
-    'path': 'api',
-    'name': 'add-user',
-    'description': 'Add a new user.'
+function print(result: $Clap.IParseResult): void {
 
-}).addCommand({
+    console.log(JSON.stringify(result, null, 2));
+}
 
-    'path': 'api',
-    'name': 'get-user',
-    'description': 'Read the profile of specifc user.'
+if (process.argv.length > 2) {
 
-}).addCommand({
+    // print(parser.parse(process.argv.slice(2)));
+    console.log(parser.generateHelp(parser.parse(process.argv.slice(2))).join('\n'));
+    process.exit(0);
+}
 
-    'path': 'api',
-    'name': 'del-user',
-    'description': 'Delete specifc user.'
+print(parser.parse([
+    'run', 'a'
+]));
 
-});
+print(parser.parse([
+    'run', '-it', 'alpine:latest'
+]));
 
-parser.addOption({
-    'name': 'username',
-    'description': 'Specify the username of user to be operated.',
-    'shortcut': 'u',
-    'path': ['api.get-user', 'api.add-user', 'login']
-});
+print(parser.parse([
+    'run', '-it', '--name=test', 'alpine:latest'
+]));
 
-parser.addOption({
-    'name': 'password',
-    'description': 'Specify the username of user to be operated.',
-    'shortcut': 'p',
-    'path': ['api.get-user', 'api.add-user', 'login']
-});
+print(parser.parse([
+    'run', '-it', '--name', 'test', 'alpine:latest'
+]));
 
-console.log(JSON.stringify(
-    parser.parse([
-        'help', 'login', '-u=fenying', '-p=helloworld!', '-vcfff',
-        '--', '--username=fff', '--ccc=12313', 'this is a test'
-    ]),
-    null,
-    2
-));
+print(parser.parse([
+    'run', '-it', '-ntest', 'alpine:latest'
+]));
 
-console.log(parser.generateHelp('test', 'api.add-user').join('\n'));
+print(parser.parse([
+    'run', '-itn', 'test', 'alpine:latest', '--', 'sh'
+]));
 
-console.log(parser.generateHelp('test', '').join('\n'));
+print(parser.parse([
+    'run', '-itd', '-p0.0.0.0:22:22', '-p0.0.0.0:80:80', '-v', '$PWD:/data', 'alpine:latest', 'sh'
+]));
+
+print(parser.parse([
+    'network', 'create', 'my-network', '--driver=bridge'
+]));

@@ -1,5 +1,5 @@
 /**
- *  Copyright 2020 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2021 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,130 +14,68 @@
  *  limitations under the License.
  */
 
-import * as C from './Common';
+export function isValidFlagName(token: string): boolean {
 
-export function strSplit(
-    str: string,
-    delimiter: string,
-    limit: number = -1
-): string[] {
-
-    switch (limit) {
-        case -1:
-            return str.split(delimiter);
-        case 0:
-        case 1:
-            return [str];
-    }
-
-    const tmp = str.split(delimiter);
-
-    if (tmp.length <= limit) {
-
-        return tmp;
-    }
-
-    tmp.splice(limit - 1, -1, tmp.splice(limit - 1).join(delimiter));
-
-    return tmp;
+    return /^[a-z][-a-z0-9]+$/i.test(token);
 }
 
-export function deepDefault<T extends Record<string, any>>(val: C.DeepPartial<T>, def: T): T {
+export function isValidFlagShortcut(token: string): boolean {
 
-    const ret: T = {} as any;
-
-    for (const k in def) {
-
-        if (val[k] === undefined) {
-
-            ret[k] = def[k];
-        }
-        else if (typeof def[k] === 'object') {
-
-            ret[k] = def[k] === null ? def[k] : deepDefault(val[k] as any, def[k]);
-        }
-        else {
-
-            ret[k] = val[k] as any;
-        }
-    }
-
-    return ret;
+    return /^[a-zA-Z]$/i.test(token);
 }
 
-export function dereplicate<T>(s: T[]): T[] {
+export function isValidOptionShortcut(token: string): boolean {
 
-    return Array.from(new Set(s));
+    return /^[a-zA-Z]$/.test(token);
 }
 
-export function calcCommandsAverageLength(cmds: string[]): number {
+export function isValidCommandName(token: string): boolean {
 
-    const totalLength = cmds.reduce((p, v) => p + v.length, 0);
-
-    return Math.ceil(totalLength / cmds.length);
+    return /^[a-z][-a-z0-9]+$/i.test(token);
 }
 
-export function findMaxLength(s: string[]): number {
+export function isValidCommandShortcut(token: string): boolean {
 
-    return s.reduce((p, v) => v.length > p ? v.length : p, 0);
+    return /^[a-z][-a-z0-9]+$/i.test(token);
 }
 
-export function indent(s: string, depth: number = 1): string {
+export function isFullFlagExpr(token: string): boolean {
 
-    return `${'    '.repeat(depth)}${s}`;
+    return /^--[a-z][-a-z0-9]+$/i.test(token);
 }
 
-/*
-    setup, install, configure
-                    Setup the application
+export function isShortFlagMixedExpr(token: string): boolean {
 
-    close
-    kill
-    remove
-    shutdown
-    stop            Stop the appliation
+    return /^-[a-z]+$/i.test(token);
+}
 
-    clean           Clean up the application
+/**
+ * Check if token matches `-n=value` pattern.
+ */
+export function isShortAssignExpr(token: string): boolean {
 
-*/
+    return /^-[a-z]=.+$/i.test(token);
+}
 
-export function wrapLines(
-    p: string,
-    lineWidth: number,
-    autoIndent: number = 0
-): string[] {
+/**
+ * Check if token matches `-n<arg>` pattern.
+ */
+export function isShortAttachLikeExpr(token: string): boolean {
 
-    const lines = [];
+    return /^-[a-z].+/i.test(token);
+}
 
-    let l = '';
+/**
+ * Check if token matches `--name=value` pattern.
+ */
+export function isFullAssignExpr(token: string): boolean {
 
-    for (const item of p.split(' ')) {
+    return /^--[a-z][-a-z0-9]+=.+$/i.test(token);
+}
 
-        let tmp: string;
+export function extractFullAssignExpr(expr: string): string[] {
 
-        if (l) {
+    const segs = expr.split('=');
 
-            tmp = l + ' ' + item;
-        }
-        else {
-
-            tmp = item;
-        }
-
-        if (lineWidth < tmp.length) {
-
-            lines.push(l);
-            l = item;
-        }
-        else {
-
-            l = tmp;
-        }
-    }
-
-    lines.push(l);
-
-    return autoIndent ?
-        [lines[0], ...lines.slice(1).map((x) => indent(x, autoIndent))] :
-        lines;
+    return [segs[0].slice(2), segs.slice(1).join('=')];
 }

@@ -24,6 +24,7 @@
         "brace-style": "off",
         "@typescript-eslint/brace-style": ["error", "stroustrup", { "allowSingleLine": true }],
         "camelcase": "off",
+        "max-len": ["error", 120],
         "@typescript-eslint/ban-types": ["error", {
             "types": {
 
@@ -79,7 +80,11 @@
         "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
         "func-call-spacing": "off",
         "@typescript-eslint/func-call-spacing": ["error", "never"],
-        "@typescript-eslint/no-namespace": "off",
+        "@typescript-eslint/no-namespace": ["error", {
+
+            "allowDeclarations": true,
+            "allowDefinitionFiles": true
+        }],
         "@typescript-eslint/consistent-type-assertions": ["error", {
             "assertionStyle": "as"
         }],
@@ -91,7 +96,6 @@
             "caughtErrors": "all"
         }],
         "no-unused-expressions": "off",
-        "no-use-before-define": "off",
         "@typescript-eslint/no-unused-expressions": ["error"],
         "no-useless-constructor": "off",
         "@typescript-eslint/no-useless-constructor": ["error"],
@@ -100,9 +104,8 @@
         "@typescript-eslint/comma-spacing": ["error"],
         "@typescript-eslint/unified-signatures": ["error"],
         "semi": "off",
-        "prefer-const": "off",
         "@typescript-eslint/semi": ["error"],
-        "@typescript-eslint/no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": ["error"],
         "@typescript-eslint/no-unnecessary-type-assertion": ["error"],
         "@typescript-eslint/no-unnecessary-type-arguments": ["error"],
         "@typescript-eslint/unbound-method": ["error"],
@@ -146,25 +149,13 @@
             },
             {
                 "selector": "parameter",
+                "format": ["camelCase"],
+                "modifiers": ["unused"],
+                "leadingUnderscore": "allow"
+            },
+            {
+                "selector": "parameter",
                 "format": ["camelCase"]
-            },
-            {
-              "selector": "property",
-              "format": ["snake_case"],
-              "filter": {
-                // you can expand this regex to add more allowed names
-                "regex": "^(target_id|target_type|payer_account|date_type|date_start|date_end|page_type|max_id|min_id|sort_order|sort_by|filter_by|filter_id|http_status_code|http_status_msg|redirect_uri|expires_in|input_token|access_token|refresh_token|grant_type|token_type|client_id|client_secret)$",
-                "match": true
-              }
-            },
-            {
-              "selector": "property",
-              "format": ["snake_case", "camelCase"],
-              "filter": {
-                // you can expand this regex as you find more cases that require quoting that you want to allow
-                "regex": "\\?$",
-                "match": true
-              }
             },
             {
                 "selector": "memberLike",
@@ -201,8 +192,17 @@
                 "format": ["UPPER_CASE"]
             },
             {
+                "selector": "objectLiteralProperty",
+                "format": []
+            },
+            {
                 "selector": "variable",
                 "format": ["camelCase", "UPPER_CASE"]
+            },
+            {
+                "selector": "variable",
+                "modifiers": ["const"],
+                "format": ["UPPER_CASE", "camelCase"]
             },
             {
                 "selector": "typeParameter",
@@ -258,7 +258,8 @@
         ],
         "quotes": [
             "error",
-            "single"
+            "single",
+            { "avoidEscape": true, "allowTemplateLiterals": true }
         ]
     }
 }

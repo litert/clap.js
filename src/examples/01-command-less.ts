@@ -1,5 +1,5 @@
 /**
- *  Copyright 2020 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2021 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,63 +14,86 @@
  *  limitations under the License.
  */
 
-// tslint:disable: no-console
+import * as $Clap from '../lib';
 
-import * as LibCLAP from '../lib';
-
-const parser = LibCLAP.createGNUParser();
-
-parser.addOption({
-
-    'name': 'go',
-    'description': 'This is a flag go',
-    'arguments': 0
-
-}).addOption({
-
-    'name': 'file',
-    'description': 'This is a option file',
-    'shortcut': 'f',
-    'argumentName': 'PATH'
-
-}).addOption({
-
-    'name': 'out',
-    'description': 'This is a option out',
-    'shortcut': 'o',
-    'arguments': 1
-
-}).addOption({
-
-    'name': 'this-is-a-long-test-option-item-yes',
-    'description': 'This is a option out',
-    'shortcut': 't',
-    'arguments': 1
-
+const parser = $Clap.createHelper({
+    title: 'Test Docker Command Arguments',
+    command: 'docker',
+    description: 'This is a demo of clap.js with docker command.',
+    languagePackage: {
+        ...$Clap.ENGLISH_LANG_PACKAGE,
+        'flags:port:argument': 'port',
+        'flags:volume:argument': 'volume',
+    }
 });
 
-const parseResult = parser.parse([
-    '-p=123', '--go', '--go', '--go', '--go', '-f=123', '-faaa', '-f', 'faaa', '-o', 'hello', 'hey'
-]);
+parser
+    .addOption({
+        'name': 'name',
+        'shortcut': 'n',
+        'description': 'The name of container.'
+    })
+    .addOption({
+        'name': 'port',
+        'shortcut': 'p',
+        'description': 'The ports mapping.',
+        'multiple': true
+    })
+    .addOption({
+        'name': 'volume',
+        'shortcut': 'v',
+        'description': 'The volume mapping.',
+        'multiple': true
+    })
+    .addFlag({
+        'name': 'daemon',
+        'shortcut': 'd',
+        'description': 'Run as daemon mode.'
+    })
+    .addFlag({
+        'name': 'terminal',
+        'shortcut': 't',
+        'description': 'Run as terminal mode.'
+    })
+    .addFlag({
+        'name': 'interactive',
+        'shortcut': 'i',
+        'description': 'Run as interactive mode.'
+    })
+    .setMaxArguments(1)
+    .setMinArguments(1);
 
-console.log(JSON.stringify(parseResult, null, 2));
+function print(result: $Clap.IParseResult): void {
 
-console.log(parser.generateHelp('test', parseResult.help).join('\n'));
-
-try {
-
-    parser.parse([
-        '-p=123', '--go', '-f=123', '-faaa', '-f', 'faaa', '-o', 'hello', '-o', 'dd'
-    ]);
+    console.log(JSON.stringify(result, null, 2));
 }
-catch (e) {
 
-    if (e instanceof LibCLAP.E_TOO_MANY_ARGUMENTS) {
+print(parser.parse([
+    'a'
+]));
 
-        console.error(`ERROR CAUGHT: Too many argumetns for option '${e.metadata.optionName}'.`);
-    }
-    else {
+print(parser.parse([
+    '-it', 'alpine:latest'
+]));
 
-        console.error(`Unexpected error: ${e.message}`);
-    }
-}
+print(parser.parse([
+    '-it', '--name=test', 'alpine:latest'
+]));
+
+print(parser.parse([
+    '-it', '--name', 'test', 'alpine:latest'
+]));
+
+print(parser.parse([
+    '-it', '-ntest', 'alpine:latest'
+]));
+
+print(parser.parse([
+    '-itn', 'test', 'alpine:latest', '--', 'sh'
+]));
+
+print(parser.parse([
+    '-itd', '-p0.0.0.0:22:22', '-p0.0.0.0:80:80', '-v', '$PWD:/data', 'alpine:latest', 'sh'
+]));
+
+console.log(parser.generateHelp().join('\n'));
