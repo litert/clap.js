@@ -7,3 +7,7 @@
 /tsconfig.json
 /.eslintrc
 /.eslintignore
+/commitlint.config.js
+/.husky/
+/examples/
+/src/examples/
