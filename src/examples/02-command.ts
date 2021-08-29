@@ -109,7 +109,15 @@ function print(result: $Clap.IParseResult): void {
 if (process.argv.length > 2) {
 
     // print(parser.parse(process.argv.slice(2)));
-    console.log(parser.generateHelp(parser.parse(process.argv.slice(2))).join('\n'));
+    const result = parser.parseAndProcess(process.argv.slice(2));
+    if (Array.isArray(result)) {
+
+        console.log(result.join('\n'));
+    }
+    else {
+
+        print(result);
+    }
     process.exit(0);
 }
 

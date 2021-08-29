@@ -33,6 +33,7 @@ export class ParserContext {
 
     public constructor(
         public rules: ParseRulesVessel,
+        private _opts: C.IParserPreferences,
         public args: string[]
     ) {
 
@@ -61,6 +62,11 @@ export class ParserContext {
     public getCurrentPiece(): string {
 
         return this.args[this.cursor];
+    }
+
+    public end(): void {
+
+        this.cursor = this.args.length;
     }
 
     public next(): boolean {
@@ -113,6 +119,11 @@ export class ParserContext {
     public saveFlag(flag: C.IFlagConfig): void {
 
         this._result.flags[flag.name] = (this._result.flags[flag.name] ?? 0) + 1;
+
+        if (flag.name.toLowerCase() === 'help' && !this._opts.disableHelpFlag) {
+
+            this.end();
+        }
     }
 
     public saveUnknownFlag(expr: string): void {

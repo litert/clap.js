@@ -22,7 +22,7 @@ import { ParseRuleBuilder } from './ParseRuleBuilder';
 
 class ClapHelper extends ParseRuleBuilder implements C.IHelper {
 
-    private _helpGenerator: HelpGenerator;
+    private _helpGen: HelpGenerator;
 
     private _parser: ClapParser;
 
@@ -39,7 +39,7 @@ class ClapHelper extends ParseRuleBuilder implements C.IHelper {
             description
         });
 
-        this._helpGenerator = new HelpGenerator(
+        this._helpGen = new HelpGenerator(
             title,
             command,
             opts,
@@ -47,12 +47,41 @@ class ClapHelper extends ParseRuleBuilder implements C.IHelper {
             this._lang
         );
 
-        this._parser = new ClapParser(opts, this._rules);
+        this._parser = new ClapParser(opts, this._rules, this._helpGen);
     }
 
-    public generateHelp(result?: C.IParseResult): string[] {
+    public isHelpRequest(result: C.IParseResult): boolean {
 
-        return this._helpGenerator.generate(result);
+        return this._helpGen.isHelpRequest(result);
+    }
+
+    public generateHelpOutput(result?: C.IParseResult): string[] {
+
+        return this._helpGen.generate(result);
+    }
+
+    public generateErrorOutput(e: unknown): string[] {
+
+        return this._helpGen.generateErrorOutput(e);
+    }
+
+    public parseAndProcess(args: string[]): C.IParseResult | string[] {
+
+        try {
+
+            const result = this.parse(args);
+
+            if (this.isHelpRequest(result)) {
+
+                return this.generateHelpOutput(result);
+            }
+
+            return result;
+        }
+        catch (e: unknown) {
+
+            return this.generateErrorOutput(e);
+        }
     }
 
     public parse(args: string[]): C.IParseResult {

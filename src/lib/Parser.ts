@@ -19,17 +19,19 @@ import { ParseRulesVessel } from './ParseRules';
 import * as E from './Errors';
 import * as _ from './Utils';
 import { EParserStatus, ParserContext } from './ParserContext';
+import { HelpGenerator } from './HelpGenerator';
 
 export class ClapParser {
 
     public constructor(
         private _opts: C.IParserPreferences,
-        private _rules: ParseRulesVessel
+        private _rules: ParseRulesVessel,
+        private _helpGen: HelpGenerator
     ) {}
 
     public parse(args: string[]): C.IParseResult {
 
-        const ctx = new ParserContext(this._rules, args);
+        const ctx = new ParserContext(this._rules, this._opts, args);
 
         do {
 
@@ -95,20 +97,23 @@ export class ClapParser {
 
         } while (ctx.next());
 
-        switch (ctx.status) {
-            case EParserStatus.READING_ARGUMENTS:
+        if (!this._helpGen.isHelpRequest(ctx.getResult())) {
 
-                if (ctx.countArguments() < ctx.rules.minArguments) {
+            switch (ctx.status) {
+                case EParserStatus.READING_ARGUMENTS:
 
-                    throw new E.E_ARGUMENTS_LACKED();
-                }
+                    if (ctx.countArguments() < ctx.rules.minArguments) {
 
-                ctx.complete();
-                break;
-            case EParserStatus.READING_COMMAND:
-                throw new E.E_COMMAND_REQUIRED();
-            case EParserStatus.READING_OPTION_ARG:
-                throw new E.E_OPTION_VALUE_REQUIRED();
+                        throw new E.E_ARGUMENTS_LACKED();
+                    }
+
+                    ctx.complete();
+                    break;
+                case EParserStatus.READING_COMMAND:
+                    throw new E.E_COMMAND_REQUIRED();
+                case EParserStatus.READING_OPTION_ARG:
+                    throw new E.E_OPTION_VALUE_REQUIRED();
+            }
         }
 
         return ctx.getResult();
@@ -277,7 +282,7 @@ export class ClapParser {
         if (piece === '--') {
 
             ctx.saveTailingArguments(ctx.args.slice(ctx.cursor + 1));
-            ctx.cursor = ctx.args.length;
+            ctx.end();
             return true;
         }
 

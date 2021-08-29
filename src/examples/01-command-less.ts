@@ -58,7 +58,7 @@ parser
     .addFlag({
         'name': 'interactive',
         'shortcut': 'i',
-        'description': 'Run as interactive mode.'
+        'description': 'Run as interactive mode.\nUsed with -t.'
     })
     .setMaxArguments(1)
     .setMinArguments(1);
@@ -96,4 +96,4 @@ print(parser.parse([
     '-itd', '-p0.0.0.0:22:22', '-p0.0.0.0:80:80', '-v', '$PWD:/data', 'alpine:latest', 'sh'
 ]));
 
-console.log(parser.generateHelp().join('\n'));
+console.log(parser.generateHelpOutput().join('\n'));

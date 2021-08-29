@@ -149,14 +149,39 @@ export interface IParseRuleBuilder {
 export interface IHelper extends IParseRuleBuilder {
 
     /**
-     * Generate the help text about the parse result.
+     * Check if a parse result is a request of displaying help tips.
+     *
+     * @param result    The parse result.
      */
-    generateHelp(result?: IParseResult): string[];
+    isHelpRequest(result: IParseResult): boolean;
+
+    /**
+     * Generate the help text about the parse result.
+     *
+     * @throws `E.NO_SUCH_COMMAND` if required command for help does not exist.
+     */
+    generateHelpOutput(result?: IParseResult): string[];
+
+    /**
+     * Generate the error notices from the parser.
+     *
+     * @param e     The error thrown by method `parse` or `generateHelpOutput`.
+     */
+    generateErrorOutput(e: unknown): string[];
 
     /**
      * Parse the command line arguments into structured result.
+     *
+     * @param args  The command-line arguments after command name.
      */
     parse(args: string[]): IParseResult;
+
+    /**
+     * Do parsing and return the result or help/error tips on case.
+     *
+     * @param args  The command-line arguments after command name.
+     */
+    parseAndProcess(args: string[]): IParseResult | string[];
 }
 
 export interface IParserPreferences {

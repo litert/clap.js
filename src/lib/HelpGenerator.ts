@@ -75,9 +75,15 @@ export class HelpGenerator {
         private _lang: C.ILangPackage,
     ) {}
 
-    public isHelpCommand(result: C.IParseResult): boolean {
+    public isHelpRequest(result: C.IParseResult): boolean {
 
-        return result.commands?.[0]?.toLowerCase() === 'help';
+        if (this._opts.disableHelpCommand && this._opts.disableHelpFlag) {
+
+            return false;
+        }
+
+        return (!this._opts.disableHelpCommand && result.commands?.[0]?.toLowerCase() === 'help')
+            || (!this._opts.disableHelpFlag && result.flags.help > 0);
     }
 
     private _orEmpty(cond: any, text: string): string {
@@ -146,7 +152,7 @@ export class HelpGenerator {
                 ),
                 this._orEmpty(
                     this._rules.maxArguments,
-                    `[...${this._lang['help:usage:arguments']}]`
+                    this._lang['help:usage:arguments']
                 )
             ]));
 
@@ -307,5 +313,48 @@ export class HelpGenerator {
         }
 
         return [validCmds.join(' '), rules];
+    }
+
+    public generateErrorOutput(e: unknown): string[] {
+
+        const gen = new ConsoleTextGenerator();
+
+        if (!E.errorRegistry.identify(e)) {
+
+            gen.appendLine(`ERROR unknown: ${this._lang['errors.unknown']}`);
+        }
+        else {
+
+            gen.appendLine(`ERROR ${e.name}: ${e.message}`);
+        }
+
+        if (!this._opts.disableHelpCommand && !this._opts.disableHelpFlag) {
+
+            gen.appendEmptyLine();
+
+            gen.appendLine(`${this._lang['errors.help.tips']}:`);
+
+            gen.indentIn();
+
+            if (!this._opts.disableHelpCommand && this._rules.isCommandMode) {
+
+                gen.appendLine(`${this._command} help [...COMMAND]`);
+            }
+            else if (!this._opts.disableHelpFlag) {
+
+                const cmd = this._rules.isCommandMode ? `${this._command} [...COMMAND]` : this._command;
+
+                gen.appendLine(`${cmd} --help`);
+
+                if (!this._opts.disableHelpFlagShortcut) {
+
+                    gen.appendLine(`${cmd} -h`);
+                }
+            }
+
+            gen.indentOut();
+        }
+
+        return gen.getLines();
     }
 }

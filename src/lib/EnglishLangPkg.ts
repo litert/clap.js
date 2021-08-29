@@ -30,4 +30,6 @@ export const ENGLISH_LANG_PACKAGE: Record<string, string> = {
     'errors:command_required': 'The command is required before arguments.',
     'errors:arguments_lacked': 'Too few arguments.',
     'errors:no_such_command': 'The command does not exist.',
+    'errors.unknown': 'Something wrong while parsing arguments for CLI.',
+    'errors.help.tips': 'Please use following commands get help',
 };
