@@ -37,17 +37,24 @@ export class ParseRulesVessel {
 
     private _commands: Record<string, ParseRulesVessel> = {};
 
-    public maxArguments: number = -1;
-
-    public minArguments: number = 0;
+    public readonly info: Required<C.ICommandConfig>;
 
     public constructor(
         /**
          * The config of command bound with current rules vessel.
          */
-        public readonly info: C.ICommandConfig,
+        info: C.ICommandConfig,
         public readonly parent?: ParseRulesVessel,
-    ) {}
+    ) {
+
+        this.info = {
+            name: info.name,
+            description: info.description ?? '',
+            shortcut: info.shortcut ?? '',
+            maxArguments: info.maxArguments ?? -1,
+            minArguments: info.minArguments ?? 0
+        };
+    }
 
     public get isCommandMode(): boolean {
 

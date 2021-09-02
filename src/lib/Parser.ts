@@ -102,7 +102,7 @@ export class ClapParser {
             switch (ctx.status) {
                 case EParserStatus.READING_ARGUMENTS:
 
-                    if (ctx.countArguments() < ctx.rules.minArguments) {
+                    if (ctx.countArguments() < ctx.rules.info.minArguments) {
 
                         throw new E.E_ARGUMENTS_LACKED();
                     }

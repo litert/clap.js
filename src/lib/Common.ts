@@ -38,6 +38,22 @@ export interface ICommandConfig {
      * @format `/^[a-z][-a-z0-9]+$/i`
      */
     shortcut?: string;
+
+    /**
+     * Minimum quantity of arguments.
+     *
+     * @default 0
+     */
+    minArguments?: number;
+
+    /**
+     * When a maximum quantity of arguments is set, the arguments after the one will be treat as tailing arguments.
+     *
+     * > Pass `-1` as unlimited.
+     *
+     * @default -1
+     */
+    maxArguments?: number;
 }
 
 export interface IFlagConfig {

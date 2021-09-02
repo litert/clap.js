@@ -30,7 +30,9 @@ const parser = $Clap.createHelper({
 parser
     .addCommand({
         name: 'run',
-        description: 'Start a new container.'
+        description: 'Start a new container.',
+        minArguments: 1,
+        maxArguments: 1
     })
     .with('run', (cmdRun) => cmdRun
         .addOption({
@@ -65,8 +67,6 @@ parser
             'shortcut': 'i',
             'description': 'Run as interactive mode.'
         })
-        .setMaxArguments(1)
-        .setMinArguments(1)
     )
     .addCommand({
         'name': 'network',
@@ -93,12 +93,10 @@ parser
         .addCommand({
             'name': 'delete',
             'shortcut': 'rm',
-            'description': 'Delete given networks.'
+            'description': 'Delete given networks.',
+            'minArguments': 1,
+            'maxArguments': 1
         })
-        .with('delete', (cmdNetworkDelete) => cmdNetworkDelete
-            .setMinArguments(1)
-            .setMaxArguments(1)
-        )
     );
 
 function print(result: $Clap.IParseResult): void {

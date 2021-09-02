@@ -36,13 +36,13 @@ export class ParseRuleBuilder implements C.IParseRuleBuilder {
 
     public setMaxArguments(qty: number): this {
 
-        this._rules.maxArguments = qty;
+        this._rules.info.maxArguments = qty;
         return this;
     }
 
     public setMinArguments(qty: number): this {
 
-        this._rules.minArguments = qty;
+        this._rules.info.minArguments = qty;
         return this;
     }
 

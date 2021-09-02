@@ -76,7 +76,7 @@ export class ParserContext {
 
     public saveArgument(argument: string): void {
 
-        if (this.rules.maxArguments !== -1 && this.countArguments() >= this.rules.maxArguments) {
+        if (this.rules.info.maxArguments !== -1 && this.countArguments() >= this.rules.info.maxArguments) {
 
             this._result.tailingArguments.push(argument);
         }

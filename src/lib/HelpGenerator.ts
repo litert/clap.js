@@ -122,7 +122,7 @@ export class HelpGenerator {
                     `[...${this._lang['help:usage:sub-options']}]`
                 ),
                 this._orEmpty(
-                    rules.maxArguments,
+                    rules.info.maxArguments,
                     this._lang[`${prefix}arguments`] ?? this._lang['help:usage:arguments']
                 ),
             ]));
@@ -151,14 +151,14 @@ export class HelpGenerator {
                     `[...${this._lang['help:usage:options']}]`
                 ),
                 this._orEmpty(
-                    this._rules.maxArguments,
+                    this._rules.info.maxArguments,
                     this._lang['help:usage:arguments']
                 )
             ]));
 
             gen.appendEmptyLine();
 
-            gen.appendLine(this._rules.info.description!);
+            gen.appendLine(this._rules.info.description);
 
             if (this._rules.countFlags + this._rules.countOptions) {
 
@@ -187,7 +187,7 @@ export class HelpGenerator {
 
             lines.push([
                 i.shortcut ? `${i.name}, ${i.shortcut}` : `${i.name}`,
-                (i.description ?? this._lang[`${prefix}${i.name}:desc`] ?? '').trim()
+                (i.description || this._lang[`${prefix}${i.name}:desc`] || '').trim()
             ]);
         }
 
