@@ -29,7 +29,7 @@ export class ParseRuleBuilder implements C.IParseRuleBuilder {
 
             this.addFlag({
                 'name': 'help',
-                'shortcut': _opts.disableHelpFlagShortcut ? undefined : 'h'
+                'shortcut': _opts.disableHelpFlagShortcut ? undefined : 'h',
             });
         }
     }
@@ -46,7 +46,7 @@ export class ParseRuleBuilder implements C.IParseRuleBuilder {
         return this;
     }
 
-    public addCommand(opts: C.ICommandConfig): this {
+    public addCommand(opts: C.ICommandConfig, processor?: (helper: C.IParseRuleBuilder) => void): this {
 
         this._rules.addCommand(opts);
 
@@ -59,7 +59,7 @@ export class ParseRuleBuilder implements C.IParseRuleBuilder {
             this.addCommand({ name: 'help' });
         }
 
-        return this;
+        return processor ? this.with(opts.name, processor) : this;
     }
 
     public addOption(opts: C.IOptionConfig): this {

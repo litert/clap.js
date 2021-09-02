@@ -125,7 +125,7 @@ export interface IParseRuleBuilder {
     /**
      * Register a new sub command of current command.
      */
-    addCommand(opts: ICommandConfig): this;
+    addCommand(opts: ICommandConfig, processor?: (helper: IParseRuleBuilder) => void): this;
 
     /**
      * Register a new input option of current command.
