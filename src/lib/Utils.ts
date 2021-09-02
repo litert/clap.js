@@ -36,7 +36,7 @@ export function isValidCommandName(token: string): boolean {
 
 export function isValidCommandShortcut(token: string): boolean {
 
-    return /^[a-z][-a-z0-9]+$/i.test(token);
+    return /^[a-z][-a-z0-9]*$/i.test(token);
 }
 
 export function isFullFlagExpr(token: string): boolean {

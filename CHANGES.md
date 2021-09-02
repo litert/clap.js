@@ -5,6 +5,7 @@
 ## v2.0.1
 
 - feat(helper): simplified registering command.
+- fix(helper): fixed the length of command shortcut.
 
 ## v2.0.0
 
