@@ -2,6 +2,10 @@
 
 [Dep:LRT.Core]: https://github.com/litert/core.js
 
+## v2.0.2
+
+- fix(parser): should not read tailing twice.
+
 ## v2.0.1
 
 - feat(helper): simplified registering command.

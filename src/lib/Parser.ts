@@ -67,19 +67,18 @@ export class ClapParser {
                         break;
                     }
 
-                    if (this._opts.disableFlagsAfterArguments && ctx.countArguments()) {
+                    if (!this._opts.disableFlagsAfterArguments || !ctx.countArguments()) {
 
-                        ctx.saveArgument(p);
-                    }
-                    else if (
-                        this._tryParseOptionLongAssignMode(p, ctx)
-                        || this._tryParseFlagLongMode(p, ctx)
-                        || this._tryParseOptionShortAssignMode(p, ctx)
-                        || this._tryParseOptionShortAttachMode(p, ctx)
-                        || this._tryParseFlagShortMode(p, ctx)
-                    ) {
+                        if (
+                            this._tryParseOptionLongAssignMode(p, ctx)
+                            || this._tryParseFlagLongMode(p, ctx)
+                            || this._tryParseOptionShortAssignMode(p, ctx)
+                            || this._tryParseOptionShortAttachMode(p, ctx)
+                            || this._tryParseFlagShortMode(p, ctx)
+                        ) {
 
-                        break;
+                            break;
+                        }
                     }
 
                     ctx.saveArgument(p);
