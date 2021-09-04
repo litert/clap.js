@@ -2,6 +2,10 @@
 
 [Dep:LRT.Core]: https://github.com/litert/core.js
 
+## v2.0.3
+
+- fix(parser): should save full command name while parsing.
+
 ## v2.0.2
 
 - fix(parser): should not read tailing twice.

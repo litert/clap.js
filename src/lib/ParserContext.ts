@@ -137,7 +137,7 @@ export class ParserContext {
     public saveCommand(commandName: string): void {
 
         this.rules = this.rules.getCommandRules(commandName);
-        this._result.commands.push(commandName);
+        this._result.commands.push(this.rules.info.name);
     }
 
     public resetStatus(): void {
