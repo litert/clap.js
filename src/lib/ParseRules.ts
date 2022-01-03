@@ -63,12 +63,12 @@ export class ParseRulesVessel {
 
     public get countOptions(): number {
 
-        return Object.keys(this._options).length;
+        return Object.keys(this._options).length + (this.parent?.countOptions ?? 0);
     }
 
     public get countFlags(): number {
 
-        return Object.keys(this._flags).length;
+        return Object.keys(this._flags).length + (this.parent?.countFlags ?? 0);
     }
 
     public get isRoot(): boolean {
@@ -83,12 +83,30 @@ export class ParseRulesVessel {
 
     public getOptionNames(): string[] {
 
-        return Object.keys(this._options);
+        const ret: string[] = [];
+
+        if (this.parent) {
+
+            ret.push(...this.parent.getOptionNames());
+        }
+
+        ret.push(...Object.keys(this._options));
+
+        return ret;
     }
 
     public getFlagNames(): string[] {
 
-        return Object.keys(this._flags);
+        const ret: string[] = [];
+
+        if (this.parent) {
+
+            ret.push(...this.parent.getFlagNames());
+        }
+
+        ret.push(...Object.keys(this._flags));
+
+        return ret;
     }
 
     protected _toIndexFlagName(name: string): string {

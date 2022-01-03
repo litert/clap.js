@@ -1,6 +1,6 @@
 {
   "name": "@litert/clap",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A simple library for parsing commandline arguments.",
   "main": "./lib/index.js",
   "scripts": {
@@ -34,14 +34,14 @@
   "types": "./lib/index.d.ts",
   "typings": "./lib/index.d.ts",
   "devDependencies": {
-    "@commitlint/cli": "^13.1.0",
-    "@commitlint/config-conventional": "^13.1.0",
-    "@types/node": "^16.7.1",
-    "@typescript-eslint/eslint-plugin": "^4.29.0",
-    "@typescript-eslint/parser": "^4.29.0",
-    "eslint": "^7.32.0",
-    "husky": "^7.0.1",
-    "typescript": "^4.3.5"
+    "@commitlint/cli": "^16.0.1",
+    "@commitlint/config-conventional": "^16.0.0",
+    "@types/node": "^17.0.7",
+    "@typescript-eslint/eslint-plugin": "^5.8.1",
+    "@typescript-eslint/parser": "^5.8.1",
+    "eslint": "^8.6.0",
+    "husky": "^7.0.4",
+    "typescript": "^4.5.4"
   },
   "engines": {
     "node": ">=8.0.0"

@@ -223,7 +223,10 @@ export class HelpGenerator {
 
         const lines: Array<[string, string]> = [];
 
-        for (const name of [...rules.getOptionNames(), ...rules.getFlagNames()].sort()) {
+        for (const name of Array.from(new Set([
+            ...rules.getOptionNames(),
+            ...rules.getFlagNames()
+        ])).sort()) {
 
             if (rules.existFlag(name)) {
 
