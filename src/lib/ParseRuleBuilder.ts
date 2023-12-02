@@ -1,5 +1,5 @@
 /**
- *  Copyright 2021 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2023 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,12 +20,12 @@ import { ParseRulesVessel } from './ParseRules';
 export class ParseRuleBuilder implements C.IParseRuleBuilder {
 
     public constructor(
-        private _opts: C.IParserPreferences,
+        private readonly _opts: C.IParserPreferences,
         info: C.ICommandConfig,
         protected _rules = new ParseRulesVessel(info, undefined)
     ) {
 
-        if (!_opts.disableHelpFlag) {
+        if (!_opts.disableHelpFlag && !this._rules.existFlag('help')) {
 
             this.addFlag({
                 'name': 'help',

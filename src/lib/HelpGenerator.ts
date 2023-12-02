@@ -1,5 +1,5 @@
 /**
- *  Copyright 2021 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2023 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import { ParseRulesVessel } from './ParseRules';
 
 class ConsoleTextGenerator {
 
-    private _lines: string[] = [];
+    private readonly _lines: string[] = [];
 
     private _indentWidth = 0;
 
@@ -68,11 +68,11 @@ class ConsoleTextGenerator {
 export class HelpGenerator {
 
     public constructor(
-        private _title: string,
-        private _command: string,
-        private _opts: C.IParserPreferences,
-        private _rules: ParseRulesVessel,
-        private _lang: C.ILangPackage,
+        private readonly _title: string,
+        private readonly _command: string,
+        private readonly _opts: C.IParserPreferences,
+        private readonly _rules: ParseRulesVessel,
+        private readonly _lang: C.ILangPackage,
     ) {}
 
     public isHelpRequest(result: C.IParseResult): boolean {
@@ -86,7 +86,7 @@ export class HelpGenerator {
             || (!this._opts.disableHelpFlag && result.flags.help > 0);
     }
 
-    private _orEmpty(cond: any, text: string): string {
+    private _orEmpty(cond: unknown, text: string): string {
 
         return cond ? text : '';
     }
@@ -270,16 +270,16 @@ export class HelpGenerator {
         gen.indentOut();
     }
 
-    private _buildUsageLine(segs: string[]): string {
+    private _buildUsageLine(pieces: string[]): string {
 
-        return segs.filter((v) => v.length > 0).join(' ');
+        return pieces.filter((v) => v.length > 0).join(' ');
     }
 
     private _prepareCommands(result?: C.IParseResult): [string, ParseRulesVessel] {
 
-        const validCmds: string[] = [];
+        const validCmdList: string[] = [];
 
-        let cmds: string[] = [];
+        let cmdList: string[] = [];
 
         let rules = this._rules;
 
@@ -292,22 +292,22 @@ export class HelpGenerator {
 
             if (result.commands[0] === 'help') {
 
-                cmds = result.arguments;
+                cmdList = result.arguments;
             }
             else {
 
-                cmds = result.commands;
+                cmdList = result.commands;
             }
 
-            cmds = cmds.map((v) => v.toLowerCase()).filter((v) => v !== 'help');
+            cmdList = cmdList.map((v) => v.toLowerCase()).filter((v) => v !== 'help');
         }
 
-        for (const k of cmds) {
+        for (const k of cmdList) {
 
             if (rules.existCommand(k)) {
 
                 rules = rules.getCommandRules(k);
-                validCmds.push(rules.info.name);
+                validCmdList.push(rules.info.name);
             }
             else {
 
@@ -315,14 +315,14 @@ export class HelpGenerator {
             }
         }
 
-        return [validCmds.join(' '), rules];
+        return [validCmdList.join(' '), rules];
     }
 
     public generateErrorOutput(e: unknown): string[] {
 
         const gen = new ConsoleTextGenerator();
 
-        if (!E.errorRegistry.identify(e)) {
+        if (!(e instanceof E.ClapError)) {
 
             gen.appendLine(`ERROR unknown: ${this._lang['errors.unknown']}`);
         }

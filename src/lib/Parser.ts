@@ -1,5 +1,5 @@
 /**
- *  Copyright 2021 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2023 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,9 +24,9 @@ import { HelpGenerator } from './HelpGenerator';
 export class ClapParser {
 
     public constructor(
-        private _opts: C.IParserPreferences,
-        private _rules: ParseRulesVessel,
-        private _helpGen: HelpGenerator
+        private readonly _opts: C.IParserPreferences,
+        private readonly _rules: ParseRulesVessel,
+        private readonly _helpGen: HelpGenerator
     ) {}
 
     public parse(args: string[]): C.IParseResult {

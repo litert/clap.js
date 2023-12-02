@@ -1,6 +1,9 @@
 # Changes Logs
 
-[Dep:LRT.Core]: https://github.com/litert/core.js
+## v3.0.0
+
+- build(project): removed all runtime dependencies.
+- fix(parser): fixed `with` method of builder.
 
 ## v2.0.4
 

@@ -1,5 +1,5 @@
 /**
- *  Copyright 2021 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2023 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import { ParseRulesVessel } from './ParseRules';
 
 export enum EParserStatus {
 
-    IDLE,
     READING_COMMAND,
     READING_ARGUMENTS,
     READING_OPTION_ARG,
@@ -27,13 +26,13 @@ export enum EParserStatus {
 
 export class ParserContext {
 
-    public status: EParserStatus = EParserStatus.IDLE;
+    public status: EParserStatus;
 
     public data: Record<string, any> = {};
 
     public constructor(
         public rules: ParseRulesVessel,
-        private _opts: C.IParserPreferences,
+        private readonly _opts: C.IParserPreferences,
         public args: string[]
     ) {
 
@@ -47,7 +46,7 @@ export class ParserContext {
         }
     }
 
-    private _result: C.IParseResult = {
+    private readonly _result: C.IParseResult = {
         successful: false,
         commands: [],
         options: {},

@@ -1,5 +1,5 @@
 /**
- *  Copyright 2021 Angus.Fenying <fenying@litert.org>
+ *  Copyright 2023 Angus.Fenying <fenying@litert.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,16 +22,16 @@ import { ParseRuleBuilder } from './ParseRuleBuilder';
 
 class ClapHelper extends ParseRuleBuilder implements C.IHelper {
 
-    private _helpGen: HelpGenerator;
+    private readonly _helpGen: HelpGenerator;
 
-    private _parser: ClapParser;
+    private readonly _parser: ClapParser;
 
     public constructor(
         title: string,
         command: string,
         description: string,
         opts: C.IParserPreferences,
-        private _lang: C.ILangPackage
+        private readonly _lang: C.ILangPackage
     ) {
 
         super(opts, {
